@@ -45,11 +45,11 @@
     "build:all": "electron-builder --mac --win"
   },
   "devDependencies": {
-    "@types/jsdom": "^28.0.3",
+    "@types/jsdom": "^30.0.0",
     "electron": "^43.2.0",
     "electron-builder": "^24.13.3",
     "fast-xml-parser": "^5.9.3",
-    "jsdom": "^29.1.1",
+    "jsdom": "^30.0.1",
     "jszip": "^3.10.1",
     "opentype.js": "^2.0.0",
     "stylelint": "^16.26.1",
