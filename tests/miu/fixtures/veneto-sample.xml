@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<prezzario cod="2025" desc="Prezzario 2025" ver="1.1">
+  <settore cod="VEN25-01" ex="E" desc="OPERE EDILI">
+    <capitolo cod="VEN25-01.02" ex="E.02" desc="SCAVI">
+      <paragrafo cod="VEN25-01.02.01" manodopera="0" ex="E.02.01">
+        <sint>SCAVO DI PULIZIA GENERALE FINO ALLA PROFONDITA' DI M 0,20</sint>
+        <estesa>Scavo di pulizia generale eseguito con mezzi meccanici in terreno di qualsiasi natura e consistenza fino alla profondità di m 0.20, compreso l'estirpazione d'erbe, arbusti e radici</estesa>
+        <prezzi>
+          <prezzo cod="VEN25-01.02.01.00" ex="E.02.01.00" umi="m²" val="3.4" man="34.97">SCAVO DI PULIZIA GENERALE FINO ALLA PROFONDITA' DI M 0,20</prezzo>
+        </prezzi>
+      </paragrafo>
+      <paragrafo cod="VEN25-01.02.02" manodopera="0" ex="E.02.02">
+        <sint>SCAVO A SEZIONE APERTA CON QUALSIASI PROFONDITA'</sint>
+        <estesa>Scavo a sezione aperta eseguito con mezzi meccanici fino a qualsiasi profondità in terreno di qualsiasi natura e consistenza, esclusa la roccia</estesa>
+        <prezzi>
+          <prezzo cod="VEN25-01.02.02.00" ex="E.02.02.00" umi="m³" val="7.99" man="37.21">SCAVO A SEZIONE APERTA - terreno naturale</prezzo>
+          <prezzo cod="VEN25-01.02.02.01" ex="E.02.02.01" umi="m³" val="0" man="0">VARIANTE SENZA PREZZO DA SCARTARE</prezzo>
+        </prezzi>
+      </paragrafo>
+    </capitolo>
+  </settore>
+</prezzario>

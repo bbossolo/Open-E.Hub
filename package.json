@@ -1,0 +1,106 @@
+{
+  "name": "open-ehub",
+  "version": "1.0.0",
+  "description": "Open E.Hub — suite open source di tool per progettazione elettrica e impiantistica, offline-first",
+  "main": "main.js",
+  "author": "Davide Bottura",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "prestart": "npm run build:web",
+    "start": "electron .",
+    "serve": "node scripts/serve.mjs",
+    "pretest": "npm run typecheck",
+    "prebuild": "npm run test",
+    "build": "npm run build:web",
+    "build:web": "node scripts/build-web.mjs",
+    "build:miu": "TOOL=miu vite build && node scripts/place-builds.mjs",
+    "build:alfa": "TOOL=alfa vite build && node scripts/place-builds.mjs",
+    "build:chi": "TOOL=chi vite build && node scripts/place-builds.mjs",
+    "build:delta": "TOOL=delta vite build && node scripts/place-builds.mjs",
+    "build:beta": "TOOL=beta vite build && node scripts/place-builds.mjs",
+    "build:hub": "TOOL=hub vite build && node scripts/place-builds.mjs",
+    "build:prezzari": "vite-node scripts/build-prezzari.ts",
+    "build:dxf-glyphs": "vite-node scripts/build-dxf-glyphs.ts",
+    "validate:dxf": "python3 scripts/dxf-validate.py",
+    "ehub": "vite-node scripts/cli/ehub.run.ts",
+    "bundle:prezzari": "node scripts/bundle-prezzari.mjs",
+    "bump": "node scripts/bump.mjs",
+    "release": "node scripts/release.mjs",
+    "sync:versions": "node scripts/bump.mjs --sync",
+    "sync:readme": "node scripts/sync-readme.mjs",
+    "sync:docs": "vite-node scripts/sync-docs.run.ts",
+    "postinstall": "git config core.hooksPath .githooks || true",
+    "typecheck": "tsc --noEmit",
+    "lint:css": "stylelint \"src/tools/**/styles/*.css\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prebuild:mac": "npm run build:web && npm run bundle:prezzari",
+    "build:mac": "electron-builder --mac",
+    "prebuild:win": "npm run build:web && npm run bundle:prezzari",
+    "build:win": "electron-builder --win",
+    "predist:win": "npm run build",
+    "dist:win": "npm run build:win",
+    "prebuild:all": "npm run build:web && npm run bundle:prezzari",
+    "build:all": "electron-builder --mac --win"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^28.0.3",
+    "electron": "^43.2.0",
+    "electron-builder": "^24.13.3",
+    "fast-xml-parser": "^5.9.3",
+    "jsdom": "^29.1.1",
+    "jszip": "^3.10.1",
+    "opentype.js": "^2.0.0",
+    "stylelint": "^16.26.1",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vite-plugin-singlefile": "^2.0.3",
+    "vitest": "^2.1.4",
+    "wawoff2": "^2.0.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "build": {
+    "appId": "org.open-ehub.app",
+    "productName": "Open E.Hub",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "*.html",
+      "versions.js",
+      "main.js",
+      "preload.js",
+      "vendor/**",
+      "assets/**",
+      "prezzari/_bundle/**"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "assets/icon.png",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "icon": "assets/icon-win.png",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "dependencies": {
+    "@pdf-lib/fontkit": "^1.1.1",
+    "pdf-lib": "^1.17.1"
+  }
+}

@@ -1,0 +1,253 @@
+/* χ Refs — stili specifici del tool.
+   I pulsanti vengono TUTTI dal design system condiviso (famiglia ehb-btn e
+   ehb-icon-btn): qui non esistono primitive locali, e la guardia ui-coherence
+   lo verifica.
+   NB: mai scrivere il selettore con l'asterisco seguito dalla barra in un
+   commento — chiude il commento in anticipo. È già costato sei volte. */
+
+/* Base del tool — la stessa riga che hanno tutti gli altri: senza `font-family`
+   qui, il tool cade sul font di sistema perché tokens.css definisce solo la
+   variabile, non la applica al body. */
+html, body { height: 100%; }
+body { margin: 0; font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 14px; }
+
+.c-view { padding: var(--sp-4); }
+
+/* ── vista 1: apri ───────────────────────────────────────────────────────── */
+/* Il riquadro di trascinamento è quello condiviso (.ehb-dropzone): qui solo l'altezza. */
+.c-drop { min-height: 52vh; align-content: center; }
+.c-drop__tit { margin: 0; font-size: var(--fs-lg); color: var(--text); }
+.c-drop__sub { margin: 0; max-width: 60ch; line-height: 1.5; }
+.c-passi {
+  margin: var(--sp-2) 0 0; padding: 0; list-style: none;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: var(--sp-3);
+  counter-reset: passo; font-size: var(--fs-sm);
+}
+.c-passi li::before {
+  counter-increment: passo; content: counter(passo);
+  display: inline-grid; place-items: center; width: 1.5em; height: 1.5em; margin-right: .5em;
+  border: 1px solid var(--line2); border-radius: var(--radius-pill); color: var(--accent);
+}
+.c-drop__tit { margin: 0; font-size: 1.28rem; }
+.c-drop__sub { margin: 0; max-width: 62ch; color: var(--muted); line-height: 1.55; }
+
+/* ── scheda del file ─────────────────────────────────────────────────────── */
+.c-scheda {
+  padding: var(--sp-2) var(--sp-3); margin-bottom: var(--sp-3);
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel);
+}
+.c-scheda__riga { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-3); }
+.c-scheda__riga + .c-scheda__riga { margin-top: var(--sp-1); }
+.c-scheda__file { font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 42ch; }
+.c-scheda__dato { color: var(--text); font-variant-numeric: tabular-nums; }
+.c-scheda__et { color: var(--muted); text-transform: uppercase; font-size: .74rem; letter-spacing: .06em; }
+.c-fioco { color: var(--muted); font-size: .88em; }
+.c-attenzione { color: var(--warn); font-weight: 650; }
+.c-avviso {
+  margin: var(--sp-2) 0 0; padding: var(--sp-2);
+  border-left: 3px solid var(--warn); border-radius: var(--radius-sm);
+  background: var(--panel2); color: var(--text); line-height: 1.5;
+}
+
+/* ══ LA VISTA DI LAVORO — due colonne, si trascina da sinistra a destra ══════
+   La versione ad accordion era leggibile e inutilizzabile: per trascinare una riga
+   servivano aperti insieme il gruppo di partenza e quello d'arrivo, che è proprio
+   ciò che un accordion impedisce. Qui sorgente e destinazioni sono sempre
+   entrambe a schermo, ed è l'unica cosa che conta. */
+.c-trasferimento {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: var(--sp-2); align-items: stretch;
+  height: calc(100vh - 21rem); min-height: 24rem;
+}
+.c-col {
+  display: flex; flex-direction: column; min-width: 0; min-height: 0;
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel); overflow: hidden;
+}
+.c-col--dest { border-color: var(--accent-line); }
+.c-col__cap {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-2); border-bottom: 1px solid var(--line); background: var(--panel2);
+}
+.c-col__cap h3 { margin: 0; font-size: var(--fs-sm); }
+.c-col__conta { font-size: var(--fs-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+.c-col__azioni { display: flex; gap: var(--sp-1); margin-left: auto; }
+.c-filtro { flex: 1 1 8rem; min-width: 7rem; }
+.c-lista { flex: 1; min-height: 0; overflow: auto; padding: var(--sp-2); }
+.c-vuoto { margin: 0; padding: var(--sp-3); color: var(--muted); font-style: italic; text-align: center; }
+
+/* La freccia fra le due colonne: dice in che verso si lavora, senza istruzioni scritte. */
+.c-verso {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--sp-1);
+  padding: 0 var(--sp-1); color: var(--muted); font-size: var(--fs-xs);
+  writing-mode: vertical-rl; text-orientation: mixed;
+}
+.c-verso__freccia { writing-mode: horizontal-tb; font-size: var(--fs-lg); color: var(--accent); }
+
+/* ── una riga della sorgente ─────────────────────────────────────────────── */
+.c-riga {
+  position: relative; display: flex; align-items: center; gap: var(--sp-1);
+  padding: .3rem var(--sp-1); border-radius: var(--radius-sm); cursor: grab;
+  border: 1px solid transparent;
+}
+.c-riga:hover { background: var(--panel2); border-color: var(--line2); }
+.c-riga.is-trascinata { opacity: .35; }
+.c-riga--spenta .c-riga__nome, .c-riga--spenta .c-riga__num { opacity: .45; text-decoration: line-through; }
+/* La barra del peso: su una tavola vera cinque layer contengono quasi tutto. */
+.c-riga__peso {
+  position: absolute; left: 0; top: 0; bottom: 0; width: var(--p, 2%);
+  background: var(--accent-dim); opacity: .16; border-radius: var(--radius-sm); pointer-events: none;
+}
+.c-riga__nome { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.c-riga__num { font-variant-numeric: tabular-nums; font-size: var(--fs-xs); color: var(--muted); }
+.c-riga__txt { font-size: var(--fs-xs); color: var(--muted); }
+.c-riga__proposta {
+  font: inherit; font-size: var(--fs-xs); cursor: pointer; white-space: nowrap;
+  padding: .05em .45em; border-radius: var(--radius-pill);
+  border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--accent);
+}
+.c-riga__proposta:hover { background: var(--accent); color: var(--on-accent); }
+.c-presa { color: var(--faint); cursor: grab; letter-spacing: -2px; }
+.c-xref {
+  font-size: var(--fs-xs); padding: .05em .35em; border-radius: var(--radius-sm);
+  background: var(--panel2); color: var(--muted); border: 1px solid var(--line);
+}
+
+/* L'interruttore: si decide a video se un layer si vede o no. */
+.c-occhio {
+  font: inherit; line-height: 1; cursor: pointer; flex: none;
+  padding: .1em .25em; border-radius: var(--radius-sm);
+  border: 1px solid transparent; background: transparent; color: var(--muted);
+}
+.c-occhio[aria-pressed="true"] { color: var(--accent); }
+.c-occhio:hover { border-color: var(--line2); background: var(--panel2); }
+
+/* ── un cassetto di destinazione ─────────────────────────────────────────── */
+.c-cassetto {
+  border: 1px solid var(--line); border-radius: var(--radius);
+  margin-bottom: var(--sp-1); background: var(--bg);
+  transition: var(--tr);
+}
+.c-cassetto.is-pieno { border-color: var(--accent-line); background: var(--panel); }
+.c-cassetto--spento { opacity: .55; }
+.c-cassetto.is-sopra {
+  border-color: var(--accent); background: var(--accent-soft);
+  outline: 2px dashed var(--accent); outline-offset: -3px;
+}
+.c-cassetto__cap { display: flex; align-items: center; gap: var(--sp-1); padding: .35rem var(--sp-2); }
+.c-cassetto__nome { font-weight: 650; flex: none; }
+.c-cassetto__conta { font-size: var(--fs-xs); color: var(--muted); font-variant-numeric: tabular-nums; margin-left: auto; }
+.c-cassetto__cosa {
+  font-size: var(--fs-xs); color: var(--muted); margin-left: auto;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+}
+.c-pastello { width: .85em; height: .85em; border-radius: 2px; background: var(--c, var(--muted)); flex: none; }
+.c-pastiglie { display: flex; flex-wrap: wrap; gap: .25rem; padding: 0 var(--sp-2) var(--sp-2); }
+/* Una pastiglia è viva quanto una riga: si clicca, si seleziona, si trascina.
+   Correggere uno smistamento sbagliato non deve costare più che farlo. */
+.c-pastiglia {
+  display: inline-flex; align-items: center; gap: .3em; cursor: grab; transition: var(--tr);
+  font-size: var(--fs-xs); padding: .12em .3em .12em .5em; border-radius: var(--radius-pill);
+  background: var(--accent-soft); border: 1px solid var(--accent-line); color: var(--text);
+}
+.c-pastiglia.is-trascinata { opacity: .35; }
+.c-pastiglia:hover { border-color: var(--accent); }
+.c-pastiglia.is-sel { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.c-pastiglia.is-sel .c-pastiglia__x { color: var(--on-accent); }
+.c-riga.is-sel { background: var(--accent-soft); border-color: var(--accent); }
+.c-pastiglia__x {
+  font: inherit; line-height: 1; cursor: pointer; color: var(--muted);
+  border: none; background: transparent; padding: 0 .15em;
+}
+.c-pastiglia__x:hover { color: var(--bad); }
+
+/* Mentre si trascina, i bersagli si fanno notare: sparisce il «dove lo lascio?». */
+body.c-trascinando .c-cassetto { border-style: dashed; }
+/* Mentre si trascina anche la colonna di sinistra è un bersaglio: «rimandalo
+   indietro» è una correzione come le altre. */
+body.c-trascinando .c-lista--sorgente { outline: 1px dashed var(--accent-line); outline-offset: -4px; }
+
+/* La barra in alto raccoglie i comandi; quella in basso le opzioni e l'export. */
+.c-barra--alto { margin-top: 0; margin-bottom: var(--sp-3); }
+.c-barra__sep { width: 1px; align-self: stretch; background: var(--line); margin: 0 var(--sp-1); }
+.c-col__azioni { margin-left: auto; }
+
+/* ── barra in basso ──────────────────────────────────────────────────────── */
+.c-barra {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2);
+  margin-top: var(--sp-3); padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel);
+}
+.c-barra__spacer { flex: 1; }
+.c-riepilogo { font-size: .84rem; color: var(--muted); }
+
+/* ── avanzamento ─────────────────────────────────────────────────────────── */
+.c-prog {
+  position: fixed; left: 50%; bottom: var(--sp-4); transform: translateX(-50%); z-index: 60;
+  min-width: 20rem; padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel);
+  box-shadow: var(--shadow);
+}
+.c-prog__txt { display: block; font-size: .82rem; margin-bottom: .35rem; }
+.c-prog__bar { display: block; height: 4px; border-radius: 2px; background: var(--panel2); overflow: hidden; }
+.c-prog__bar i { display: block; height: 100%; background: var(--accent); transition: width .12s linear; }
+
+/* ── stretto: i riquadri si impilano solo quando non c'è alternativa ─────── */
+@media (max-width: 900px) {
+  .c-trasferimento { grid-template-columns: 1fr; height: auto; }
+  .c-verso { writing-mode: horizontal-tb; flex-direction: row; justify-content: center; padding: var(--sp-1) 0; }
+  .c-lista { max-height: 20rem; }
+}
+
+/* ── comando della scala ─────────────────────────────────────────────────── */
+.c-scala { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
+.c-scala__sel { max-width: 15rem; font-size: .8rem; }
+.c-scala__esito { font-size: .78rem; color: var(--muted); }
+
+/* ── riga del profilo collaboratore ──────────────────────────────────────── */
+.c-profilo {
+  display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3); margin-bottom: var(--sp-3);
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel);
+  font-size: .86rem;
+}
+.c-profilo__et { color: var(--muted); text-transform: uppercase; font-size: .72rem; letter-spacing: .06em; }
+
+/* Il cassetto degli spenti: destinazione a tutti gli effetti, ma visivamente spenta. */
+.c-cassetto--spenti { border-style: dashed; background: transparent; }
+.c-cassetto--spenti.is-pieno { background: var(--panel2); border-color: var(--line2); }
+.c-cassetto--spenti .c-pastiglia { background: var(--panel2); border-color: var(--line); opacity: .75; }
+.c-preset { font-size: var(--fs-xs); max-width: 12rem; }
+
+/* Nota di servizio in scheda: informa, non allarma (l'avviso vero è .c-avviso). */
+.c-nota {
+  margin: var(--sp-2) 0 0; padding: var(--sp-1) var(--sp-2);
+  border-left: 3px solid var(--line2); border-radius: var(--radius-sm);
+  background: var(--panel2); color: var(--muted); font-size: var(--fs-xs); line-height: 1.5;
+}
+
+
+/* ── il menù sotto il puntatore: la distanza da percorrere diventa zero ──── */
+.c-menu {
+  position: fixed; z-index: 70; width: 250px; padding: var(--sp-2);
+  border: 1px solid var(--line3); border-radius: var(--radius);
+  background: var(--panel3); box-shadow: var(--shadow);
+}
+.c-menu__t { font-size: var(--fs-xs); color: var(--muted); margin-bottom: var(--sp-2); }
+.c-menu__lista { display: flex; flex-direction: column; gap: 2px; max-height: 320px; overflow: auto; }
+.c-menu__v {
+  display: flex; align-items: center; gap: var(--sp-2); width: 100%;
+  font: inherit; font-size: var(--fs-sm); text-align: left; cursor: pointer;
+  padding: 4px var(--sp-2); border-radius: var(--radius-sm);
+  border: 1px solid transparent; background: transparent; color: var(--text);
+}
+.c-menu__v:hover, .c-menu__v.is-cur { background: var(--accent-soft); border-color: var(--accent-line); }
+.c-menu__v kbd {
+  margin-left: auto; font: inherit; font-size: var(--fs-xs); color: var(--faint);
+  border: 1px solid var(--line2); border-radius: 4px; padding: 0 4px;
+}
+/* Il numero del cassetto: dice che la tastiera basta, senza spiegarlo. */
+.c-tasto {
+  font-size: var(--fs-xs); min-width: 1.4em; text-align: center; color: var(--faint);
+  border: 1px solid var(--line2); border-radius: 4px; padding: 0 3px; flex: none;
+}
+.c-mini-btn { width: 20px; height: 20px; font-size: var(--fs-xs); }

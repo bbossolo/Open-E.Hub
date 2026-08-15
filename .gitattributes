@@ -1,0 +1,44 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# FINE RIGA — LF ovunque, anche nel working tree su Windows.
+#
+# Perché `eol=lf` e non solo `text=auto`: con `core.autocrlf=true` Git consegna
+# i sorgenti su disco in CRLF, e `vite-plugin-singlefile` — che rimuove i tag
+# <link>/<script src> per inlinearne il contenuto — lascia orfano il \r di ogni
+# tag rimosso. Risultato: i bundle buildati su Windows contengono CR spuri e
+# NON coincidono con quelli buildati su macOS, che parte già da sorgenti LF.
+# Da qui i bundle eternamente "modificati" e i diff da migliaia di righe.
+# Con eol=lf le due postazioni producono lo stesso byte.
+# ═══════════════════════════════════════════════════════════════════════════
+* text=auto eol=lf
+
+# ── Binari: mai toccare i byte ──────────────────────────────────────────────
+# L'euristica di Git (presenza di NUL) li riconoscerebbe comunque, ma qui è
+# esplicito: un giorno un file potrebbe non avere NUL nei primi byte e verrebbe
+# "normalizzato" in silenzio.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.pdf   binary
+*.gz    binary
+*.zip   binary
+*.xls   binary
+*.xlsx  binary
+*.dwg   binary
+*.dcf   binary
+# NB: i .dxf NON sono binari — le fixture di test sono DXF ASCII, committati in
+# LF. Marcarli `binary` congelerebbe i CRLF che il checkout mette su disco.
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+
+# ── Fixture byte-esatte ─────────────────────────────────────────────────────
+# Il buffer degli appunti di PriMus: CRLF e NUL finale fanno parte del
+# contratto (vedi tests/miu/primus-dcf.test.ts). Nessuna normalizzazione.
+tests/miu/fixtures/primus-voce-analizzata.xmldcf_ep.xml -text
+
+# ── Script che DEVONO restare CRLF per girare su Windows ────────────────────
+*.bat text eol=crlf
+*.cmd text eol=crlf

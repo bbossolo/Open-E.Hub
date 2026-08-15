@@ -1,0 +1,31 @@
+name: Proposta di miglioramento
+description: Un'idea per un tool esistente, o un tool nuovo
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Il problema di progettazione da cui nasce
+      description: |
+        Cosa stavi facendo — un computo, una tavola, un SAL — e dove ti si è messo di mezzo
+        lo strumento. Il *perché* serve più della soluzione già confezionata.
+    validations:
+      required: true
+  - type: textarea
+    id: proposta
+    attributes:
+      label: Cosa proponi
+    validations:
+      required: true
+  - type: input
+    id: tool
+    attributes:
+      label: Quale tool riguarda
+      placeholder: μ Prezzi · β Contabilità · δ Copertine · χ Refs · α Alfa · l'hub · un tool nuovo
+  - type: markdown
+    attributes:
+      value: |
+        Un promemoria dalle regole della casa: Open E.Hub non incorpora prezzari, cataloghi
+        o cartigli di terzi, e non fabbrica dati per far sembrare viva una funzione che non
+        ha una fonte. Le proposte che richiedono di ridistribuire dati altrui non possono
+        essere accolte così come sono.

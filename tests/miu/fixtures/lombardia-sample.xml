@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report>
+  <voci>
+    <voci>
+      <riferimenti_voce>
+        <autore>LOM</autore>
+        <anno>2026</anno>
+        <edizione>1</edizione>
+      </riferimenti_voce>
+      <dettaglio_voce codice_voce="LOM261.OC.EEA.Pa01.C0625.Sb010.0000.-" prezzo_voce="310.62" unita_misura_voce="1 cad" importo_senza_sgui_voce="245.55" rapporto_RU_voce="5.13" tipologia_risorsa="OPERA COMPIUTA">
+        <declaratoria_voce>OPERA: Maniglione risalita di lega ferrosa acciaio inox AISI 304; impiego: piscine. Incluso: viteria. Escluso: rivelatori di fumo.
+LAVORO: Installazione.
+SPECIFICHE TECNICHE: coppia di maniglioni; su bordo vasca in corrispondenza della scala interna in muratura.</declaratoria_voce>
+        <risorse>
+          <risorsaDTOList codifica_risorsa="LOM261.RM.56.15.45.Sb010.0000.-" udm_risorsa="1 cad" quantita_risorsa="1.00000" prezzo_risorsa="229.62" importo_risorsa="229.62" tipologia_risorsa="RISORSA MATERIALE">
+            <declaratoria_risorsa>Maniglione di risalita di lega ferrosa acciaio inox AISI 304; impiego: piscine; fornitura: coppia. Incluso: viteria</declaratoria_risorsa>
+          </risorsaDTOList>
+          <risorsaDTOList codifica_risorsa="LOM261.RU.00.00.00.0015.a" udm_risorsa="1 h" quantita_risorsa="0.55000" prezzo_risorsa="28.96" importo_risorsa="15.93" tipologia_risorsa="RISORSA UMANA">
+            <declaratoria_risorsa>Operaio edile di livello 1°; qualifica: comune</declaratoria_risorsa>
+          </risorsaDTOList>
+        </risorse>
+        <declaratoria_voce_dettaglio>OP1 Maniglione risalita di lega ferrosa acciaio inox AISI 304; impiego: piscine.
+RM2 Maniglione di risalita di lega ferrosa acciaio inox AISI 304; impiego: piscine; fornitura: coppia. Incluso: viteria
+LV1 Installazione.</declaratoria_voce_dettaglio>
+        <cod_liv_1>OC</cod_liv_1>
+        <descr_liv_1>OPERA COMPIUTA</descr_liv_1>
+        <cod_liv_2>E</cod_liv_2>
+        <descr_liv_2>EDILIZIA</descr_liv_2>
+        <cod_liv_3>E</cod_liv_3>
+        <descr_liv_3>EDIFICI</descr_liv_3>
+        <cod_liv_4>A</cod_liv_4>
+        <descr_liv_4>RESIDENZE</descr_liv_4>
+        <cod_liv_5>P</cod_liv_5>
+        <descr_liv_5>PRODUZIONE</descr_liv_5>
+        <cod_liv_6>a</cod_liv_6>
+        <descr_liv_6>REALIZZAZIONE</descr_liv_6>
+        <cod_liv_7>01</cod_liv_7>
+        <descr_liv_7>INSTALLAZIONE</descr_liv_7>
+        <cod_liv_8>C</cod_liv_8>
+        <descr_liv_8>ARCHITETTURA</descr_liv_8>
+        <cod_liv_9>06</cod_liv_9>
+        <descr_liv_9>SISTEMI SCALA</descr_liv_9>
+        <cod_liv_10>25</cod_liv_10>
+        <descr_liv_10>MANIGLIONE RISALITA</descr_liv_10>
+        <cod_liv_11>Sb010</cod_liv_11>
+        <descr_liv_11>LEGA FERROSA ACCIAIO INOX AISI 304</descr_liv_11>
+      </dettaglio_voce>
+    </voci>
+    <voci>
+      <riferimenti_voce>
+        <autore>LOM</autore>
+        <anno>2026</anno>
+      </riferimenti_voce>
+      <dettaglio_voce codice_voce="LOM261.RM.00.10.00.Ba002.0000.0" prezzo_voce="4.03" unita_misura_voce="1 m² * cm" importo_senza_sgui_voce="3.18" rapporto_RU_voce="0.00" tipologia_risorsa="RISORSA MATERIALE">
+        <declaratoria_voce>Additivo sintetico di composto chimico ossido di ferro; funzione: colorante agli ossidi rosso. Sovrapprezzo</declaratoria_voce>
+        <cod_liv_1>RM</cod_liv_1>
+        <descr_liv_1>RISORSA MATERIALE</descr_liv_1>
+        <cod_liv_2>00</cod_liv_2>
+        <descr_liv_2>IMPASTI</descr_liv_2>
+        <cod_liv_3>10</cod_liv_3>
+        <descr_liv_3>PRODOTTI</descr_liv_3>
+        <cod_liv_4>00</cod_liv_4>
+        <descr_liv_4>ADDITIVO</descr_liv_4>
+        <cod_liv_5>Ba002</cod_liv_5>
+        <descr_liv_5>COMPOSTO CHIMICO OSSIDO DI FERRO</descr_liv_5>
+      </dettaglio_voce>
+    </voci>
+    <voci>
+      <riferimenti_voce><anno>2026</anno></riferimenti_voce>
+      <dettaglio_voce codice_voce="LOM261.ZZ.00.00.00.0000.0000.-" prezzo_voce="0.00" unita_misura_voce="1 cad" importo_senza_sgui_voce="0.00" rapporto_RU_voce="0.00" tipologia_risorsa="RISORSA MATERIALE">
+        <declaratoria_voce>Voce senza prezzo da scartare</declaratoria_voce>
+        <descr_liv_1>RISORSA MATERIALE</descr_liv_1>
+      </dettaglio_voce>
+    </voci>
+  </voci>
+</report>

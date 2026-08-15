@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark" data-palette="ardesia" data-tool="hub">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- CSP — nessuno schema http:/https: compare in questa policy: la suite non può
+     caricare nulla dalla rete né spedire nulla fuori, e non è più solo una promessa
+     del codice. 'unsafe-inline'/'unsafe-eval' servono perché i bundle sono file
+     unici (tutto inlinato) e pdf.js/JSZip usano eval al proprio interno; la via
+     d'esecuzione JS dei PDF ostili è chiusa alla fonte con isEvalSupported:false. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob:; script-src 'self' file: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' file: data: 'unsafe-inline'; img-src 'self' file: data: blob:; font-src 'self' file: data:; connect-src 'self' file: data: blob:; worker-src 'self' file: blob:; frame-src 'self' file: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>Open E.Hub</title>
+<link href="vendor/fonts.css" rel="stylesheet">
+<!-- Design system condiviso (STEP 8): token + libreria componenti, poi gli stili propri dell'hub. -->
+<link rel="stylesheet" href="../shared/ui/tokens.css">
+<link rel="stylesheet" href="../shared/ui/components.css">
+<link rel="stylesheet" href="./styles/hub.css">
+</head>
+<body>
+<div id="shell">
+  <!-- ── SIDEBAR ── -->
+  <div id="sidebar">
+    <div id="brand">
+      <div id="brand-left">
+        <div id="brand-mark" onclick="goHome()" title="Home"><svg class="ehb-mark-svg" viewBox="-18 -18 986.5 744" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M348.3 707.5 L280.3 708.0 L244.3 705.8 L226.3 697.7 L186.3 694.8 L173.3 685.9 L148.3 682.2 L140.3 674.4 L123.4 670.5 L115.3 662.1 L99.3 657.0 L94.3 650.3 L85.3 645.5 L68.0 627.5 L60.2 622.5 L44.9 603.5 L38.2 598.5 L33.4 589.5 L26.1 583.5 L21.4 567.5 L13.8 559.5 L9.5 534.5 L1.8 521.5 L0.0 486.5 L2.3 454.5 L10.2 440.5 L14.5 418.5 L22.2 407.5 L25.5 398.5 L33.5 391.5 L39.3 376.8 L63.3 351.0 L77.4 344.5 L92.3 332.8 L93.7 329.5 L82.5 314.5 L74.3 309.7 L69.3 302.3 L62.3 298.0 L57.5 290.5 L50.3 285.4 L46.0 277.5 L39.3 272.3 L33.5 255.5 L25.4 246.5 L22.0 211.5 L21.8 181.5 L25.6 142.5 L34.3 130.5 L40.3 113.1 L50.8 99.5 L58.3 93.7 L62.3 86.5 L69.3 81.7 L86.3 63.2 L94.9 58.5 L101.3 50.9 L115.7 45.5 L123.3 37.3 L138.3 34.2 L147.3 26.0 L166.3 22.7 L182.3 13.2 L221.3 10.3 L232.3 3.0 L242.3 1.3 L340.3 1.2 L355.3 9.8 L393.3 13.3 L407.3 22.2 L428.3 25.8 L436.3 33.2 L452.3 37.0 L460.3 44.8 L467.3 46.1 L475.8 43.5 L482.3 28.5 L490.5 22.5 L495.3 15.3 L512.3 9.7 L520.3 2.0 L539.3 0.0 L561.3 1.8 L570.3 8.6 L586.3 14.3 L598.8 26.5 L609.9 43.5 L612.8 80.5 L612.8 193.5 L611.1 217.5 L608.8 224.5 L585.3 249.1 L568.3 254.2 L560.3 261.8 L538.3 264.0 L520.3 261.6 L512.3 254.0 L495.3 249.0 L452.3 207.0 L437.3 201.0 L430.3 193.6 L421.3 189.5 L415.3 182.3 L398.3 178.8 L383.3 169.2 L362.3 166.2 L349.3 157.8 L325.3 156.0 L224.3 157.3 L219.3 159.1 L212.3 165.9 L194.3 169.7 L187.3 177.5 L173.3 183.7 L169.1 191.5 L167.9 210.5 L170.3 223.7 L177.8 229.5 L183.3 237.5 L199.3 242.1 L208.8 250.5 L239.3 253.8 L254.3 262.2 L268.3 263.8 L412.3 264.2 L419.2 267.5 L420.9 275.5 L420.8 409.5 L418.3 417.5 L409.3 420.0 L260.3 421.1 L255.0 422.5 L245.3 429.8 L208.3 434.1 L200.3 441.9 L182.3 446.1 L176.3 453.1 L168.6 457.5 L157.0 469.5 L149.2 484.5 L158.2 511.5 L167.0 517.5 L172.3 524.3 L188.3 530.1 L196.3 537.9 L222.3 542.0 L235.3 550.7 L365.3 552.0 L390.3 550.4 L404.3 541.9 L450.3 538.6 L461.3 530.3 L496.3 526.1 L510.3 517.3 L547.3 516.6 L558.3 518.4 L567.3 526.2 L583.6 530.5 L589.6 538.5 L596.9 543.5 L609.6 560.5 L612.8 585.5 L610.0 618.5 L584.3 645.2 L569.3 650.9 L561.3 658.7 L545.3 662.8 L535.3 671.2 L518.3 673.9 L508.3 681.9 L472.3 686.0 L461.3 694.4 L399.3 698.2 L390.3 700.3 L379.3 706.6 L348.3 707.5 Z" fill="currentColor"/><circle cx="841.5" cy="576.6" r="109" fill="#e5484d"/></svg></div>
+        <div id="brand-txt" onclick="goHome()" title="Home">
+          <div id="brand-name">E<b>.</b>Hub</div>
+          <div id="brand-sub">Engineering Toolkit</div>
+        </div>
+      </div>
+      <button id="brand-toggle" onclick="toggleSidebar()" title="Apri / chiudi menu (B)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+    </div>
+
+    <div id="search-wrap">
+      <input id="search" type="text" placeholder="Cerca…  ( / )" oninput="filterList()" autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="nav-label"><span>Tools</span><span class="count" id="nav-count">0</span></div>
+    <div id="app-list"></div>
+    <div id="list-empty">Nessun risultato</div>
+
+    <div id="sidebar-footer">
+      <!-- Pannello Impostazioni (palette spostata dalla home + densità UI).
+           Apre verso l'alto (è in fondo alla sidebar). -->
+      <div id="side-settings">
+        <button id="settingsTrigger" class="side-set-trigger" onclick="toggleSettings()"
+                aria-haspopup="true" aria-expanded="false" aria-controls="settingsPanel" title="Impostazioni">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="side-set-lbl">Impostazioni</span>
+          <span class="side-set-caret" aria-hidden="true">▴</span>
+        </button>
+        <div id="settingsPanel" class="side-set-panel" role="group" aria-label="Impostazioni" hidden>
+          <button type="button" class="side-set-appearance" onclick="openAppearance()" title="Impostazioni grafiche (palette, font, dimensione testo…)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r=".8"/><circle cx="17.5" cy="10.5" r=".8"/><circle cx="8.5" cy="7.5" r=".8"/><circle cx="6.5" cy="12.5" r=".8"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996C18.928 15.271 22 12.199 22 8.5 22 4.5 17.5 2 12 2z"/></svg>
+            <span class="side-set-lbl">Aspetto</span>
+            <span class="side-set-caret" aria-hidden="true">→</span>
+          </button>
+          <!-- LA MEMORIA DELLO STUDIO — quello che Open E.Hub ha imparato lavorando (cos'è ogni
+               blocco, come si computa, le Analisi Prezzi già fatte). Vive nel browser di
+               QUESTA macchina: finché non c'è il server aziendale, esportarla è l'unico modo
+               per darla al collega, portarla sul PC nuovo e non perderla se il disco muore. -->
+          <button type="button" class="side-set-appearance" onclick="openBackup()" title="Backup dei dati che lo studio ha insegnato a Open E.Hub: catalogo voci, dizionario blocchi, Analisi Prezzi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg>
+            <span class="side-set-lbl">Backup dati</span>
+            <span class="side-set-caret" aria-hidden="true">→</span>
+          </button>
+          <div class="set-row" id="set-profile" hidden>
+            <div class="set-row__lbl">Profilo</div>
+            <div class="set-prof" id="set-prof-who"><!-- icona utente + azienda (via JS) --></div>
+            <div class="set-prof-actions">
+              <button type="button" class="set-prof-btn" id="set-prof-admin" onclick="launchApp('alfa-control-center')" hidden>α Centro di controllo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="side-proj">
+        <button class="side-proj-btn" onclick="newEhubProject()" title="Nuovo progetto Open E.Hub: azzera tutto e riparte da zero">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M12 11v6M9 14h6"/></svg>
+          <span class="side-proj-lbl">Nuovo progetto</span>
+        </button>
+        <button class="side-proj-btn" onclick="openEhubProject()" title="Apri un progetto Open E.Hub (.ehub): ripristina lo stato dei tool">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <span class="side-proj-lbl">Apri progetto</span>
+        </button>
+        <button class="side-proj-btn js-save-project" onclick="saveEhubProject()" title="Salva l'intero stato del programma in un file .ehub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+          <span class="side-proj-lbl">Salva progetto</span>
+        </button>
+        <button class="side-proj-btn" onclick="saveEhubProjectAs()" title="Salva con nome: scegli nome del progetto e cartella di destinazione">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/><path d="M12 3v4"/></svg>
+          <span class="side-proj-lbl">Salva con nome…</span>
+        </button>
+        <button class="side-proj-btn side-proj-btn--guide" onclick="openGuide()" title="Guida rapida a Open E.Hub: cos'è, come si collegano i tool, progetto .ehub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+          <span class="side-proj-lbl">Guida</span>
+        </button>
+      </div>
+      <!-- Logo azienda DISCRETO (solo profilo aziendale; admin → nascosto). -->
+      <div id="side-company" hidden></div>
+      <div id="stat-row">
+        <div class="stat-item"><div class="stat-val" id="stat-n">—</div><div class="stat-lbl">tools</div></div>
+        <div class="stat-item"><div class="stat-val" id="stat-hubver">—</div><div class="stat-lbl">hub ver</div></div>
+        <button id="theme-btn" onclick="toggleTheme()" title="Tema chiaro/scuro (T)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CONTENT ── -->
+  <div id="content">
+    <!-- App bar (visible when app is open) -->
+    <div id="app-bar">
+      <button id="bar-toggle" onclick="toggleSidebar()" title="Sidebar (B)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
+      </button>
+      <div id="bar-title"></div>
+      <div id="bar-actions">
+        <button class="proj-act" onclick="newEhubProject()" title="Nuovo progetto Open E.Hub: azzera tutto e riparte da zero">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/><path d="M12 11v6M9 14h6"/></svg>
+          Nuovo
+        </button>
+        <button class="proj-act" onclick="openEhubProject()" title="Apri un progetto Open E.Hub (.ehub): ripristina lo stato dei tool">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Apri progetto
+        </button>
+        <button class="proj-act js-save-project" onclick="saveEhubProject()" title="Salva l'intero stato del programma in un file .ehub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+          Salva progetto
+        </button>
+        <button class="proj-act" onclick="saveEhubProjectAs()" title="Salva con nome: scegli nome del progetto e cartella di destinazione">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/><path d="M12 3v4"/></svg>
+          Salva con nome…
+        </button>
+        <button class="bar-act" onclick="reloadApp()" title="Ricarica (R)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+          Ricarica
+        </button>
+      </div>
+      <input type="file" id="ehub-file" accept=".ehub,.json,application/json" style="display:none" onchange="onEhubFile(this)">
+    </div>
+
+    <!-- Welcome screen -->
+    <div id="welcome">
+      <div class="wlc-inner">
+        <div class="wlc-hero">
+          <div class="wlc-mark"><svg class="ehb-mark-svg" viewBox="-18 -18 986.5 744" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M348.3 707.5 L280.3 708.0 L244.3 705.8 L226.3 697.7 L186.3 694.8 L173.3 685.9 L148.3 682.2 L140.3 674.4 L123.4 670.5 L115.3 662.1 L99.3 657.0 L94.3 650.3 L85.3 645.5 L68.0 627.5 L60.2 622.5 L44.9 603.5 L38.2 598.5 L33.4 589.5 L26.1 583.5 L21.4 567.5 L13.8 559.5 L9.5 534.5 L1.8 521.5 L0.0 486.5 L2.3 454.5 L10.2 440.5 L14.5 418.5 L22.2 407.5 L25.5 398.5 L33.5 391.5 L39.3 376.8 L63.3 351.0 L77.4 344.5 L92.3 332.8 L93.7 329.5 L82.5 314.5 L74.3 309.7 L69.3 302.3 L62.3 298.0 L57.5 290.5 L50.3 285.4 L46.0 277.5 L39.3 272.3 L33.5 255.5 L25.4 246.5 L22.0 211.5 L21.8 181.5 L25.6 142.5 L34.3 130.5 L40.3 113.1 L50.8 99.5 L58.3 93.7 L62.3 86.5 L69.3 81.7 L86.3 63.2 L94.9 58.5 L101.3 50.9 L115.7 45.5 L123.3 37.3 L138.3 34.2 L147.3 26.0 L166.3 22.7 L182.3 13.2 L221.3 10.3 L232.3 3.0 L242.3 1.3 L340.3 1.2 L355.3 9.8 L393.3 13.3 L407.3 22.2 L428.3 25.8 L436.3 33.2 L452.3 37.0 L460.3 44.8 L467.3 46.1 L475.8 43.5 L482.3 28.5 L490.5 22.5 L495.3 15.3 L512.3 9.7 L520.3 2.0 L539.3 0.0 L561.3 1.8 L570.3 8.6 L586.3 14.3 L598.8 26.5 L609.9 43.5 L612.8 80.5 L612.8 193.5 L611.1 217.5 L608.8 224.5 L585.3 249.1 L568.3 254.2 L560.3 261.8 L538.3 264.0 L520.3 261.6 L512.3 254.0 L495.3 249.0 L452.3 207.0 L437.3 201.0 L430.3 193.6 L421.3 189.5 L415.3 182.3 L398.3 178.8 L383.3 169.2 L362.3 166.2 L349.3 157.8 L325.3 156.0 L224.3 157.3 L219.3 159.1 L212.3 165.9 L194.3 169.7 L187.3 177.5 L173.3 183.7 L169.1 191.5 L167.9 210.5 L170.3 223.7 L177.8 229.5 L183.3 237.5 L199.3 242.1 L208.8 250.5 L239.3 253.8 L254.3 262.2 L268.3 263.8 L412.3 264.2 L419.2 267.5 L420.9 275.5 L420.8 409.5 L418.3 417.5 L409.3 420.0 L260.3 421.1 L255.0 422.5 L245.3 429.8 L208.3 434.1 L200.3 441.9 L182.3 446.1 L176.3 453.1 L168.6 457.5 L157.0 469.5 L149.2 484.5 L158.2 511.5 L167.0 517.5 L172.3 524.3 L188.3 530.1 L196.3 537.9 L222.3 542.0 L235.3 550.7 L365.3 552.0 L390.3 550.4 L404.3 541.9 L450.3 538.6 L461.3 530.3 L496.3 526.1 L510.3 517.3 L547.3 516.6 L558.3 518.4 L567.3 526.2 L583.6 530.5 L589.6 538.5 L596.9 543.5 L609.6 560.5 L612.8 585.5 L610.0 618.5 L584.3 645.2 L569.3 650.9 L561.3 658.7 L545.3 662.8 L535.3 671.2 L518.3 673.9 L508.3 681.9 L472.3 686.0 L461.3 694.4 L399.3 698.2 L390.3 700.3 L379.3 706.6 L348.3 707.5 Z" fill="currentColor"/><circle cx="841.5" cy="576.6" r="109" fill="#e5484d"/></svg></div>
+          <div class="wlc-titles">
+            <div class="wlc-h1">Open E.Hub</div>
+            <div class="wlc-h2">Engineering Toolkit</div>
+          </div>
+        </div>
+
+        <!-- Tool launch tiles -->
+        <div id="welcome-cards"></div>
+
+        <!-- Le azioni Nuovo/Apri/Salva progetto e il toggle tema chiaro/scuro
+             vivono SOLO in sidebar (#side-proj, #theme-btn): erano duplicati
+             qui, comprimendo lo spazio verticale per #welcome-cards. -->
+        <div class="wlc-hints">↑ ↓ naviga · Enter apri · T tema · B sidebar · R ricarica</div>
+
+        <!-- Suggerimento + crediti -->
+        <div class="wlc-footer">
+          <div class="protip" id="hub-protip"></div>
+          <div class="hub-legal-link">
+            <button type="button" onclick="openCredits()">Crediti</button>
+            <span class="hub-legal-sep">·</span>
+            <button type="button" onclick="openLegal()">Note legali</button>
+          </div>
+          <!-- Edition: badge/logo secondo il profilo al login (admin / azienda) -->
+          <div class="hub-edition" id="hub-edition"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast hub (es. avviso uso interno all'avvio) -->
+    <div id="hub-toast" class="hub-toast" role="status" aria-live="polite"></div>
+
+    <!-- Guida Open E.Hub: ora manuale unico condiviso (visore F1) che aggrega la
+         panoramica hub + la guida di ogni tool. Contenuti in main.js (registerGuide). -->
+
+    <!-- BACKUP DATI: esporta/importa ciò che Open E.Hub ha imparato lavorando. -->
+    <div id="backup-overlay" class="cl-overlay" onclick="if(event.target===this)closeBackup()">
+      <div class="cl-box" role="dialog" aria-label="Backup dati">
+        <div class="cl-head">
+          <span class="cl-title">Backup dati</span>
+          <button class="cl-close" onclick="closeBackup()" title="Chiudi (Esc)">✕</button>
+        </div>
+        <div class="cl-body">
+          <p>Qui salvi quello che hai insegnato a Open E.Hub mentre lavoravi: cosa sono i blocchi del tuo CAD, quali non vanno computati, a quale voce di prezzario corrispondono, e le voci che hai composto con le loro <b>Analisi Prezzi</b>.</p>
+          <p class="bk-warn" id="bk-warn">Questi dati stanno <b>solo su questo computer</b>, perché per ora non c'è un server aziendale che li tenga insieme per tutti. Finché non ci sarà, il backup è il modo per passarli a un collega, spostarli su un altro PC o non perderli.</p>
+          <div id="bk-list" class="bk-list"><!-- inventario, via JS --></div>
+          <div class="bk-acts">
+            <button class="ehb-btn ehb-btn--accent" onclick="backupEsporta()">↓ Esporta backup</button>
+            <button class="ehb-btn" onclick="backupEsportaCsv()" title="Il catalogo in CSV: si apre in Excel e si verifica riga per riga">↓ Catalogo in CSV</button>
+            <span class="ehb-hdr__spacer"></span>
+            <button class="ehb-btn" onclick="document.getElementById('bk-file').click()" title="Importa una memoria: UNISCE al tuo lavoro, non lo cancella">↑ Importa…</button>
+            <input type="file" id="bk-file" accept=".json" hidden onchange="backupImporta(this)">
+          </div>
+          <p class="hub-guide-note">Importare <b>unisce</b>: le tue decisioni restano, arrivano solo quelle che qui non c'erano. Prima di scrivere qualcosa ti viene detto cosa contiene il file.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aspetto: impostazioni grafiche di suite (palette, font, dimensione testo, densità, ombre, animazioni) -->
+    <div id="appearance-overlay" class="cl-overlay" onclick="if(event.target===this)closeAppearance()">
+      <div class="cl-box" role="dialog" aria-label="Aspetto Open E.Hub">
+        <div class="cl-head">
+          <span class="cl-title">Aspetto · Open E.Hub</span>
+          <button class="cl-close" onclick="closeAppearance()" title="Chiudi (Esc)">✕</button>
+        </div>
+        <div class="cl-body">
+          <div class="set-grid">
+            <div class="set-row">
+              <div class="set-row__lbl">Palette</div>
+              <details class="set-disclosure" id="paletteDisclosure">
+                <summary class="set-disclosure__summary">
+                  <span class="wlc-swatch" id="paletteTriggerSwatch" aria-hidden="true"><span class="wlc-swatch__surf"></span><span class="wlc-swatch__panel"></span><span class="wlc-swatch__text"></span><span class="wlc-swatch__acc"></span></span>
+                  <span class="set-disclosure__val" id="paletteTriggerLabel">Palette</span>
+                  <svg class="set-disclosure__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </summary>
+                <div class="set-palette" role="group" aria-label="Palette colori">
+                  <button type="button" class="set-sw wlc-theme-opt" role="menuitemradio" data-palette-opt="ardesia" data-desc="grigio-blu slate" onclick="setPalette('ardesia')"><span class="wlc-swatch wlc-swatch--ardesia" aria-hidden="true"><span class="wlc-swatch__surf"></span><span class="wlc-swatch__panel"></span><span class="wlc-swatch__text"></span><span class="wlc-swatch__acc"></span></span><span class="set-sw__name">Ardesia</span></button>
+                  <button type="button" class="set-sw wlc-theme-opt" role="menuitemradio" data-palette-opt="carbonio" data-desc="grafite neutro" onclick="setPalette('carbonio')"><span class="wlc-swatch wlc-swatch--carbonio" aria-hidden="true"><span class="wlc-swatch__surf"></span><span class="wlc-swatch__panel"></span><span class="wlc-swatch__text"></span><span class="wlc-swatch__acc"></span></span><span class="set-sw__name">Carbonio</span></button>
+                  <button type="button" class="set-sw wlc-theme-opt" role="menuitemradio" data-palette-opt="pergamena" data-desc="seppia/avorio caldo" onclick="setPalette('pergamena')"><span class="wlc-swatch wlc-swatch--pergamena" aria-hidden="true"><span class="wlc-swatch__surf"></span><span class="wlc-swatch__panel"></span><span class="wlc-swatch__text"></span><span class="wlc-swatch__acc"></span></span><span class="set-sw__name">Pergamena</span></button>
+                  <button type="button" class="set-sw wlc-theme-opt" role="menuitemradio" data-palette-opt="notturno" data-desc="blu-verde freddo, low-blue-light" onclick="setPalette('notturno')"><span class="wlc-swatch wlc-swatch--notturno" aria-hidden="true"><span class="wlc-swatch__surf"></span><span class="wlc-swatch__panel"></span><span class="wlc-swatch__text"></span><span class="wlc-swatch__acc"></span></span><span class="set-sw__name">Notturno</span></button>
+                  <button type="button" class="set-sw wlc-theme-opt" role="menuitemradio" data-palette-opt="inchiostro" data-desc="contrasto massimo, accessibilità" onclick="setPalette('inchiostro')"><span class="wlc-swatch wlc-swatch--inchiostro" aria-hidden="true"><span class="wlc-swatch__surf"></span><span class="wlc-swatch__panel"></span><span class="wlc-swatch__text"></span><span class="wlc-swatch__acc"></span></span><span class="set-sw__name">Inchiostro</span></button>
+                </div>
+              </details>
+            </div>
+            <div class="set-row">
+              <div class="set-row__lbl">Font</div>
+              <details class="set-disclosure" id="fontDisclosure">
+                <summary class="set-disclosure__summary">
+                  <span class="set-disclosure__val" id="fontTriggerLabel">JetBrains Mono</span>
+                  <svg class="set-disclosure__chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </summary>
+                <div class="set-font" role="group" aria-label="Font di sistema">
+                  <button type="button" class="set-font-opt" data-font-opt="jetbrains-mono" style="font-family:'JetBrains Mono'" onclick="setFont('jetbrains-mono')" title="Default">JetBrains Mono</button>
+                  <button type="button" class="set-font-opt" data-font-opt="cormorant" style="font-family:'Cormorant'" onclick="setFont('cormorant')">Cormorant</button>
+                  <button type="button" class="set-font-opt" data-font-opt="sistema" style="font-family:-apple-system,'Segoe UI',system-ui,sans-serif" onclick="setFont('sistema')">Sistema</button>
+                  <button type="button" class="set-font-opt" data-font-opt="pixelify" style="font-family:'Pixelify Sans'" onclick="setFont('pixelify')">Pixelify Sans</button>
+                  <button type="button" class="set-font-opt" data-font-opt="fredoka" style="font-family:'Fredoka'" onclick="setFont('fredoka')">Fredoka</button>
+                </div>
+              </details>
+            </div>
+            <div class="set-row">
+              <div class="set-row__lbl">Dimensione testo</div>
+              <!-- Slider CONTINUO (US-text-scale-slider): pilota --ui-scale in modo
+                   graduale invece dei 4 preset S/M/L/XL. Lo zoom di pagina resta il
+                   meccanismo (Chromium scala testo+spaziature+icone). -->
+              <div class="set-scale" role="group" aria-label="Dimensione testo">
+                <button type="button" class="set-scale__mini" onclick="nudgeUiScale(-0.05)" aria-label="Riduci">A−</button>
+                <input type="range" id="ui-scale-range" class="set-scale__range" min="0.8" max="1.4" step="0.01" value="1"
+                       aria-label="Dimensione testo" oninput="setUiScale(this.valueAsNumber)">
+                <button type="button" class="set-scale__mini" onclick="nudgeUiScale(0.05)" aria-label="Aumenta">A+</button>
+                <!-- Casella numerica: valore in % digitabile (80–140), sincronizzata con lo slider. -->
+                <span class="set-scale__num" role="group">
+                  <input type="number" id="ui-scale-num" class="set-scale__numin" min="80" max="140" step="1" value="100"
+                         aria-label="Dimensione testo in percentuale" onchange="setUiScalePct(this.valueAsNumber)"
+                         onkeydown="if(event.key==='Enter'){setUiScalePct(this.valueAsNumber);this.blur();}">%
+                </span>
+              </div>
+            </div>
+            <div class="set-row">
+              <div class="set-row__lbl">Densità</div>
+              <div class="set-seg" role="group" aria-label="Densità UI">
+                <button type="button" class="set-seg__opt" data-density-opt="comfortable" onclick="setDensity('comfortable')">Normale</button>
+                <button type="button" class="set-seg__opt" data-density-opt="compact" onclick="setDensity('compact')">Compatta</button>
+              </div>
+            </div>
+            <div class="set-row">
+              <div class="set-row__lbl">Ombre</div>
+              <div class="set-seg set-seg--wrap" role="group" aria-label="Intensità ombre">
+                <button type="button" class="set-seg__opt" data-shadow-opt="flat" onclick="setShadow('flat')">Piatte</button>
+                <button type="button" class="set-seg__opt" data-shadow-opt="soft" onclick="setShadow('soft')">Soft</button>
+                <button type="button" class="set-seg__opt" data-shadow-opt="normal" onclick="setShadow('normal')">Normale</button>
+                <button type="button" class="set-seg__opt" data-shadow-opt="deep" onclick="setShadow('deep')">Profonde</button>
+              </div>
+            </div>
+            <div class="set-row">
+              <div class="set-row__lbl">Animazioni</div>
+              <div class="set-seg" role="group" aria-label="Animazioni">
+                <button type="button" class="set-seg__opt" data-motion-opt="normal" onclick="setMotion('normal')">Normali</button>
+                <button type="button" class="set-seg__opt" data-motion-opt="reduced" onclick="setMotion('reduced')">Ridotte</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Crediti (autore + sviluppo assistito da AI + proprietà intellettuale) -->
+    <div id="credits-overlay" class="cl-overlay" onclick="if(event.target===this)closeCredits()">
+      <div class="cl-box" role="dialog" aria-label="Crediti Open E.Hub">
+        <div class="cl-head">
+          <span class="cl-title">Crediti · Open E.Hub</span>
+          <button class="cl-close" onclick="closeCredits()" title="Chiudi (Esc)">✕</button>
+        </div>
+        <div id="credits-body" class="cl-body"></div>
+      </div>
+    </div>
+
+    <!-- Note legali (strumento di verifica + marchi di terzi a fini di interoperabilità) -->
+    <div id="legal-overlay" class="cl-overlay" onclick="if(event.target===this)closeLegal()">
+      <div class="cl-box" role="dialog" aria-label="Note legali Open E.Hub">
+        <div class="cl-head">
+          <span class="cl-title">Note legali · Open E.Hub</span>
+          <button class="cl-close" onclick="closeLegal()" title="Chiudi (Esc)">✕</button>
+        </div>
+        <div id="legal-body" class="cl-body"></div>
+      </div>
+    </div>
+
+
+    <!-- Frames container -->
+    <div id="frames"></div>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay">
+      <div class="spinner"></div>
+      <div id="loading-name">Caricamento…</div>
+    </div>
+
+    <!-- Error overlay -->
+    <div id="error-overlay">
+      <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="var(--red)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div id="error-msg"></div>
+      <div id="error-hint"></div>
+      <button onclick="goHome()" style="margin-top:4px;background:var(--panel2);border:1px solid var(--line2);color:var(--muted);padding:7px 16px;border-radius:var(--r);font-size:12px;cursor:pointer;font-family:var(--sans);">← Torna alla home</button>
+    </div>
+  </div>
+</div>
+
+<!-- Il login NON vive più qui: la scena di accesso (edizione server) è la
+     pagina pubblica src/web-login/index.html — così l'HTML dell'app non viene
+     consegnato a chi non è autenticato (vedi middleware.ts). In edizione
+     desktop non c'è login (profilo admin locale, vedi ui/auth.js initAuth). -->
+<!-- Project gate: a schermo intero, NON dismissibile (niente Esc, niente click
+     fuori) — compare solo quando non c'è un progetto Open E.Hub attivo in sessione
+     (hubState.id === null), vedi syncProjectGate() in ui/bus.js. Le due CTA
+     riusano newEhubProject()/openEhubProject() già esistenti (sidebar/app-bar):
+     nessuna logica duplicata, solo un secondo punto d'ingresso. -->
+<div id="project-gate" hidden>
+  <div class="pg-box" role="dialog" aria-modal="true" aria-label="Scegli un progetto">
+    <div class="pg-mark" aria-hidden="true"><svg class="ehb-mark-svg" viewBox="-18 -18 986.5 744" xmlns="http://www.w3.org/2000/svg"><path d="M348.3 707.5 L280.3 708.0 L244.3 705.8 L226.3 697.7 L186.3 694.8 L173.3 685.9 L148.3 682.2 L140.3 674.4 L123.4 670.5 L115.3 662.1 L99.3 657.0 L94.3 650.3 L85.3 645.5 L68.0 627.5 L60.2 622.5 L44.9 603.5 L38.2 598.5 L33.4 589.5 L26.1 583.5 L21.4 567.5 L13.8 559.5 L9.5 534.5 L1.8 521.5 L0.0 486.5 L2.3 454.5 L10.2 440.5 L14.5 418.5 L22.2 407.5 L25.5 398.5 L33.5 391.5 L39.3 376.8 L63.3 351.0 L77.4 344.5 L92.3 332.8 L93.7 329.5 L82.5 314.5 L74.3 309.7 L69.3 302.3 L62.3 298.0 L57.5 290.5 L50.3 285.4 L46.0 277.5 L39.3 272.3 L33.5 255.5 L25.4 246.5 L22.0 211.5 L21.8 181.5 L25.6 142.5 L34.3 130.5 L40.3 113.1 L50.8 99.5 L58.3 93.7 L62.3 86.5 L69.3 81.7 L86.3 63.2 L94.9 58.5 L101.3 50.9 L115.7 45.5 L123.3 37.3 L138.3 34.2 L147.3 26.0 L166.3 22.7 L182.3 13.2 L221.3 10.3 L232.3 3.0 L242.3 1.3 L340.3 1.2 L355.3 9.8 L393.3 13.3 L407.3 22.2 L428.3 25.8 L436.3 33.2 L452.3 37.0 L460.3 44.8 L467.3 46.1 L475.8 43.5 L482.3 28.5 L490.5 22.5 L495.3 15.3 L512.3 9.7 L520.3 2.0 L539.3 0.0 L561.3 1.8 L570.3 8.6 L586.3 14.3 L598.8 26.5 L609.9 43.5 L612.8 80.5 L612.8 193.5 L611.1 217.5 L608.8 224.5 L585.3 249.1 L568.3 254.2 L560.3 261.8 L538.3 264.0 L520.3 261.6 L512.3 254.0 L495.3 249.0 L452.3 207.0 L437.3 201.0 L430.3 193.6 L421.3 189.5 L415.3 182.3 L398.3 178.8 L383.3 169.2 L362.3 166.2 L349.3 157.8 L325.3 156.0 L224.3 157.3 L219.3 159.1 L212.3 165.9 L194.3 169.7 L187.3 177.5 L173.3 183.7 L169.1 191.5 L167.9 210.5 L170.3 223.7 L177.8 229.5 L183.3 237.5 L199.3 242.1 L208.8 250.5 L239.3 253.8 L254.3 262.2 L268.3 263.8 L412.3 264.2 L419.2 267.5 L420.9 275.5 L420.8 409.5 L418.3 417.5 L409.3 420.0 L260.3 421.1 L255.0 422.5 L245.3 429.8 L208.3 434.1 L200.3 441.9 L182.3 446.1 L176.3 453.1 L168.6 457.5 L157.0 469.5 L149.2 484.5 L158.2 511.5 L167.0 517.5 L172.3 524.3 L188.3 530.1 L196.3 537.9 L222.3 542.0 L235.3 550.7 L365.3 552.0 L390.3 550.4 L404.3 541.9 L450.3 538.6 L461.3 530.3 L496.3 526.1 L510.3 517.3 L547.3 516.6 L558.3 518.4 L567.3 526.2 L583.6 530.5 L589.6 538.5 L596.9 543.5 L609.6 560.5 L612.8 585.5 L610.0 618.5 L584.3 645.2 L569.3 650.9 L561.3 658.7 L545.3 662.8 L535.3 671.2 L518.3 673.9 L508.3 681.9 L472.3 686.0 L461.3 694.4 L399.3 698.2 L390.3 700.3 L379.3 706.6 L348.3 707.5 Z" fill="currentColor"/><circle cx="841.5" cy="576.6" r="109" fill="#e5484d"/></svg></div>
+    <div class="pg-title">Prima di iniziare</div>
+    <p class="pg-sub">Scegli un progetto per lavorare: così il tuo lavoro resta separato da quello di altri progetti e puoi ritrovarlo (.ehub).</p>
+    <div class="pg-acts">
+      <button type="button" class="pg-btn pg-btn--accent" onclick="newEhubProject()">Nuovo progetto</button>
+      <button type="button" class="pg-btn" onclick="openEhubProject()">Apri progetto…</button>
+    </div>
+  </div>
+</div>
+
+<!-- Il pannello admin è ora il tool α Alfa (src/tools/alfa/): il bottone
+     "Admin" in Impostazioni apre α con launchApp('alfa-control-center'),
+     visibile SOLO al profilo amministratore (vedi engine/visibility.ts). -->
+
+<!-- Fonte di verità versioni (resta esterno: usato anche da Node). -->
+<script src="versions.js"></script>
+<script type="module" src="./main.js"></script>
+</body>
+</html>

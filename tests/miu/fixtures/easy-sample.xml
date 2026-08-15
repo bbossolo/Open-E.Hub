@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EASY:Prezzario xmlns:EASY="https://prezzario.calabriallpp.it/prezzario.xsd">
+    <EASY:intestazione autore="Regione Calabria" versione="0.2">
+        <EASY:dettaglio anno="2025" versione="0" area="Ambito Regionale"/>
+        <EASY:copyright tipo="CC BY 3.0" descrizione="Creative commons: CC BY"/>
+    </EASY:intestazione>
+    <EASY:Contenuto>
+        <EASY:Articolo cam="0" codice="CAL25_01.A01.001.001">
+            <EASY:livello1><![CDATA[NUOVE COSTRUZIONI EDILI: I prezzi sono relativi a una nuova costruzione di edilizia civile e si riferiscono a lavori con normali difficoltà di esecuzione.]]></EASY:livello1>
+            <EASY:livello2><![CDATA[BONIFICA DA ORDIGNI BELLICI]]></EASY:livello2>
+            <EASY:livello3><![CDATA[Localizzazione, bonifica e scavi stratigrafici]]></EASY:livello3>
+            <EASY:livello4><![CDATA[Localizzazione e bonifica delle aree mediante ricerca superficiale di eventuali ordigni esplosivi, eseguita da tecnici specializzati fino a profondità di m 1,00, con idonea apparecchiatura cerca metalli munita di avvisatore acustico e con trasmissione dei segnali]]></EASY:livello4>
+            <EASY:um><![CDATA[m²]]></EASY:um>
+            <EASY:prezzo>1.5605</EASY:prezzo>
+            <EASY:Analisi>
+                <EASY:vocedettaglio ordine="1" cam="0" codice="CAL25_AT.N40.001.001" tipo="CAL25_AT" udm="ora" quantita="0.0132" prezzo="35.20000" importo="0.46464">
+                    <EASY:descrizione><![CDATA[Rilevazione ordigni bellici - Apparecchiatura per rilevazione superficiale di ordigni bellici]]></EASY:descrizione>
+                </EASY:vocedettaglio>
+                <EASY:totaleparziale valore="1.2336"/>
+                <EASY:spesegenerali percentuale="15" valore="0.18504" />
+                <EASY:onerisicurezza percentuale="1" valore="0.00185" />
+                <EASY:utileimpresa percentuale="10" valore="0.14186"/>
+                <EASY:prezzo valore="1.56050"/>
+                <EASY:incidenzamanodopera percentuale="49.28" valore="0.76896"/>
+                <EASY:incidenzasicurezza percentuale="0.12"/>
+            </EASY:Analisi>
+        </EASY:Articolo>
+        <EASY:Articolo cam="0" codice="CAL25_01.A01.001.002">
+            <EASY:livello1><![CDATA[NUOVE COSTRUZIONI EDILI: I prezzi sono relativi a una nuova costruzione di edilizia civile e si riferiscono a lavori con normali difficoltà di esecuzione.]]></EASY:livello1>
+            <EASY:livello2><![CDATA[BONIFICA DA ORDIGNI BELLICI]]></EASY:livello2>
+            <EASY:livello3><![CDATA[Localizzazione, bonifica e scavi stratigrafici]]></EASY:livello3>
+            <EASY:livello4><![CDATA[Localizzazione e bonifica delle aree mediante ricerca profonda di eventuali ordigni esplosivi]]></EASY:livello4>
+            <EASY:um><![CDATA[m]]></EASY:um>
+            <EASY:prezzo>11.02884</EASY:prezzo>
+        </EASY:Articolo>
+        <EASY:Articolo cam="0" codice="CAL25_01.A01.999.000">
+            <EASY:livello1><![CDATA[VOCE SENZA PREZZO]]></EASY:livello1>
+            <EASY:livello4><![CDATA[Riga di sezione/titolo senza prezzo da scartare]]></EASY:livello4>
+            <EASY:um><![CDATA[m²]]></EASY:um>
+            <EASY:prezzo>0</EASY:prezzo>
+        </EASY:Articolo>
+    </EASY:Contenuto>
+</EASY:Prezzario>

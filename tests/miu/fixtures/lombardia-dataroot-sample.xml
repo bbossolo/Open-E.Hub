@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataroot xmlns:od="urn:schemas-microsoft-com:officedata" generated="2026-05-21T18:13:20">
+<F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<Codice>LOM261.1C</Codice>
+<Declaratoria>OPERE COMPIUTE</Declaratoria>
+</F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<Codice>LOM261.1C.00</Codice>
+<Declaratoria>ANALISI DIAGNOSTICHE</Declaratoria>
+</F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<Codice>LOM261.1C.00.010</Codice>
+<Declaratoria>CONTROLLI NON DISTRUTTIVI O SEMI-DISTRUTTIVI</Declaratoria>
+</F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<Codice>LOM261.1C.00.010.0010</Codice>
+<Declaratoria>Misura della durezza superficiale delle strutture in c.a. mediante sclerometro manuale o elettronico. Valutazione della resistenza caratteristica a compressione Rck del calcestruzzo costituente strutture in c.a. a mezzo di prove di misura della durezza superficiale del getto mediante sclerometro manuale o elettronico, al fine di fornire la resistenza caratteristica come media di almeno 10 letture (o battute). E&apos; compreso quanto altro occorre per dare i risultati della misurazione completi. Il prezzo è riferito a ciascuna battuta.</Declaratoria>
+<U_M>cad</U_M>
+<Prezzo>1.44</Prezzo>
+<Importo_senza_SG_e_UI>1.14</Importo_senza_SG_e_UI>
+<Rapporto_RU>0.456140350877193</Rapporto_RU>
+</F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<Codice>LOM261.1C.00.010.0030</Codice>
+<Declaratoria>Prova di estrazione con espansione (pull-out). Valutazione semi distruttiva della resistenza a compressione del cls di strutture in c.a. mediante prova di estrazione (pull-out). E&apos; compreso quanto altro occorre per dare i risultati della prova completi.</Declaratoria>
+<U_M>100 kg</U_M>
+<Prezzo>72.56</Prezzo>
+<Importo_senza_SG_e_UI>57.36</Importo_senza_SG_e_UI>
+<Rapporto_RU>0.208682008368201</Rapporto_RU>
+</F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+<Codice>LOM261.1E.03.030.0140.k</Codice>
+<Declaratoria>Interruttore automatico magnetotermico salvamotore, modulare con modulo di 17,5 mm, 3 poli, nelle taglie:
+- campo di regolazione 9÷14 A, corrente d&apos;intervento magnetico Im 170 A</Declaratoria>
+<U_M>cad</U_M>
+<Prezzo>64.77</Prezzo>
+<Importo_senza_SG_e_UI>51.2</Importo_senza_SG_e_UI>
+<Rapporto_RU>0.1263671875</Rapporto_RU>
+</F_x0029__x0020_Parte_x0020_4_x0020_-_x0020_Elenco_x0020_prezzi>
+</dataroot>

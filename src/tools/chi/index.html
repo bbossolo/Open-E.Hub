@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it" data-tool="chi" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- CSP — nessuno schema http:/https: compare in questa policy: la suite non può
+     caricare nulla dalla rete né spedire nulla fuori, e non è più solo una promessa
+     del codice. 'unsafe-inline'/'unsafe-eval' servono perché i bundle sono file
+     unici (tutto inlinato) e pdf.js/JSZip usano eval al proprio interno; la via
+     d'esecuzione JS dei PDF ostili è chiusa alla fonte con isEvalSupported:false. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob:; script-src 'self' file: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' file: data: 'unsafe-inline'; img-src 'self' file: data: blob:; font-src 'self' file: data:; connect-src 'self' file: data: blob:; worker-src 'self' file: blob:; frame-src 'self' file: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>χ Refs — Normalizzazione delle basi DXF</title>
+<!-- Design system condiviso: token + componenti; χ tiene solo i propri specifici.
+     Accento blu oltremare (data-tool="chi"). -->
+<link rel="stylesheet" href="../../shared/ui/tokens.css">
+<link rel="stylesheet" href="../../shared/ui/components.css">
+<link rel="stylesheet" href="./styles/chi.css">
+</head>
+<body>
+
+<header class="ehb-hdr" data-tool="chi">
+  <div class="ehb-hdr__brand">
+    <div class="ehb-logo" data-tool="chi"><span class="ehb-logo__glyph"><svg class="ehb-glyph-svg" viewBox="0 -800 600 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 180 216 -197 33 -550H198L274 -390Q285 -368 292.5 -350Q300 -332 302 -324Q304 -332 311 -350Q318 -368 328 -390L406 -550H567L384 -197L580 180H415L327 0Q317 -22 309 -41Q301 -60 297 -70Q294 -60 287 -41Q280 -22 269 0L181 180Z" fill="currentColor"/></svg></span></div>
+    <div class="ehb-hdr__brand-txt">
+      <span class="ehb-hdr__brand-name"><span class="ehb-name-glyph"><svg class="ehb-glyph-svg" viewBox="0 -800 600 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 180 216 -197 33 -550H198L274 -390Q285 -368 292.5 -350Q300 -332 302 -324Q304 -332 311 -350Q318 -368 328 -390L406 -550H567L384 -197L580 180H415L327 0Q317 -22 309 -41Q301 -60 297 -70Q294 -60 287 -41Q280 -22 269 0L181 180Z" fill="currentColor"/></svg></span> Refs</span>
+      <span class="ehb-hdr__brand-sub">basi DXF esterne → riferimento esterno · layer dello studio · scala 1:1</span>
+    </div>
+  </div>
+  <div class="ehb-hdr__spacer"></div>
+  <div class="ehb-hdr__actions">
+    <button id="btnTheme" class="ehb-icon-btn" onclick="toggleTheme()" title="Cambia tema (chiaro/scuro) di questo tool">☾</button>
+    <button id="btnGuide" class="ehb-guide-btn" onclick="openGuide()" title="Guida rapida a χ Refs">? Guida</button>
+  </div>
+</header>
+
+<!-- Binario di flusso — navigazione REALE (mostraVista), non decorazione. -->
+<nav id="chi-rail" class="ehb-rail" aria-label="Fasi di lavoro">
+  <div id="cTabApri" class="ehb-rail-step active" data-step="apri" data-fam="create" onclick="mostraVista('apri')" title="Apri la base DXF da normalizzare (1)"><span class="rail-k">1</span><span class="dot"></span>Apri</div>
+  <div class="ehb-rail-sep"></div>
+  <div id="cTabFondi" class="ehb-rail-step" data-step="fondi" data-fam="assign" onclick="mostraVista('fondi')" title="Smista i layer ed esporta (2)"><span class="rail-k">2</span><span class="dot"></span>Smista ed esporta</div>
+</nav>
+
+<main id="app">
+
+  <!-- ══ VISTA 1 — APRI ══ -->
+  <section id="view-apri" class="c-view">
+    <div id="cDrop" class="ehb-dropzone c-drop" onclick="apriFileClick()" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="onDragLeave()">
+      <h2 class="c-drop__tit">Normalizzazione di una base DXF</h2>
+      <p class="c-drop__sub">Rimappa i layer sullo standard dello studio, spegne quelli non pertinenti e dichiara le unità di misura. La geometria non viene modificata.</p>
+      <ol class="c-passi">
+        <li><b>Apri</b> il file, o trascinalo qui.</li>
+        <li><b>Smista</b> i layer: trascina a destra ciò che serve, spegni il resto.</li>
+        <li><b>Esporta</b> il riferimento esterno.</li>
+      </ol>
+      <button class="ehb-btn ehb-btn--accent-soft" onclick="apriFileClick()">Apri un DXF…</button>
+      <input id="cFile" type="file" accept=".dxf" hidden onchange="onFileScelto(event)">
+    </div>
+  </section>
+
+  <!-- ══ VISTA 2 — FONDI ══ -->
+  <section id="view-fondi" class="c-view" hidden>
+    <div id="cScheda" class="c-scheda"></div>
+    <div id="cProfilo" class="c-profilo"></div>
+
+    <!-- Barra strumenti in alto, come nel resto della suite: le azioni stanno
+         tutte insieme sopra il lavoro, non sparse dentro le colonne. -->
+    <div class="c-barra c-barra--alto">
+      <button class="ehb-btn ehb-btn--accent-soft" id="btnSmista" onclick="smistaAuto()">⚡ Smista automaticamente</button>
+      <select class="ehb-select c-preset" onchange="cambiaPreset(this.value)" title="Cosa proporre in automatico">
+        <option value="essenziale">Solo murature e arredi</option>
+        <option value="completo">Mappatura completa</option>
+      </select>
+      <span class="c-barra__sep" aria-hidden="true"></span>
+      <button class="ehb-btn ehb-btn--ghost" onclick="nuovoLayer()" title="Crea un layer che non è nello standard">+ Nuovo layer</button>
+      <button class="ehb-btn ehb-btn--ghost" onclick="spegniRestanti()" title="Manda fra gli spenti tutto quello che resta">Spegni i restanti</button>
+      <div class="c-barra__spacer"></div>
+      <span id="cRiepilogo" class="c-riepilogo"></span>
+    </div>
+
+    <!-- LA VISTA PRINCIPALE: si prende da sinistra e si porta a destra. -->
+    <div class="c-trasferimento">
+      <section id="cSorgente" class="c-col c-col--sorgente" aria-label="Layer del file"></section>
+      <div class="c-verso" aria-hidden="true"><span class="c-verso__freccia">→</span></div>
+      <section id="cDestinazioni" class="c-col c-col--dest" aria-label="Layer dello studio"></section>
+    </div>
+
+    <div class="c-barra">
+      <label class="c-check"><input type="checkbox" id="cPreservaTesti" checked onchange="cambiaOpzione('preservaTesti', this.checked)"> preserva i testi su TESTI</label>
+      <label class="c-check"><input type="checkbox" id="cByLayer" checked onchange="cambiaOpzione('forzaByLayer', this.checked)"> colore dal layer (BYLAYER)</label>
+      <div id="cScala" class="c-scala"></div>
+      <div class="c-barra__spacer"></div>
+      <button class="ehb-btn ehb-btn--accent-soft" onclick="esportaXref()">↓ Esporta l’xref</button>
+    </div>
+  </section>
+
+</main>
+
+<script type="module" src="./main.js"></script>
+</body>
+</html>

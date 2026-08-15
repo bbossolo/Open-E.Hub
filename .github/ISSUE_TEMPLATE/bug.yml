@@ -1,0 +1,51 @@
+name: Segnalazione di un problema
+description: Qualcosa non funziona come dovrebbe
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Se il problema è una **vulnerabilità di sicurezza**, non aprire una issue:
+        segui [SECURITY.md](../blob/main/SECURITY.md), così resta privata finché non c'è
+        una correzione.
+  - type: textarea
+    id: cosa-succede
+    attributes:
+      label: Cosa succede
+      description: E cosa ti aspettavi che succedesse.
+    validations:
+      required: true
+  - type: textarea
+    id: passi
+    attributes:
+      label: Come si riproduce
+      description: |
+        I passi, dall'apertura dell'app in poi. Se serve un file per innescarlo
+        (prezzario, PDF, DXF, `.ehub`), allegalo — ma **controlla prima che non contenga
+        dati di un progetto reale**: bastano poche righe di esempio.
+      placeholder: |
+        1. Apro μ Prezzi
+        2. Trascino il file …
+        3. …
+    validations:
+      required: true
+  - type: input
+    id: tool
+    attributes:
+      label: Quale tool
+      placeholder: μ Prezzi · β Contabilità · δ Copertine · χ Refs · α Alfa · l'hub
+  - type: input
+    id: versione
+    attributes:
+      label: Versione di Open E.Hub
+      description: La trovi in basso nell'hub, o in `versions.js`.
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: ambiente
+    attributes:
+      label: Sistema operativo e modo d'uso
+      placeholder: macOS 15 — app Electron · Windows 11 — installer · browser via npm run serve
+    validations:
+      required: true

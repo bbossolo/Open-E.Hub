@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Open E.Hub — Design System (anteprima)</title>
+<link href="../../../vendor/fonts.css" rel="stylesheet">
+<link rel="stylesheet" href="./tokens.css">
+<link rel="stylesheet" href="./components.css">
+<style>
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); transition: var(--tr); }
+  .page { max-width: 1180px; margin: 0 auto; padding: var(--sp-6) var(--sp-5) var(--sp-7); }
+  .topbar { display: flex; align-items: center; gap: var(--sp-4); margin-bottom: var(--sp-6); }
+  .swatches { display: flex; gap: var(--sp-3); margin-left: auto; }
+  .tools-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--sp-5); }
+  @media (max-width: 900px) { .tools-grid { grid-template-columns: 1fr; } }
+  .demo { padding: var(--sp-5); }
+  .demo h3 { margin: 0 0 var(--sp-4); display: flex; align-items: center; gap: var(--sp-3); }
+  .stack { display: flex; flex-direction: column; gap: var(--sp-4); }
+  .inline { display: flex; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+  .sectitle { font: 600 var(--fs-xs)/1 var(--sans); text-transform: uppercase; letter-spacing: .08em; color: var(--faint); margin-bottom: var(--sp-2); }
+  .extras { display: grid; grid-template-columns: repeat(2,1fr); gap: var(--sp-5); margin-top: var(--sp-5); }
+</style>
+</head>
+<body class="ehb-scroll">
+<div class="page">
+
+  <div class="topbar">
+    <div>
+      <h1 class="ehb-h1">Open E.Hub · Design System</h1>
+      <div class="ehb-muted" style="font-size:var(--fs-sm)">Gallery vivente — i componenti condivisi in ogni tema/palette/accento. Contratto: <b>Docs/UI-CONTRACT.md</b></div>
+    </div>
+    <div class="swatches">
+      <label class="ehb-muted" style="font-size:var(--fs-sm)">palette
+        <select class="ehb-select" style="width:auto;display:inline-block" onchange="document.documentElement.dataset.palette=this.value">
+          <option value="ardesia">ardesia</option>
+          <option value="carbonio">carbonio</option>
+          <option value="inchiostro">inchiostro</option>
+          <option value="notturno">notturno</option>
+          <option value="pergamena">pergamena</option>
+        </select>
+      </label>
+      <button class="ehb-btn ehb-btn--ghost" onclick="document.documentElement.dataset.theme = document.documentElement.dataset.theme==='dark'?'light':'dark'">◐ tema</button>
+    </div>
+  </div>
+
+  <div class="tools-grid" id="grid"></div>
+
+  <!-- Extra: modal + toast statici -->
+  <div class="extras">
+    <div class="ehb-panel demo" data-tool="hub">
+      <div class="sectitle">Modal</div>
+      <div class="ehb-modal" style="position:static;width:auto;box-shadow:var(--shadow-2)">
+        <h2 class="ehb-h2">Conferma esportazione</h2>
+        <p class="ehb-muted" style="margin:var(--sp-3) 0 var(--sp-5)">Esportare la distinta in formato PriMus? L'operazione sovrascrive il file esistente.</p>
+        <div class="inline" style="justify-content:flex-end">
+          <button class="ehb-btn ehb-btn--ghost">Annulla</button>
+          <button class="ehb-btn ehb-btn--accent">Esporta</button>
+        </div>
+      </div>
+    </div>
+    <div class="ehb-panel demo" data-tool="miu">
+      <div class="sectitle">Toast & drop-zone</div>
+      <div class="stack">
+        <div class="ehb-toast" style="position:static;transform:none" >✓ Prezzario Lombardia caricato — 39.714 voci</div>
+        <div class="ehb-dropzone">
+          <div style="font-size:24px">↓</div>
+          <div>Trascina qui un file <b>.ldt</b> o <b>.xlsx</b></div>
+          <div class="ehb-muted" style="font-size:var(--fs-xs)">oppure clicca per sfogliare</div>
+        </div>
+      </div>
+    </div>
+    <div class="ehb-panel demo" data-tool="beta">
+      <div class="sectitle">Guida unica (visore F1)</div>
+      <div class="ehb-guide" style="position:static;width:auto;height:280px;box-shadow:var(--shadow-2)">
+        <aside class="ehb-guide__toc">
+          <div class="ehb-guide__toc-head">
+            <span class="ehb-guide__title">Guida Open E.Hub</span>
+            <button class="ehb-btn ehb-btn--ghost ehb-btn--icon">×</button>
+          </div>
+          <nav class="ehb-guide__nav">
+            <div class="ehb-guide__section-lbl">β Contabilità</div>
+            <button class="ehb-guide__nav-item is-active">Oggetto e finalità</button>
+            <button class="ehb-guide__nav-item">Modalità di contabilizzazione</button>
+            <button class="ehb-guide__nav-item">Domande frequenti</button>
+          </nav>
+        </aside>
+        <div class="ehb-guide__content">
+          <section class="ehb-guide__section">
+            <h2>β Contabilità — Contabilità dei lavori pubblici</h2>
+            <article class="ehb-guide__chapter">
+              <h3>Oggetto e finalità</h3>
+              <p>La contabilità dei lavori è il complesso degli atti con cui la direzione dei lavori accerta le lavorazioni eseguite e ne determina il corrispettivo.</p>
+            </article>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const TOOLS = [
+  { tool:'hub',   glyph:'ε', cls:'', name:'Open E.Hub',      sub:'suite impiantistica · illuminotecnica', badge:'brand' },
+  { tool:'miu',   glyph:'μ', cls:'', name:'μ Prezzi',    sub:'Prezzari e computo metrico',   badge:'verde' },
+  { tool:'delta', glyph:'δ', cls:'', name:'δ Copertine', sub:'Copertine degli elaborati',    badge:'rosa' },
+  { tool:'beta',  glyph:'β', cls:'', name:'β Contabilità', sub:'Contabilità lavori pubblici', badge:'porpora' },
+  { tool:'chi',   glyph:'χ', cls:'', name:'χ Refs',      sub:'Basi DXF esterne come xref',   badge:'blu' },
+  { tool:'alfa',  glyph:'α', cls:'', name:'α Alfa',      sub:'Centro di controllo dell\'hub', badge:'neutro' },
+];
+const logo = (t, size='') => `<div class="ehb-logo ${t.cls} ${size}"><span class="ehb-logo__glyph">${t.glyph}</span></div>`;
+document.getElementById('grid').innerHTML = TOOLS.map(t => `
+  <section class="ehb-panel demo" data-tool="${t.tool}">
+    <h3>
+      <div class="ehb-brand">
+        ${logo(t)}
+        <div class="ehb-brand__text">
+          <span class="ehb-brand__name">${t.name}</span>
+          <span class="ehb-brand__sub">${t.sub}</span>
+        </div>
+      </div>
+      <span class="ehb-spacer"></span>
+      <span class="ehb-badge">${t.badge}</span>
+    </h3>
+
+    <div class="stack">
+      <div>
+        <div class="sectitle">Logo (3 taglie) · niente overflow</div>
+        <div class="inline">${logo(t,'ehb-logo--sm')} ${logo(t)} ${logo(t,'ehb-logo--lg')}</div>
+      </div>
+
+      <div>
+        <div class="sectitle">Bottoni · varianti .ehb-btn*</div>
+        <div class="inline">
+          <button class="ehb-btn ehb-btn--accent">Accent</button>
+          <button class="ehb-btn ehb-btn--accent-soft">Accento trasparente</button>
+          <button class="ehb-btn">Secondario</button>
+          <button class="ehb-btn ehb-btn--ghost">Ghost</button>
+          <button class="ehb-btn ehb-btn--danger">Distruttivo</button>
+          <button class="ehb-btn ehb-btn--sm">Small</button>
+          <button class="ehb-btn ehb-btn--icon">⤓</button>
+          <button class="ehb-icon-btn">◐</button>
+          <button class="ehb-btn is-ready">Import <span class="ehb-btn__count">3</span></button>
+          <button class="ehb-btn ehb-btn--accent" disabled>Disabilitato</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="sectitle">Le 5 famiglie ✨ (colore = funzione, uguale in ogni tool)</div>
+        <div class="inline">
+          <button class="ehb-btn-fam-nav">Filtra</button>
+          <button class="ehb-btn-fam-create">Componi</button>
+          <button class="ehb-btn-fam-create-ghost">+ Riga</button>
+          <button class="ehb-btn-fam-assign">Assegna</button>
+          <button class="ehb-btn-fam-danger-ghost">Rimuovi</button>
+          <button class="ehb-btn-fam-danger-outline">Svuota</button>
+          <button class="ehb-btn-fam-export">Esporta <span class="arrow">→</span></button>
+        </div>
+        <nav class="ehb-rail" style="margin-top:var(--sp-3)">
+          <span class="ehb-rail-step active" data-fam="create"><span class="dot"></span>Componi</span>
+          <span class="ehb-rail-sep"></span>
+          <span class="ehb-rail-step"><span class="dot"></span>Misura</span>
+          <span class="ehb-rail-sep"></span>
+          <span class="ehb-rail-step" data-fam="assign"><span class="dot"></span>Categorizza</span>
+          <span class="ehb-rail-sep"></span>
+          <span class="ehb-rail-step" data-fam="export"><span class="dot"></span>Esporta</span>
+        </nav>
+      </div>
+
+      <div>
+        <div class="sectitle">Tab di vista (.ehb-tab · attiva = accento del tool)</div>
+        <nav class="ehb-tabs" role="tablist" style="margin-left:0">
+          <button class="ehb-tab is-active">Panoramica</button>
+          <button class="ehb-tab">Dettaglio</button>
+          <button class="ehb-tab">Esporta</button>
+        </nav>
+      </div>
+
+      <div>
+        <div class="sectitle">Badge & stato</div>
+        <div class="inline">
+          <span class="ehb-badge">accent</span>
+          <span class="ehb-badge ehb-badge--ok">conforme</span>
+          <span class="ehb-badge ehb-badge--warn">verifica</span>
+          <span class="ehb-badge ehb-badge--bad">non conforme</span>
+          <span class="ehb-badge ehb-badge--soft">stabile</span>
+          <span class="inline" style="gap:6px"><span class="ehb-dot ehb-dot--pulse"></span><span class="ehb-muted" style="font-size:var(--fs-sm)">attiva</span></span>
+        </div>
+      </div>
+
+      <div>
+        <div class="sectitle">Campi</div>
+        <div class="inline" style="gap:var(--sp-3)">
+          <input class="ehb-input" style="max-width:180px" placeholder="Cerca…">
+          <select class="ehb-select" style="max-width:150px"><option>Categoria M3</option><option>M4</option></select>
+        </div>
+      </div>
+
+      <div>
+        <div class="sectitle">Tabella</div>
+        <table class="ehb-table">
+          <thead><tr><th>Grandezza</th><th class="ehb-num">Valore</th><th>Esito</th></tr></thead>
+          <tbody>
+            <tr><td>Lav [cd/m²]</td><td class="ehb-num">1.02</td><td><span class="ehb-badge ehb-badge--ok">≥ 1.0</span></td></tr>
+            <tr><td>Uo</td><td class="ehb-num">0.41</td><td><span class="ehb-badge ehb-badge--ok">≥ 0.40</span></td></tr>
+            <tr><td>Ul</td><td class="ehb-num">0.58</td><td><span class="ehb-badge ehb-badge--bad">≥ 0.60</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+`).join('');
+</script>
+</body>
+</html>

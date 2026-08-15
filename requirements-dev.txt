@@ -1,0 +1,5 @@
+# Dipendenze Python di SVILUPPO/CI della suite Open E.Hub.
+# Solo per la validazione severa degli export DXF (tests/shared/dxf-ezdxf.test.ts +
+# scripts/dxf-validate.py): apre i file con un parser tipo-AutoCAD ed esegue l'audit.
+# Installa con:  pip install -r requirements-dev.txt
+ezdxf>=1.1

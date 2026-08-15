@@ -1,0 +1,611 @@
+/* Token dal design system condiviso (tokens.css + components.css, caricati prima).
+   Qui restano solo le variabili locali dell'hub e gli alias verso i nomi legacy
+   usati più in basso. L'accento dell'hub è rosso (4.0.0) (data-tool="hub" sull'<html>). */
+:root{
+  --sidebar-w:236px;
+  --r:var(--radius-sm); --r2:var(--radius);
+  --green:var(--ok); --amber:var(--warn); --red:var(--bad);
+  --grad1:var(--accent); --grad2:var(--accent-h);
+  --sidebar-grad:linear-gradient(180deg, color-mix(in srgb,var(--panel) 58%, var(--bg)) 0%, var(--bg) 100%);
+  /* Scala tipografica dell'hub (leva UNICA, ~Major Third dalla base 13.5px).
+     Tutti i font-size dell'hub usano queste variabili → si tara tutto da qui. */
+  --fs-2xs:10px; --fs-xs:11px; --fs-sm:12px; --fs-base:13.5px;
+  --fs-md:15px; --fs-lg:17px; --fs-xl:24px; --fs-2xl:32px; --fs-mark:44px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:var(--sans);font-size:var(--fs-base);background:var(--bg);color:var(--text);display:flex;flex-direction:column;transition:background .25s,color .25s;}
+#shell{flex:1;display:flex;overflow:hidden;min-height:0;}
+
+/* ── Sidebar ── */
+#sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);background:var(--sidebar-grad);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden;transition:width .2s,min-width .2s;cursor:pointer;}
+/* Le zone morte mostrano il cursore a mano (clic = espandi/collassa);
+   la ricerca mantiene il cursore di testo. */
+#sidebar #search{cursor:text;}
+#sidebar.collapsed{width:60px;min-width:60px;}
+#sidebar.collapsed #brand-txt,
+#sidebar.collapsed #search-wrap,
+#sidebar.collapsed .nav-label,
+#sidebar.collapsed .nav-meta,
+#sidebar.collapsed .nav-right,
+#sidebar.collapsed #stat-row{display:none;}
+/* Sidebar collassata: il footer resta (solo le statistiche). */
+#sidebar.collapsed #sidebar-footer{padding:10px 6px;}
+#sidebar.collapsed #brand{padding:14px 0;flex-direction:column;gap:11px;justify-content:center;align-items:center;}
+#sidebar.collapsed #brand-left{gap:0;}
+#sidebar.collapsed #theme-btn{display:none;}
+#sidebar.collapsed .nav-item{justify-content:center;padding:9px 0;}
+#sidebar.collapsed .nav-item.active::before{display:none;}
+/* In collassato l'attivo evidenzia il CHIP quadrato (anello del colore del tool),
+   non un rettangolo attorno alla voce. */
+#sidebar.collapsed .nav-item.active{background:transparent;border-color:transparent;}
+#sidebar.collapsed #app-list{padding:8px 6px;align-items:center;}
+/* Sotto --bp-sm forziamo l'aspetto "collassato" della sidebar
+   (icone soltanto) così il contenuto non viene schiacciato dai 236px. Riusa gli
+   stessi nascondimenti di .collapsed senza richiederne la classe (che resta il
+   toggle manuale via clic). */
+@media (max-width:640px){
+  #sidebar{width:60px;min-width:60px;}
+  #sidebar #brand-txt,#sidebar #search-wrap,#sidebar .nav-label,#sidebar .nav-meta,
+  #sidebar .nav-right,#sidebar #stat-row,#sidebar .nav-group-title,#sidebar #theme-btn{display:none;}
+  #sidebar #brand{padding:14px 0;flex-direction:column;gap:11px;justify-content:center;align-items:center;}
+  #sidebar #brand-left{gap:0;}
+  #sidebar .nav-item{justify-content:center;padding:9px 0;}
+  #sidebar #app-list{padding:8px 6px;align-items:center;}
+  #sidebar #sidebar-footer{padding:10px 6px;}
+}
+
+#brand{padding:18px 16px 16px;border-bottom:1px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+#brand-left{display:flex;align-items:center;gap:11px;min-width:0;}
+/* glyph-only: niente box-shadow (seguirebbe il QUADRATO); su hover il glifo si
+   accende con un glow glifo-shaped. */
+#brand-mark:hover{text-shadow:0 0 18px color-mix(in srgb,var(--accent) 70%,transparent);transform:translateY(-1px);}
+#brand-txt{cursor:pointer;}
+#brand-txt:hover #brand-name{color:var(--accent);}
+#brand-toggle{width:30px;height:30px;border-radius:8px;background:var(--panel2);border:1px solid var(--line2);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--tr);flex-shrink:0;}
+#brand-toggle:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-dim);}
+#brand-toggle svg{width:16px;height:16px;transition:transform .2s;}
+#sidebar.collapsed #brand-toggle svg{transform:rotate(180deg);}
+#brand-mark{width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-style:normal;font-weight:800;font-size:var(--fs-mark);color:var(--accent);text-shadow:0 0 12px color-mix(in srgb,var(--accent) 45%,transparent);flex-shrink:0;user-select:none;line-height:1;cursor:pointer;transition:var(--tr);}
+#brand-txt{display:flex;flex-direction:column;gap:2px;}
+#brand-name{font-family:var(--mono);font-size:var(--fs-lg);font-weight:600;color:var(--text);letter-spacing:.01em;line-height:1;}
+#brand-name b{color:#e5484d;}
+#brand-sub{font-family:var(--mono);font-size:var(--fs-2xs);color:var(--faint);letter-spacing:.08em;text-transform:uppercase;}
+#theme-btn{background:var(--panel2);border:1px solid var(--line2);border-radius:var(--r);width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--tr);color:var(--muted);flex-shrink:0;}
+#theme-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent-dim);}
+#theme-btn svg{width:15px;height:15px;}
+.icon-sun{display:none;}
+[data-theme="light"] .icon-sun{display:block;}
+[data-theme="light"] .icon-moon{display:none;}
+/* In LIGHT il marchio Open E.Hub (ε + wordmark + punto) è NERO; in dark
+   resta col colore del tool attivo (hub-segue-tool). */
+[data-theme="light"] #brand-mark,
+[data-theme="light"] #brand-name,
+[data-theme="light"] .wlc-mark{color:#000;text-shadow:none;}
+#search-wrap{padding:12px 12px 10px;flex-shrink:0;}
+#search{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--r);color:var(--text);font-family:var(--sans);font-size:var(--fs-base);padding:8px 10px 8px 30px;outline:none;transition:var(--tr);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a8aa8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:10px center;}
+#search::placeholder{color:var(--faint);}
+#search:focus{border-color:var(--accent);background-color:var(--panel3);box-shadow:0 0 0 3px var(--accent-dim);}
+.nav-label{font-family:var(--mono);font-size:var(--fs-xs);font-weight:600;color:var(--faint);letter-spacing:.16em;text-transform:uppercase;padding:6px 16px 8px;flex-shrink:0;display:flex;justify-content:space-between;align-items:center;}
+.nav-label .count{color:var(--accent);background:var(--accent-dim);padding:1px 7px;border-radius:10px;font-size:var(--fs-xs);}
+#app-list{flex:1;overflow-y:auto;padding:0 8px 16px;display:flex;flex-direction:column;gap:3px;}
+.nav-item{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--r2);cursor:pointer;transition:var(--tr);user-select:none;border:1px solid transparent;position:relative;}
+.nav-item:hover{background:var(--panel2);}
+.nav-item:hover .nav-logo{transform:scale(1.06);}
+.nav-item.active{background:var(--panel2);border-color:color-mix(in srgb,var(--accent) 30%,transparent);}
+/* Barra attiva nel colore del TOOL (var(--accent) eredita da data-tool sul nav-item) */
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:18px;border-radius:0 3px 3px 0;background:var(--accent);}
+.nav-item.active .nav-name{color:var(--text);font-weight:600;}
+
+/* ── Glifi accesi/spenti ──
+   Default a RIPOSO: glifo spento, grafite neutro (--muted), così le sessioni
+   vive risaltano per contrasto. Vale in espanso e in collassato. */
+.nav-item .ehb-logo__glyph{color:var(--muted);text-shadow:none;transition:color .2s,text-shadow .2s;}
+/* Voce con SESSIONE VIVA (.live): il glifo si ACCENDE nel colore del tool
+   (var(--accent) eredita da data-tool sulla voce) con un glow tenue; vale sia
+   espanso sia collassato — generalizza la vecchia regola .collapsed .active. */
+.nav-item.live .ehb-logo__glyph{color:var(--accent);text-shadow:0 0 12px color-mix(in srgb,var(--accent) 70%,transparent);font-weight:900;}
+.nav-item.live .nav-name{color:var(--text);}
+/* Voce CORRENTE (.active): enfasi piena anche se non ancora "live" (il frame
+   potrebbe non essere caricato in casi limite) — glifo acceso nel colore-tool. */
+.nav-item.active .ehb-logo__glyph{color:var(--accent);text-shadow:0 0 12px color-mix(in srgb,var(--accent) 70%,transparent);font-weight:900;}
+
+/* ehb-logo (design system) ridimensionato per il contesto nav. */
+.nav-logo{--logo-size:32px;border-radius:9px;}
+.nav-meta{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.nav-name{font-size:var(--fs-base);font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
+.nav-tagline{font-size:var(--fs-sm);color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.1;}
+.nav-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}
+.nav-ver{font-family:var(--mono);font-size:var(--fs-xs);color:var(--faint);}
+.nav-badge{font-family:var(--mono);font-size:var(--fs-2xs);font-weight:600;padding:1px 5px;border-radius:3px;letter-spacing:.04em;text-transform:uppercase;}
+.nav-badge.beta{color:var(--amber);background:color-mix(in srgb,var(--amber) 18%,transparent);}
+.nav-badge.wip{color:var(--faint);background:var(--panel2);}
+#list-empty{display:none;padding:20px 16px;font-size:var(--fs-sm);color:var(--faint);text-align:center;}
+#sidebar-footer{padding:12px 16px;border-top:1px solid var(--line);flex-shrink:0;}
+/* Progetto Open E.Hub nella sidebar (Apri/Salva .ehub) — ripristinati nel footer. */
+#side-proj{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;}
+.side-proj-btn{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r2);border:1px solid var(--line);background:var(--panel2);color:var(--text);font-family:var(--mono);font-size:var(--fs-base);cursor:pointer;transition:var(--tr);width:100%;text-align:left;}
+.side-proj-btn svg{width:16px;height:16px;flex-shrink:0;color:var(--muted);transition:var(--tr);}
+.side-proj-btn:hover{border-color:color-mix(in srgb,var(--accent) 40%,transparent);background:var(--panel);}
+.side-proj-btn:hover svg{color:var(--accent);}
+/* «Salva progetto» = pulsante hub-only → accento ROSSO (il puntino del
+   logo). A riposo: superficie themed (light/dark) + icona rossa. Emphasis
+   (hover / «dirty» = modifiche non salvate): rosso pieno con contenuto NERO
+   (mai icona grigia su rosso). Token hub-only qui sotto. */
+:root{ --hub-red:#e5484d; --hub-red-h:#d83c41; --hub-red-ink:#15171c; }
+.side-proj-btn.js-save-project svg{color:var(--hub-red);}
+.side-proj-btn.js-save-project:hover{border-color:var(--hub-red);background:var(--hub-red);color:var(--hub-red-ink);}
+.side-proj-btn.js-save-project:hover svg{color:var(--hub-red-ink);}
+.side-proj-btn.js-save-project.dirty{border-color:var(--hub-red);background:var(--hub-red);color:var(--hub-red-ink);}
+.side-proj-btn.js-save-project.dirty svg{color:var(--hub-red-ink);}
+.side-proj-btn.js-save-project.dirty:hover{background:var(--hub-red-h);border-color:var(--hub-red-h);}
+#sidebar.collapsed #side-proj{align-items:center;}
+#sidebar.collapsed .side-proj-lbl{display:none;}
+#sidebar.collapsed .side-proj-btn{justify-content:center;padding:8px 0;width:42px;}
+
+/* ── Pannello IMPOSTAZIONI (fondo sidebar): palette + densità ─────── */
+#side-settings{position:relative;margin-bottom:12px;}
+.side-set-trigger{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r2);border:1px solid var(--line);background:var(--panel2);color:var(--text);font-family:var(--mono);font-size:var(--fs-base);cursor:pointer;transition:var(--tr);width:100%;text-align:left;}
+.side-set-trigger svg{width:16px;height:16px;flex-shrink:0;color:var(--muted);transition:var(--tr);}
+.side-set-trigger:hover,.side-set-trigger.active{border-color:color-mix(in srgb,var(--accent) 40%,transparent);background:var(--panel);}
+.side-set-trigger:hover svg,.side-set-trigger.active svg{color:var(--accent);}
+.side-set-caret{margin-left:auto;color:var(--faint);font-size:var(--fs-sm);transition:var(--tr);}
+.side-set-trigger.active .side-set-caret{transform:rotate(180deg);}
+.side-set-panel{position:absolute;bottom:calc(100% + 6px);left:0;right:0;background:var(--panel);border:1px solid var(--line2);border-radius:var(--r2);box-shadow:var(--shadow);padding:12px;display:flex;flex-direction:column;gap:12px;z-index:60;}
+.side-set-panel[hidden]{display:none;}
+/* Bottone che apre il menu grafico separato (modale Aspetto). */
+.side-set-appearance{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:var(--r2);border:1px solid var(--line);background:var(--panel2);color:var(--text);font-family:var(--mono);font-size:var(--fs-base);cursor:pointer;transition:var(--tr);width:100%;text-align:left;}
+.side-set-appearance svg{width:16px;height:16px;flex-shrink:0;color:var(--muted);transition:var(--tr);}
+.side-set-appearance:hover{border-color:color-mix(in srgb,var(--accent) 40%,transparent);background:var(--panel);}
+.side-set-appearance:hover svg,.side-set-appearance:hover .side-set-caret{color:var(--accent);}
+.side-set-appearance .side-set-caret{transform:none;}
+/* Griglia 2 colonne dei controlli grafici dentro il modale Aspetto. */
+.set-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 20px;}
+@media (max-width:520px){ .set-grid{grid-template-columns:1fr;} }
+.set-row{display:flex;flex-direction:column;gap:7px;}
+.set-row__lbl{font-family:var(--mono);font-size:var(--fs-xs);font-weight:600;color:var(--faint);letter-spacing:.16em;text-transform:uppercase;}
+/* Swatch + NOME della palette (lista verticale). La descrizione
+   NON è più un title nativo (usciva fuori schermo: sidebar overflow:hidden) ma un
+   popup custom che compare se il mouse RESTA sul nome (ritardo ~.45s). */
+.set-palette{display:flex;flex-direction:column;gap:3px;}
+.set-sw{position:relative;display:flex;align-items:center;gap:9px;width:100%;padding:5px 8px;border:1px solid transparent;border-radius:8px;background:transparent;cursor:pointer;transition:var(--tr);text-align:left;font-family:var(--mono);font-size:var(--fs-sm);color:var(--muted);}
+.set-sw .wlc-swatch{flex:0 0 auto;}
+.set-sw:hover{background:var(--panel2);color:var(--text);}
+.set-sw.active{color:var(--text);border-color:color-mix(in srgb,var(--accent) 55%,transparent);}
+.set-sw__name{line-height:1.1;}
+/* La descrizione NON è un nodo di testo inline (compariva di fianco al
+   nome, fuori sidebar): vive nell'attributo data-desc e appare SOLO come popup
+   via ::after, se il mouse RESTA sul nome (~.45s). Inline resta solo il nome. */
+.set-sw[data-desc]::after{content:attr(data-desc);position:absolute;bottom:calc(100% + 5px);left:6px;right:6px;z-index:70;background:var(--panel3);border:1px solid var(--line3,var(--line2));border-radius:8px;box-shadow:var(--shadow);padding:6px 9px;font-family:var(--sans);font-size:var(--fs-sm);line-height:1.35;color:var(--text);opacity:0;transform:translateY(3px);pointer-events:none;transition:opacity .14s,transform .14s;}
+.set-sw[data-desc]:hover::after{opacity:1;transform:translateY(0);transition-delay:.45s;}
+.set-seg{display:flex;border:1px solid var(--line2);border-radius:99px;padding:2px;gap:2px;min-width:0;max-width:100%;}
+.set-seg__opt{flex:1 1 0;min-width:0;padding:5px 6px;border:none;background:transparent;color:var(--muted);font-family:var(--mono);font-size:var(--fs-sm);font-weight:600;cursor:pointer;border-radius:99px;transition:var(--tr);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* Variante a 2 righe per controlli con 4 etichette-parola (es. Ombre): niente
+   troncamento, opzioni su griglia 2×2 con label complete. */
+.set-seg--wrap{flex-wrap:wrap;border-radius:12px;}
+.set-seg--wrap .set-seg__opt{flex:1 1 calc(50% - 3px);padding:6px 8px;border-radius:8px;overflow:visible;text-overflow:clip;font-size:var(--fs-sm);}
+.set-seg__opt:hover{color:var(--text);}
+.set-seg__opt.active{background:var(--accent);color:var(--on-accent);}
+/* Slider dimensione testo: continuo, con nudge ±5% e % live. */
+.set-scale{display:flex;align-items:center;gap:8px;min-width:0;}
+.set-scale__mini{flex:0 0 auto;padding:4px 8px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);font-family:var(--mono);font-size:var(--fs-xs);font-weight:700;border-radius:8px;cursor:pointer;transition:var(--tr);}
+.set-scale__mini:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent);}
+.set-scale__range{flex:1 1 auto;min-width:0;accent-color:var(--accent);cursor:pointer;height:4px;}
+.set-scale__val{flex:0 0 auto;font-family:var(--mono);font-size:var(--fs-xs);color:var(--muted);min-width:42px;text-align:right;font-variant-numeric:tabular-nums;}
+.set-scale__num{flex:0 0 auto;display:inline-flex;align-items:center;gap:2px;font-family:var(--mono);font-size:var(--fs-xs);color:var(--muted);}
+.set-scale__numin{width:40px;font-family:var(--mono);font-size:var(--fs-xs);color:var(--text);background:var(--panel2);border:1px solid var(--line2);border-radius:6px;padding:3px 4px;text-align:right;font-variant-numeric:tabular-nums;}
+.set-scale__numin:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-dim);}
+/* nasconde le frecce spinner: la casella è per digitare, i passi fini sono su A−/A+ */
+.set-scale__numin::-webkit-inner-spin-button,.set-scale__numin::-webkit-outer-spin-button{-webkit-appearance:none;margin:0;}
+.set-scale__numin{-moz-appearance:textfield;}
+/* Lista verticale come la palette, ma ogni voce è scritta NEL
+   proprio font (anteprima live) — l'unico posto in cui l'UI mescola font diversi
+   di proposito. I nomi dei tool restano glifi vettoriali: nessun font qui li tocca. */
+.set-font{display:flex;flex-direction:column;gap:3px;}
+.set-font-opt{width:100%;padding:6px 8px;border:1px solid transparent;border-radius:8px;background:transparent;cursor:pointer;transition:var(--tr);text-align:left;font-size:var(--fs-base);color:var(--muted);}
+.set-font-opt:hover{background:var(--panel2);color:var(--text);}
+.set-font-opt.active{color:var(--text);border-color:color-mix(in srgb,var(--accent) 55%,transparent);}
+/* Palette e Font raggruppati in tendine <details> (non occupano tutto il pannello
+   Impostazioni quando chiusi): il bottone mostra la scelta corrente, il resto
+   compare solo aperto. Nativo (no JS per apri/chiudi), coerente con l'a11y. */
+.set-disclosure{border:1px solid transparent;border-radius:8px;}
+.set-disclosure[open]{border-color:var(--line2);}
+.set-disclosure__summary{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:8px;background:var(--panel2);cursor:pointer;list-style:none;font-family:var(--mono);font-size:var(--fs-sm);color:var(--text);transition:var(--tr);}
+.set-disclosure__summary:hover{background:color-mix(in srgb,var(--panel2) 70%,var(--accent) 10%);}
+.set-disclosure__summary::-webkit-details-marker{display:none;}
+.set-disclosure__summary::marker{content:'';}
+.set-disclosure .wlc-swatch{flex:0 0 auto;}
+.set-disclosure__val{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;}
+.set-disclosure__chev{width:12px;height:12px;flex:0 0 auto;color:var(--muted);transition:transform .16s;}
+.set-disclosure[open] .set-disclosure__chev{transform:rotate(180deg);}
+.set-disclosure > .set-palette, .set-disclosure > .set-font{margin-top:5px;}
+#sidebar.collapsed #side-settings{display:none;}
+
+/* Densità COMPATTA (hub): spaziature ridotte su nav e welcome. */
+[data-density="compact"] .nav-item{padding-top:5px;padding-bottom:5px;}
+[data-density="compact"] .wlc-inner{gap:18px;}
+[data-density="compact"] #welcome-cards{gap:14px;}
+[data-density="compact"] .wlc-row{gap:30px;}
+[data-density="compact"] .wlc-group-cards{grid-auto-columns:104px;gap:8px;}
+[data-density="compact"] .wlc-card{gap:5px;padding:9px 7px 7px;}
+[data-density="compact"] .wlc-card-tag{display:none;}
+[data-density="compact"] .wlc-card-name .wlc-feat-glyph{display:none;}
+[data-density="compact"] .wlc-logo{--logo-size:26px;}
+/* Chiudi sessione (welcome card attiva) — angolo in alto a sinistra. */
+.wlc-close-sess{position:absolute;top:10px;left:10px;z-index:3;width:22px;height:22px;display:none;align-items:center;justify-content:center;border-radius:6px;border:1px solid var(--line2);background:var(--panel2);color:var(--muted);font-size:var(--fs-base);line-height:1;cursor:pointer;transition:var(--tr);}
+.wlc-card.active-session .wlc-close-sess{display:flex;}
+.wlc-close-sess:hover{color:#fff;border-color:color-mix(in srgb,#e5484d 65%,transparent);background:color-mix(in srgb,#e5484d 32%,var(--panel2));}
+/* Pulsanti progetto (Apri/Salva .ehub): un unico look condiviso tra app-bar e welcome. */
+.proj-act{font-family:var(--mono);font-size:var(--fs-sm);background:var(--panel2);border:1px solid var(--line2);color:var(--muted);padding:5px 9px;border-radius:var(--r);cursor:pointer;transition:var(--tr);display:inline-flex;align-items:center;gap:5px;}
+.proj-act:hover{color:var(--text);border-color:var(--accent);background:var(--accent-dim);}
+.proj-act svg{width:12px;height:12px;}
+/* Stato "modifiche non salvate": il pulsante Salva diventa ambra + pallino. */
+/* Salva in app-bar (.proj-act) — stesso accento rosso hub, nero su rosso. */
+.proj-act.js-save-project svg{color:var(--hub-red);}
+.proj-act.js-save-project:hover{background:var(--hub-red);border-color:var(--hub-red);color:var(--hub-red-ink);}
+.proj-act.js-save-project:hover svg{color:var(--hub-red-ink);}
+.js-save-project.dirty{color:var(--hub-red-ink);border-color:var(--hub-red);background:var(--hub-red);}
+.js-save-project.dirty svg{color:var(--hub-red-ink);}
+.js-save-project.dirty:hover{background:var(--hub-red-h);border-color:var(--hub-red-h);color:var(--hub-red-ink);}
+.js-save-project.dirty::after{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block;margin-left:1px;}
+#stat-row{display:flex;align-items:center;gap:18px;}
+/* Toggle tema (T): spostato qui dalla home (era duplicato di .wlc-theme),
+   in fondo alla riga stat, accanto alla versione hub. */
+#stat-row #theme-btn{margin-left:auto;}
+.stat-item{display:flex;flex-direction:column;gap:2px;}
+.stat-val{font-family:var(--mono);font-size:var(--fs-md);font-weight:600;color:var(--accent-h);line-height:1;}
+.stat-lbl{font-size:var(--fs-xs);color:var(--faint);letter-spacing:.04em;}
+
+/* ── Content area ── */
+#content{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+#app-bar{height:40px;min-height:40px;background:var(--panel);border-bottom:1px solid var(--line);display:none;align-items:center;padding:0 12px;gap:10px;flex-shrink:0;}
+#app-bar.visible{display:flex;}
+#bar-toggle{background:var(--panel2);border:1px solid var(--line2);border-radius:var(--r);width:27px;height:27px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:var(--tr);flex-shrink:0;}
+#bar-toggle:hover{color:var(--accent);border-color:var(--accent);}
+#bar-toggle svg{width:14px;height:14px;}
+#bar-title{font-size:var(--fs-base);font-weight:600;color:var(--text);display:flex;align-items:center;gap:9px;}
+#bar-title .bt-logo{--logo-size:22px;border-radius:7px;}
+#bar-title .bt-ver{font-family:var(--mono);font-size:var(--fs-xs);color:var(--faint);font-weight:400;}
+#bar-actions{margin-left:auto;display:flex;gap:6px;}
+.bar-act{font-family:var(--mono);font-size:var(--fs-sm);background:var(--panel2);border:1px solid var(--line2);color:var(--muted);padding:5px 9px;border-radius:var(--r);cursor:pointer;transition:var(--tr);display:flex;align-items:center;gap:5px;}
+.bar-act:hover{color:var(--text);border-color:var(--accent);background:var(--accent-dim);}
+.bar-act svg{width:12px;height:12px;}
+
+/* ── Welcome screen ── */
+/* Home: colonna a tutta altezza. NIENTE justify-content:center (era la causa del
+   taglio del logo in zoom L/XL). Solo i TOOL scrollano (#welcome-cards); il resto
+   è in una "dock" fissa in basso via `order`. */
+#welcome{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;overflow:hidden;padding:22px 32px 16px;user-select:none;}
+#welcome.hidden{display:none;}
+#welcome::before{content:'';position:absolute;top:6%;left:50%;transform:translateX(-50%);width:min(620px,84%);height:320px;pointer-events:none;background:radial-gradient(58% 60% at 46% 38%,color-mix(in srgb,var(--accent) 20%,transparent),transparent 70%),radial-gradient(46% 50% at 66% 28%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 72%);filter:blur(6px);opacity:.5;}
+.wlc-inner{position:relative;z-index:1;width:100%;max-width:1080px;flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:14px;}
+/* Ordine visivo: tool (scroll) in alto, poi hint, footer e logo ε in fondo.
+   Azioni progetto e toggle tema NON sono più qui (duplicati della sidebar,
+   dove vivono già): la home resta solo lancio tool. */
+#welcome-cards{order:0;}
+.wlc-hints{order:2;flex:none;}
+.wlc-footer{order:4;flex:none;}
+.wlc-hero{order:5;flex:none;}
+
+/* Logo ε ora PICCOLO e in fondo, persistente (compatto in riga). */
+.wlc-hero{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:9px;text-align:left;}
+.wlc-mark{width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--text);line-height:1;flex:0 0 auto;}
+/* Marchio ε identico ovunque (welcome, sidebar e icona app): stesso disegno SVG,
+   ε in currentColor + punto identitario ROSSO staccato (stile "ε."). */
+.ehb-mark-svg{width:100%;height:100%;display:block;overflow:visible;}
+.wlc-titles{display:flex;flex-direction:column;gap:1px;text-align:left;}
+.wlc-h1{font-family:var(--sans);font-size:var(--fs-md);font-weight:700;letter-spacing:-.022em;color:var(--text);line-height:1.05;}
+.wlc-h2{font-family:var(--mono);font-size:var(--fs-2xs);font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+
+
+/* ── Welcome tool cards ── */
+/* Tile FISSE su una riga orizzontale: niente scrollbar (rovinava il design).
+   grid-auto-flow:column → tutti i tool in una riga, a larghezza uguale. */
+/* Welcome cards raggruppate per TEMATICA — sezioni affiancate con intestazione CENTRATA
+   e più SPAZIO tra le categorie (richiesta utente). */
+/* align-items:stretch → i due gruppi hanno la STESSA ALTEZZA; le card si allungano a riempirla
+   → stessa dimensione (larghezza E altezza) tra Progettazione e Computo & documenti, anche se i tool
+   hanno una riga in più. */
+/* UNICA regione scrollabile: i due gruppi IMPILATI (Progettazione elettrica sopra,
+   Computi e relazioni sotto). Solo qui compare la scrollbar. */
+/* I gruppi di card sono CENTRATI verticalmente nell'area disponibile (richiesta
+   utente: card centrate, non allineate in alto). `safe` → quando i gruppi sono
+   più alti dell'area, si torna ad allineamento in alto e la scroll resta usabile
+   (niente taglio del primo gruppo). */
+#welcome-cards{width:100%;flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;align-items:center;justify-content:safe center;gap:18px;padding:4px 2px 8px;}
+.wlc-group{display:flex;flex-direction:column;gap:10px;}
+/* Prezzi/Confronto e Documentazione (ex "computo-documenti", divisa in due tematiche
+   separate ma affiancate: erano un unico gruppo, restano vicine per contesto d'uso). */
+.wlc-row{display:flex;gap:44px;justify-content:center;flex-wrap:wrap;}
+.wlc-row .wlc-group{flex:0 0 auto;}
+/* Card RIDOTTE (redesign approvato dal mockup hub-welcome-orizzontale, poi
+   ristrette ulteriormente): tutta la suite sta in UNA fila; il titolo di
+   gruppo resta CENTRATO sulle sue card. */
+.wlc-group-cards{display:grid;grid-auto-flow:column;grid-auto-columns:132px;gap:10px;flex:1;align-items:stretch;}
+/* Sotto --bp-sm la fila unica non ci sta. Le card
+   RESTANO orizzontali (preferenza utente: mai impilate) ma VANNO A CAPO in una
+   griglia auto-fill, così riempiono la larghezza disponibile senza clipping. */
+@media (max-width:768px){
+  .wlc-group-cards{grid-auto-flow:row;grid-auto-columns:initial;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));}
+  .wlc-row{flex-direction:column;gap:10px;}
+}
+.wlc-card{height:100%;}
+.wlc-group-title{font-size:var(--fs-sm);letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:700;text-align:center;}
+/* Intestazione di sezione nella sidebar nav. */
+.nav-group-title{font-size:var(--fs-xs);letter-spacing:1.1px;text-transform:uppercase;color:var(--faint);font-weight:700;padding:12px 10px 4px;}
+.nav-group-title:first-child{padding-top:4px;}
+#sidebar.collapsed .nav-group-title{display:none;}
+.wlc-card{position:relative;display:flex;flex-direction:column;gap:6px;padding:11px 9px 9px;background:var(--panel);border:1px solid var(--line);border-radius:11px;cursor:pointer;transition:var(--tr);text-align:center;overflow:hidden;transform-origin:center bottom;}
+/* Striscia accent in alto nel colore del TOOL (var(--accent) eredita da data-tool) */
+.wlc-card::after{content:'';position:absolute;inset:0 0 auto 0;height:3px;background:var(--accent);opacity:0;transition:var(--tr);}
+/* hover = la card CRESCE e il glifo si accende (linguaggio della sidebar) */
+.wlc-card:hover{border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:var(--panel2);transform:scale(1.09) translateY(-4px);z-index:2;box-shadow:0 16px 36px color-mix(in srgb,var(--accent) 20%,transparent),var(--shadow);}
+.wlc-card:hover::after{opacity:1;}
+.wlc-card:hover .wlc-logo{transform:scale(1.08);}
+.wlc-card:hover .wlc-go{opacity:1;transform:translateX(0);}
+.wlc-card:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim);}
+.wlc-card.preview{opacity:.74;}
+.wlc-card-body{display:flex;flex-direction:column;align-items:center;gap:0;}
+.wlc-card-top{display:flex;align-items:center;justify-content:center;}
+/* Logo più grande con alone nel colore del tool. NB: glyph-only → niente
+   box-shadow (seguirebbe il QUADRATO dell'elemento, apparendo come sfondo dietro al
+   glifo). L'alone è un drop-shadow che segue la forma della LETTERA. */
+.wlc-logo{--logo-size:30px;transition:var(--tr);}
+/* Concetto SIDEBAR sulle card: glifo SPENTO (grigio, come .nav-item non-live)
+   finché il tool non ha una sessione attiva; si ACCENDE con l'accento del tool
+   all'hover o quando la sessione è attiva. */
+.wlc-card .wlc-logo .ehb-logo__glyph{color:var(--muted);transition:color .2s,filter .2s;}
+.wlc-card:hover .wlc-logo .ehb-logo__glyph,
+.wlc-card.active-session .wlc-logo .ehb-logo__glyph{color:var(--accent);}
+.wlc-card:hover .wlc-logo,
+.wlc-card.active-session .wlc-logo{filter:drop-shadow(0 4px 16px color-mix(in srgb,var(--accent) 38%,transparent));}
+/* Chip dei tag */
+.wlc-tags{display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin-top:10px;}
+.wlc-tag{font-family:var(--mono);font-size:var(--fs-2xs);letter-spacing:.03em;text-transform:uppercase;color:var(--muted);background:color-mix(in srgb,var(--accent) 9%,transparent);border:1px solid color-mix(in srgb,var(--accent) 22%,transparent);padding:2px 7px;border-radius:99px;}
+.wlc-go{position:absolute;top:10px;right:10px;opacity:0;transform:translateX(-4px);transition:var(--tr);color:var(--accent);display:flex;align-items:center;}
+.wlc-go svg{width:15px;height:15px;}
+.wlc-card-name{font-size:var(--fs-sm);font-weight:700;color:var(--text);line-height:1.2;}
+.wlc-card-tag{font-size:var(--fs-2xs);color:var(--muted);line-height:1.35;margin-top:2px;}
+.wlc-feat{display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-size:var(--fs-sm);color:var(--muted);font-family:var(--sans);line-height:1;}
+.wlc-feat-phi{font-family:var(--mono);font-weight:700;color:var(--accent);font-size:var(--fs-base);line-height:1;text-shadow:0 0 8px color-mix(in srgb,var(--accent) 40%,transparent);}
+/* Glifo dell'integrazione: porta l'accento del tool BERSAGLIO (data-tool sul glifo). */
+.wlc-feat-glyph{font-family:var(--mono);font-weight:700;color:var(--accent);font-size:var(--fs-base);line-height:1;text-shadow:0 0 8px color-mix(in srgb,var(--accent) 40%,transparent);}
+/* micro-glifo d'integrazione accanto al NOME (card ridotte): il testo va in tooltip */
+.wlc-card-name .wlc-feat-glyph{margin-left:5px;font-size:var(--fs-sm);}
+.wlc-card-name .wlc-feat-glyph svg{height:1.05em;vertical-align:-.12em;}
+/* Glifo d'integrazione vettoriale (coerente col logo della card). */
+.wlc-feat-glyph svg{height:1.15em;width:auto;display:inline-block;vertical-align:-.2em;fill:currentColor;}
+.wlc-feat-beta{font-family:var(--mono);font-size:var(--fs-2xs);font-weight:600;color:var(--amber);background:color-mix(in srgb,var(--amber) 16%,transparent);padding:1px 6px;border-radius:99px;letter-spacing:.06em;text-transform:uppercase;}
+.wlc-card-foot{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:auto;}
+.wlc-ver{font-family:var(--mono);font-size:var(--fs-sm);color:var(--faint);}
+.wlc-status{font-family:var(--mono);font-size:var(--fs-xs);font-weight:600;padding:2px 8px;border-radius:99px;letter-spacing:.04em;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px;}
+.wlc-status.stable{color:var(--green);background:color-mix(in srgb,var(--green) 14%,transparent);}
+.wlc-status.beta{color:var(--amber);background:color-mix(in srgb,var(--amber) 16%,transparent);}
+.wlc-status.missing{color:var(--faint);background:var(--panel2);}
+.wlc-status .d{width:5px;height:5px;border-radius:50%;background:currentColor;}
+
+.wlc-hints{font-family:var(--mono);font-size:var(--fs-sm);color:var(--faint);opacity:.8;letter-spacing:.02em;text-align:center;}
+/* .wlc-theme-opt: usata ANCORA dalle voci palette in Impostazioni → Aspetto
+   (.set-sw.wlc-theme-opt) — il gruppo tema chiaro/scuro .wlc-theme/.wlc-prefs
+   che la ospitava in home è stato rimosso (duplicato di #theme-btn/sidebar). */
+.wlc-theme-opt{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;min-height:32px;border:none;background:transparent;color:var(--muted);font-family:var(--sans);font-size:var(--fs-base);font-weight:600;cursor:pointer;border-radius:99px;transition:var(--tr);}
+.wlc-theme-opt svg{width:13px;height:13px;}
+.wlc-theme-opt:hover{color:var(--text);}
+.wlc-theme-opt.active{background:var(--panel3);color:var(--text);box-shadow:inset 0 0 0 1px var(--line2);}
+.wlc-theme-opt.active svg{color:var(--accent);}
+/* Anteprima palette: mini-superficie coi colori CHIAVE PROPRI della voce
+   (surface · panel · text · accento), indipendente dalla palette attiva → scelta
+   a colpo d'occhio senza applicare. I 4 chip sono decorativi (aria-hidden sul
+   contenitore); la label testuale accanto resta il nome accessibile. */
+.wlc-swatch{display:inline-flex;align-items:center;gap:2px;flex:none;padding:2px;border-radius:5px;
+  background:var(--pv-surf,#0d1016);box-shadow:inset 0 0 0 1px rgba(127,127,127,.32);}
+.wlc-swatch>span{width:7px;height:15px;border-radius:2px;flex:none;}
+.wlc-swatch__surf{background:var(--pv-surf,#0d1016);}
+/* Il chip centrale mostra la TINTA-FIRMA della palette (più saturo del panel reale):
+   è ciò che distingue le palette a colpo d'occhio, dato che surf/panel sono tutti scuri. */
+.wlc-swatch__panel{width:11px;background:var(--pv-tint,var(--pv-panel,#1b212b));}
+.wlc-swatch__text{background:var(--pv-text,#e8eef5);}
+.wlc-swatch__acc{background:#ef4444;} /* accento Open E.Hub (rosso) — per-tool, ortogonale alla palette */
+/* ⚠️ DUPLICAZIONE INTENZIONALE: surf/panel/text RISPECCHIANO i token della variante DARK
+   di ogni palette in src/shared/ui/tokens.css; --pv-tint è invece una tinta-firma scelta per
+   la LEGGIBILITÀ del picker (non un token). Se ritari una palette in tokens.css, aggiorna qui. */
+.wlc-swatch--ardesia   {--pv-surf:#0b0d11;--pv-panel:#171b22;--pv-text:#e7ecf2;--pv-tint:#6f8bad;}
+.wlc-swatch--carbonio  {--pv-surf:#101011;--pv-panel:#212125;--pv-text:#f0f0f2;--pv-tint:#8c8c93;}
+.wlc-swatch--pergamena {--pv-surf:#16130d;--pv-panel:#262118;--pv-text:#f1e9d8;--pv-tint:#c9a96a;}
+.wlc-swatch--notturno  {--pv-surf:#0a1413;--pv-panel:#142523;--pv-text:#dfeae9;--pv-tint:#3fa394;}
+.wlc-swatch--inchiostro{--pv-surf:#000000;--pv-panel:#161616;--pv-text:#f6f6f6;--pv-tint:#ffffff;}
+/* Menu palette: trigger + pannello a tendina al posto dei 5 chip a video. */
+.wlc-palette{position:relative;display:inline-flex;}
+.wlc-palette-trigger{gap:7px;}
+.wlc-caret{margin-left:2px;font-size:var(--fs-sm);color:var(--muted);transition:transform .18s ease;}
+.wlc-palette-trigger[aria-expanded="true"] .wlc-caret{transform:rotate(180deg);}
+.wlc-palette-panel{position:absolute;top:calc(100% + 6px);left:0;z-index:40;display:none;flex-direction:column;gap:2px;
+  min-width:170px;padding:5px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;box-shadow:var(--shadow-2);}
+.wlc-palette-panel.open{display:flex;}
+.wlc-palette-panel .wlc-theme-opt{justify-content:flex-start;width:100%;gap:8px;}
+/* Descrittore del carattere della palette, allineato a destra (chiarezza testuale
+   in più rispetto allo swatch — richiesta utente). */
+.wlc-palette-panel .wlc-theme-opt[data-palette-opt]::after{
+  margin-left:auto;font-family:var(--mono,monospace);font-size:var(--fs-xs);color:var(--muted);letter-spacing:.02em;}
+.wlc-theme-opt[data-palette-opt="ardesia"]::after{content:"grigio-blu";}
+.wlc-theme-opt[data-palette-opt="carbonio"]::after{content:"grafite";}
+.wlc-theme-opt[data-palette-opt="pergamena"]::after{content:"seppia caldo";}
+.wlc-theme-opt[data-palette-opt="notturno"]::after{content:"blu-verde";}
+.wlc-theme-opt[data-palette-opt="inchiostro"]::after{content:"contrasto max";}
+
+/* ── Active session flags ──
+   Il riepilogo "N sessioni attive" vive in UNA sola sede (le tessere live +
+   sidebar); il blocco centrale duplicato .wlc-summary è stato rimosso. */
+.wlc-card.active-session{border-color:color-mix(in srgb,var(--green) 40%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--green) 16%,transparent);}
+.wlc-card.active-session:hover{border-color:color-mix(in srgb,var(--green) 55%,transparent);}
+.wlc-card-foot{flex-wrap:wrap;gap:7px;}
+.wlc-live{font-family:var(--mono);font-size:var(--fs-xs);font-weight:600;color:var(--green);background:color-mix(in srgb,var(--green) 14%,transparent);padding:2px 8px;border-radius:99px;letter-spacing:.04em;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px;}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0;animation:livePulse 1.9s ease-out infinite;}
+@keyframes livePulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--green) 55%,transparent);}70%{box-shadow:0 0 0 7px transparent;}100%{box-shadow:0 0 0 0 transparent;}}
+
+
+/* ── Frames ── */
+#frames{position:absolute;inset:0;display:none;}
+#frames.visible{display:block;}
+.app-frame{position:absolute;inset:0;width:100%;height:100%;border:none;background:var(--bg);opacity:0;pointer-events:none;transition:opacity .2s ease;}
+.app-frame.active{opacity:1;pointer-events:auto;z-index:2;}
+
+/* ── Loading overlay ── */
+#loading-overlay{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;transition:opacity .25s;z-index:10;opacity:0;pointer-events:none;}
+#loading-overlay.show{opacity:1;pointer-events:auto;}
+.spinner{width:28px;height:28px;border:2px solid var(--line2);border-top-color:var(--accent);border-radius:50%;animation:spin .65s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#loading-name{font-family:var(--mono);font-size:var(--fs-sm);color:var(--muted);}
+
+/* ── Error overlay (file not found) ── */
+#error-overlay{position:absolute;inset:0;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:10;}
+#error-overlay.show{display:flex;}
+#error-msg{font-family:var(--mono);font-size:var(--fs-base);color:var(--red);text-align:center;max-width:360px;line-height:1.7;}
+#error-hint{font-size:var(--fs-sm);color:var(--muted);text-align:center;max-width:340px;line-height:1.6;}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--faint);}
+/* ── Welcome footer: protip + crediti ───────────── */
+.wlc-footer{margin-top:0;width:100%;max-width:640px;display:flex;flex-direction:column;gap:9px;align-items:center;}
+/* Protip SEMPRE su una riga: mai wrap a due righe (evita di ridimensionare la
+   welcome a ogni rotazione). Se troppo lungo → ellissi, testo pieno nel title. */
+.protip{font-family:var(--sans);font-size:var(--fs-base);color:var(--muted);text-align:center;line-height:1.5;height:22px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .4s ease;}
+.protip b{color:var(--accent);font-weight:600;}
+.protip .tip-tag{color:var(--accent);font-weight:700;}
+.credits{font-family:var(--sans);font-size:var(--fs-sm);color:var(--muted);opacity:.8;text-align:center;}
+.credits a{color:var(--muted);text-decoration:none;border-bottom:1px dotted var(--line2);}
+.credits a:hover{color:var(--accent);}
+.credits-os{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:var(--fs-xs);font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);padding:1px 7px;border-radius:99px;}
+/* Link "Crediti" · "Note legali": discreti, in fondo al welcome. */
+.hub-legal-link{text-align:center;margin-top:2px;}
+.hub-legal-link button{font-family:var(--sans);font-size:var(--fs-sm);color:var(--muted);opacity:.75;background:none;border:none;border-bottom:1px dotted var(--line2);padding:0;cursor:pointer;}
+.hub-legal-link button:hover{color:var(--accent);opacity:1;}
+.hub-legal-sep{color:var(--muted);opacity:.45;font-size:var(--fs-sm);margin:0 5px;}
+/* Titolare del marchio nel modale Note legali. */
+.lg-owner{color:var(--muted);font-weight:400;}
+/* Elenco aziende "ad espansione" nel modale Note legali. */
+.lg-details{margin:2px 0 4px;}
+.lg-details>summary{cursor:pointer;color:var(--accent);font-size:var(--fs-base);list-style:none;user-select:none;width:fit-content;}
+.lg-details>summary::-webkit-details-marker{display:none;}
+.lg-details>summary::before{content:'▸ ';color:var(--muted);}
+.lg-details[open]>summary::before{content:'▾ ';}
+.lg-details .lg-note{color:var(--faint);font-size:var(--fs-sm);margin-top:2px;}
+/* ───────────────────────────────────────────────────────────── */
+
+/* ── Modale generico (backup, aspetto, crediti, note legali, cambio password, guida) ── */
+.cl-overlay{position:fixed;inset:0;z-index:650;display:none;align-items:center;justify-content:center;background:color-mix(in srgb,#000 55%,transparent);backdrop-filter:blur(2px);}
+.cl-overlay.open{display:flex;}
+.cl-box{width:min(560px,94vw);max-height:84vh;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line2);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;}
+.cl-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line);}
+.cl-title{font-size:var(--fs-md);font-weight:700;color:var(--text);letter-spacing:.02em;}
+.cl-close{background:var(--panel2);border:1px solid var(--line);color:var(--muted);width:26px;height:26px;border-radius:7px;cursor:pointer;font-size:var(--fs-base);transition:var(--tr);}
+.cl-close:hover{color:var(--text);border-color:var(--accent);}
+.cl-body{overflow-y:auto;padding:8px 18px 18px;}
+
+/* Guida rapida Open E.Hub — riusa .cl-overlay/.cl-box, testo invece di entry */
+.cl-body p{font-size:var(--fs-base);line-height:1.65;color:var(--text);margin-bottom:8px;}
+.cl-body h4{font-size:var(--fs-sm);text-transform:uppercase;letter-spacing:.4px;color:var(--accent);margin:14px 0 5px;}
+.cl-body h4:first-child{margin-top:0;}
+.hub-guide-ul{list-style:none;margin:0 0 4px;padding:0;display:flex;flex-direction:column;gap:6px;}
+.hub-guide-ul li{position:relative;padding-left:15px;font-size:var(--fs-base);line-height:1.55;color:var(--muted);}
+.hub-guide-ul li::before{content:'';position:absolute;left:3px;top:7px;width:4px;height:4px;border-radius:50%;background:var(--accent);}
+.hub-guide-note{font-size:var(--fs-sm);color:var(--faint);margin-top:6px;}
+
+/* ── Edition (footer welcome): Developer Version · oppure logo+disclaimer interno ── */
+.hub-edition{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;min-height:18px;}
+.hub-edi-badge{font-family:var(--mono);font-size:var(--fs-xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 9px;border-radius:99px;border:1px solid;}
+.hub-edi-badge.dev{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:var(--accent-soft);} /* colore dell'hub (rosso) */
+.hub-edi-badge.internal{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 55%,transparent);background:var(--bad-soft);} /* rosso */
+.hub-edi-badge.public{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 55%,transparent);background:var(--ok-soft);} /* verde: edizione pubblica firmata */
+.hub-edi-logo{height:18px;width:auto;opacity:.9;}
+.hub-edi-note{font-family:var(--sans);font-size:var(--fs-sm);color:var(--faint);opacity:.85;}
+.hub-edi-adm{font-family:var(--mono);font-size:var(--fs-2xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);padding:1px 6px;border-radius:99px;}
+
+/* ── Toast hub (avviso uso interno all'avvio) ── */
+.hub-toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(12px);z-index:400;max-width:min(560px,92vw);background:var(--panel);border:1px solid var(--line2);color:var(--text);font-family:var(--sans);font-size:var(--fs-base);padding:9px 16px;border-radius:99px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;}
+.hub-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.hub-toast.bad{border-color:color-mix(in srgb,var(--bad) 60%,transparent);color:var(--bad);}
+
+/* ══ Project gate: schermata a scelta obbligata (Nuovo/Apri progetto) ══════
+   Compare solo quando non c'è un progetto Open E.Hub attivo in sessione
+   (hubState.id === null), vedi syncProjectGate() in ui/bus.js. Un solo box
+   centrato, NON dismissibile: nessun cl-close, nessun backdrop-click-to-close,
+   nessun ramo Escape dedicato nei listener globali. ════════════════════════ */
+#project-gate{position:fixed;inset:0;z-index:595;background:var(--bg);display:flex;align-items:center;justify-content:center;}
+#project-gate[hidden]{display:none;}
+.pg-box{width:min(480px,92vw);display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:36px 30px;background:var(--panel);border:1px solid var(--line2);border-radius:16px;box-shadow:var(--shadow);}
+.pg-mark{width:56px;height:56px;color:var(--hub-red);}
+.pg-mark .ehb-mark-svg{width:100%;height:100%;}
+.pg-title{font-family:var(--sans);font-size:var(--fs-lg);font-weight:700;color:var(--text);}
+.pg-sub{font-family:var(--sans);font-size:var(--fs-base);color:var(--muted);line-height:1.55;margin:0;}
+.pg-acts{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap;justify-content:center;}
+.pg-btn{font-family:var(--mono);font-size:var(--fs-base);padding:10px 18px;border-radius:var(--r2);border:1px solid var(--line2);background:var(--panel2);color:var(--text);cursor:pointer;transition:var(--tr);}
+.pg-btn:hover{border-color:var(--accent);background:var(--accent-dim);}
+.pg-btn--accent{background:var(--hub-red);border-color:var(--hub-red);color:var(--hub-red-ink);}
+.pg-btn--accent:hover{background:var(--hub-red-h);border-color:var(--hub-red-h);}
+
+/* Il pannello admin (.adm-*) è ora il tool α Alfa — vedi src/tools/alfa/styles/alfa.css.
+   Qui restano solo le classi ancora usate dall'hub (profilo). */
+
+/* Profilo nel pannello Impostazioni. */
+#set-profile[hidden]{display:none;}
+.set-prof__who{font-family:var(--mono);font-size:var(--fs-sm);color:var(--text);}
+.set-prof-actions{display:flex;gap:6px;margin-top:2px;}
+.set-prof-btn{flex:1;background:var(--panel2);border:1px solid var(--line2);color:var(--muted);font-family:var(--mono);font-size:var(--fs-sm);font-weight:600;padding:6px;border-radius:var(--r2);cursor:pointer;transition:var(--tr);}
+.set-prof-btn:hover{color:var(--text);border-color:var(--accent);}
+
+/* ══ Profilo AZIENDALE: logo (template), animazione, badge discreti ══ */
+/* Logo azienda: immagine se caricata, altrimenti TEMPLATE placeholder (sigla). */
+.co-logo{display:inline-flex;align-items:center;justify-content:center;}
+img.co-logo{max-height:34px;width:auto;object-fit:contain;}
+.co-logo--ph{min-width:44px;height:34px;padding:0 10px;border:1px dashed color-mix(in srgb,var(--accent) 45%,var(--line2));border-radius:8px;font-family:var(--mono);font-weight:800;font-size:var(--fs-md);letter-spacing:.06em;color:var(--text);background:var(--panel2);}
+
+/* Impostazioni → Profilo: icona utente + azienda (no username). */
+.set-prof{display:flex;align-items:center;gap:8px;color:var(--text);}
+.prof-ico{width:16px;height:16px;flex:0 0 auto;color:var(--accent);}
+.set-prof__name{font-family:var(--mono);font-size:var(--fs-base);color:var(--text);line-height:1.2;}
+
+/* Footer sidebar: logo azienda DISCRETO (solo profilo aziendale). */
+#side-company{display:flex;align-items:center;gap:9px;margin-bottom:10px;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r2);background:color-mix(in srgb,var(--accent) 5%,var(--panel2));}
+#side-company[hidden]{display:none;}
+.side-co__logo{flex:0 0 auto;}
+.side-co__logo.co-logo--ph{height:28px;min-width:38px;font-size:var(--fs-base);}
+.side-co__logo img{max-height:28px;}
+.side-co__name{font-family:var(--mono);font-size:var(--fs-sm);color:var(--muted);line-height:1.25;}
+/* Chi è entrato: nome utente in evidenza, azienda/ruolo come riga di servizio. */
+.side-co__txt{display:flex;flex-direction:column;min-width:0;}
+.side-co__user{font-family:var(--mono);font-size:var(--fs-sm);font-weight:700;color:var(--text);line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.side-co__txt .side-co__name{font-size:var(--fs-xs);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* Icona utente (profili senza azienda): stessa taglia del logo aziendale. */
+#side-company .prof-ico{width:20px;height:20px;flex:0 0 auto;color:var(--muted);}
+#sidebar.collapsed #side-company{justify-content:center;padding:8px 0;}
+#sidebar.collapsed .side-co__name,#sidebar.collapsed .side-co__txt{display:none;}
+
+/* ── BACKUP DATI: quello che Open E.Hub ha imparato lavorando ─────────────────────────────
+   Ogni riga è una parte della memoria, col suo CONTEGGIO: è il numero che dice se vale
+   la pena salvarla, e che fa vedere il capitale crescere. Le parti vuote restano a vista
+   ma spente — non si nasconde ciò che ancora non c'è, si dice che non c'è. */
+.bk-warn { padding: 10px 12px; border-radius: 8px; margin: 10px 0 14px;
+  border: 1px solid color-mix(in srgb, var(--warn, #e7a13a) 45%, transparent);
+  background: color-mix(in srgb, var(--warn, #e7a13a) 10%, transparent);
+  color: var(--warn, #e7a13a); font-size: 12.5px; line-height: 1.5; }
+.bk-list { display: flex; flex-direction: column; gap: 6px; margin: 0 0 16px; }
+.bk-row { display: flex; align-items: center; gap: 10px; padding: 9px 11px; cursor: pointer;
+  border: 1px solid var(--line2, #2f3742); border-radius: 9px; background: var(--panel2, #171b22);
+  transition: border-color .12s; }
+.bk-row:hover:not(.is-vuota) { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.bk-row.is-vuota { opacity: .45; cursor: default; }
+.bk-row__tool { flex: 0 0 auto; width: 22px; text-align: center; font-size: 15px; font-weight: 700;
+  color: var(--accent); }
+.bk-row__t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.bk-row__t b { font-size: 12.5px; }
+.bk-row__t small { font-size: 11px; color: var(--muted); line-height: 1.4; }
+.bk-row__n { flex: 0 0 auto; min-width: 34px; text-align: right; font-family: var(--mono, monospace);
+  font-size: 12px; font-weight: 700; color: var(--text); }
+.bk-row.is-vuota .bk-row__n { color: var(--faint); }
+.bk-acts { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.bk-empty { padding: 14px; border: 1px dashed var(--line2, #2f3742); border-radius: 9px;
+  color: var(--muted); font-size: 12px; line-height: 1.55; }

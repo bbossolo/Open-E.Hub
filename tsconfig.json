@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
+    "types": ["vite/client", "vitest/globals"],
+    "baseUrl": ".",
+    "paths": {
+      "compositore-catalog:marchi": ["src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:libreria": ["src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:sinonimi-parola": ["src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:tematiche": ["src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:macrocategorie": ["src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:thesaurus": ["src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:componi": ["src/shared/compositore/catalog-data-empty.ts"]
+    }
+  },
+  "include": ["src", "tests", "vite.config.ts"]
+}

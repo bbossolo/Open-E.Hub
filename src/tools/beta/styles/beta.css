@@ -1,0 +1,147 @@
+/* β Contabilità — stili del tool. Riusa la shell condivisa (.ehb-hdr, .ehb-logo,
+   .ehb-btn*, .ehb-card, .ehb-modal, .ehb-toast da components.css) e i token
+   (tokens.css → accento PORPORA via data-tool="beta"). Layout a 3 pannelli:
+   sinistra = anagrafica/computo/tempo · centro = catena documentale (timeline)
+   · destra = documenti consegnati. Tipografia dai token di sistema (--fs-*). */
+
+body { margin: 0; font: 450 var(--fs-base)/1.4 var(--sans); background: var(--bg); color: var(--text); }
+
+/* ── Workspace a 3 colonne ──────────────────────────────────────────────── */
+.b-work {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 300px;
+  gap: var(--sp-4);
+  align-items: start;
+  padding: var(--sp-4) var(--sp-5) var(--sp-6);
+  max-width: 1400px; margin: 0 auto;
+}
+.b-left, .b-right { display: flex; flex-direction: column; gap: var(--sp-4); position: sticky; top: var(--sp-4); }
+
+/* ── Pannelli laterali ──────────────────────────────────────────────────── */
+.b-panel { background: var(--panel); border: 1px solid var(--line2); border-radius: var(--radius-lg); padding: var(--sp-4); }
+.b-panel__h { font: 600 var(--fs-xs)/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 var(--sp-3); }
+.b-panel__body { font-size: var(--fs-sm); color: var(--text); display: flex; flex-direction: column; gap: 4px; margin-bottom: var(--sp-3); }
+.b-block { width: 100%; justify-content: center; }
+.b-muted { color: var(--muted); }
+.b-sumrow { display: flex; justify-content: space-between; gap: 8px; }
+.b-sumrow > span { color: var(--muted); }
+.b-sumrow > b { font-variant-numeric: tabular-nums; }
+.b-sumtitle { font-weight: 650; color: var(--text); }
+
+/* ── Controllo del tempo ────────────────────────────────────────────────── */
+.b-cursor { display: flex; flex-direction: column; gap: 2px; margin-bottom: var(--sp-3); }
+.b-cursor__lab { font: 600 var(--fs-xs)/1 var(--sans); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.b-cursor__val { font: 650 var(--fs-lg)/1.1 var(--sans); font-variant-numeric: tabular-nums; color: var(--accent); }
+.b-cursor__edit { display: flex; align-items: center; gap: 6px; }
+.b-cursor__inp { flex: 1 1 auto; min-width: 0; font: 650 var(--fs-lg)/1.1 var(--sans); font-variant-numeric: tabular-nums; color: var(--accent); background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--radius-sm); padding: 4px 8px; }
+.b-cursor__inp:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+.b-cursor__cal { flex: 0 0 auto; width: 30px; color: var(--accent); background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--radius-sm); padding: 4px; cursor: pointer; }
+.b-cursor__cal::-webkit-calendar-picker-indicator { cursor: pointer; }
+.b-cursor__cal::-webkit-datetime-edit { display: none; }
+.b-timectrl { display: flex; gap: 4px; margin-bottom: var(--sp-3); }
+.b-timectrl .ehb-btn { flex: 1; padding: 6px 0; }
+.b-fasi { display: flex; flex-direction: column; gap: 2px; margin-top: var(--sp-3); }
+.b-fase-link { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: var(--radius-sm); cursor: pointer; border: 1px solid transparent; background: transparent; color: var(--text); font: inherit; font-size: var(--fs-sm); text-align: left; width: 100%; }
+.b-fase-link:hover { background: var(--panel2); }
+.b-fase-link.is-active { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 35%, transparent); color: var(--accent); }
+.b-fase-link__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line3); flex: 0 0 auto; }
+.b-fase-link.is-done .b-fase-link__dot { background: var(--accent); }
+.b-fase-link__d { margin-left: auto; font-size: var(--fs-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ── Centro: timeline della catena documentale ──────────────────────────── */
+.b-center__h { margin: 0 0 var(--sp-4); }
+.b-center__sub { display: block; color: var(--muted); font-size: var(--fs-sm); margin-top: 2px; }
+.b-timeline { position: relative; display: flex; flex-direction: column; gap: var(--sp-5); }
+.b-fase { position: relative; padding-left: 26px; }
+.b-fase::before { content: ''; position: absolute; left: 7px; top: 4px; bottom: -26px; width: 2px; background: var(--line2); }
+.b-fase:last-child::before { display: none; }
+.b-fase__node { position: absolute; left: 0; top: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--panel); border: 2px solid var(--line3); }
+.b-fase.is-current .b-fase__node { border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.b-fase.is-done .b-fase__node { background: var(--accent); border-color: var(--accent); }
+.b-fase__h { display: flex; align-items: baseline; gap: 10px; margin-bottom: var(--sp-3); }
+.b-fase__t { font: 650 var(--fs-md)/1.2 var(--sans); color: var(--text); }
+.b-fase__date { font-size: var(--fs-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+.b-fase__badge { font: 600 var(--fs-xs)/1 var(--sans); color: var(--accent); background: var(--accent-soft); padding: 3px 7px; border-radius: var(--radius-pill); }
+
+.b-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--sp-3); }
+.b-card { display: flex; flex-direction: column; gap: 6px; padding: var(--sp-3) var(--sp-4); background: var(--panel); border: 1px solid var(--line2); border-radius: var(--radius); cursor: pointer; transition: var(--tr); text-align: left; font: inherit; }
+.b-card:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--line2)); transform: translateY(-1px); box-shadow: var(--shadow-2); }
+.b-card:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
+.b-card__t { font: 650 var(--fs-sm)/1.2 var(--sans); color: var(--text); display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.b-card__art { font-size: var(--fs-xs); color: var(--muted); font-weight: 500; }
+.b-card__d { font-size: var(--fs-xs); color: var(--muted); line-height: 1.4; }
+.b-card__go { font: 600 var(--fs-xs)/1 var(--sans); color: var(--accent); margin-top: 2px; }
+.b-card.is-done { border-color: color-mix(in srgb, var(--accent) 30%, var(--line2)); background: color-mix(in srgb, var(--accent) 5%, var(--panel)); }
+.b-card__done { font-size: var(--fs-xs); color: var(--accent); font-weight: 600; }
+
+/* ── Destra: documenti consegnati ───────────────────────────────────────── */
+.b-consegne { display: flex; flex-direction: column; gap: 2px; }
+.b-consegna { display: flex; flex-direction: column; gap: 2px; padding: 8px; border-radius: var(--radius-sm); border: 1px solid transparent; cursor: pointer; background: transparent; text-align: left; font: inherit; width: 100%; }
+.b-consegna:hover { background: var(--panel2); border-color: var(--line2); }
+.b-consegna__t { font-size: var(--fs-sm); font-weight: 600; color: var(--text); }
+.b-consegna__m { font-size: var(--fs-xs); color: var(--muted); display: flex; justify-content: space-between; gap: 8px; }
+.b-empty { color: var(--muted); font-size: var(--fs-sm); padding: var(--sp-4) 0; text-align: center; }
+
+/* ── Modali (dati appalto, import) — usano .ehb-modal condiviso ──────────── */
+/* Editor «alti»: la card diventa una colonna flex col header e footer fissi e il
+   corpo che scorre, così la scheda non sfora mai il viewport (cap della scheda). */
+.b-modal-wide { width: min(920px, 94vw); display: flex; flex-direction: column; overflow: hidden; }
+.b-modal-wide .b-modal__h { flex: 0 0 auto; }
+.b-modal__scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; margin: 0 calc(-1 * var(--sp-6)); padding: 0 var(--sp-6); }
+.b-modal__h { font: 600 var(--fs-lg)/1.2 var(--sans); margin: 0 0 var(--sp-4); color: var(--text); }
+.b-modal__foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: var(--sp-5); }
+.b-modal-wide .b-modal__foot { flex: 0 0 auto; margin-top: var(--sp-4); padding-top: var(--sp-4); border-top: 1px solid var(--line2); background: var(--panel); }
+/* Designazione lunga: massimo 3 righe, testo completo nel title al passaggio. */
+.b-desc-clamp { display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.b-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--sp-3) var(--sp-4); }
+.b-cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+.b-fieldset { border: 1px solid var(--line2); border-radius: var(--radius); padding: var(--sp-3) var(--sp-4); margin: 0 0 var(--sp-3); }
+.b-fieldset legend { font: 600 var(--fs-sm)/1 var(--sans); color: var(--accent); padding: 0 6px; }
+.b-field { display: flex; flex-direction: column; gap: 4px; margin: 0 0 var(--sp-3); }
+.b-field > span { font-size: var(--fs-xs); color: var(--muted); }
+.b-field input, .b-field select { padding: 8px 10px; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel2); color: var(--text); font: inherit; font-size: var(--fs-sm); }
+.b-field input:focus, .b-field select:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+.b-logo { display: flex; align-items: center; gap: 12px; margin: 0 0 var(--sp-3); }
+.b-logo img { max-height: 48px; max-width: 150px; object-fit: contain; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: #fff; padding: 4px; }
+.b-import-mode { display: flex; gap: 14px; align-items: center; margin: 0 0 var(--sp-4); font-size: var(--fs-sm); color: var(--muted); }
+.b-import-mode label { color: var(--text); display: inline-flex; align-items: center; gap: 5px; }
+.b-import-btns { display: flex; flex-direction: column; gap: 8px; }
+.b-import-btns .ehb-btn { justify-content: flex-start; }
+
+/* ── Editor dei documenti (tabelle editabili) ───────────────────────────── */
+.b-editrow { display: flex; gap: var(--sp-4); align-items: flex-end; flex-wrap: wrap; margin: 0 0 var(--sp-3); }
+.b-editrow .b-field { margin: 0; }
+.b-tablewrap { overflow-x: auto; border: 1px solid var(--line2); border-radius: var(--radius); }
+.b-etable { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); }
+.b-etable th { text-align: left; font: 600 var(--fs-xs)/1 var(--sans); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding: 8px 10px; border-bottom: 1px solid var(--line2); white-space: nowrap; background: var(--panel2); }
+.b-etable td { padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.b-etable tbody tr:last-child td { border-bottom: none; }
+.b-etable input, .b-etable select { padding: 6px 8px; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel2); color: var(--text); font: inherit; font-size: var(--fs-sm); width: 100%; min-width: 70px; }
+.b-etable input:focus, .b-etable select:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+.b-mono { font-family: var(--mono, ui-monospace, monospace); font-size: var(--fs-xs); color: var(--muted); white-space: nowrap; }
+.b-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.b-field textarea { padding: 8px 10px; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel2); color: var(--text); font: inherit; font-size: var(--fs-sm); resize: vertical; }
+.b-field textarea:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+.b-sumrow.b-kv--tot { border-bottom: none; margin-top: 4px; padding-top: 6px; border-top: 1px solid var(--line2); }
+.b-sumrow.b-kv--tot > b { color: var(--accent); }
+
+/* ── Libretto: misure di dettaglio (stile computo μ) + storno ───────────── */
+.b-misure { padding: 8px 4px 4px; }
+.b-etable--inner { border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel); }
+.b-etable--inner th { background: transparent; padding: 6px 8px; }
+.b-etable--inner td { padding: 4px 8px; }
+.b-etable--inner tfoot td { border-top: 1px solid var(--line2); border-bottom: none; font-weight: 600; color: var(--accent); }
+.b-misure-row > td { background: color-mix(in srgb, var(--accent) 5%, transparent); padding: 0 10px 8px; }
+tr.b-row-storno > td { color: var(--muted); text-decoration: line-through solid color-mix(in srgb, var(--danger, #c0392b) 60%, transparent); }
+tr.b-row-storno > td:first-child, tr.b-row-storno > td:last-child { text-decoration: none; }
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 1080px) {
+  .b-work { grid-template-columns: 260px minmax(0, 1fr); }
+  .b-right { grid-column: 1 / -1; position: static; }
+}
+@media (max-width: 760px) {
+  .b-work { grid-template-columns: 1fr; }
+  .b-left, .b-right { position: static; }
+  .b-cols2 { grid-template-columns: 1fr; }
+}

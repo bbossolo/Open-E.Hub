@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it" data-tool="beta" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- CSP — nessuno schema http:/https: compare in questa policy: la suite non può
+     caricare nulla dalla rete né spedire nulla fuori, e non è più solo una promessa
+     del codice. 'unsafe-inline'/'unsafe-eval' servono perché i bundle sono file
+     unici (tutto inlinato) e pdf.js/JSZip usano eval al proprio interno; la via
+     d'esecuzione JS dei PDF ostili è chiusa alla fonte con isEvalSupported:false. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob:; script-src 'self' file: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' file: data: 'unsafe-inline'; img-src 'self' file: data: blob:; font-src 'self' file: data:; connect-src 'self' file: data: blob:; worker-src 'self' file: blob:; frame-src 'self' file: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>β Contabilità — Contabilità dei lavori pubblici</title>
+<!-- Design system condiviso: token + componenti; β tiene solo i propri specifici.
+     Accento porpora (data-tool="beta"). -->
+<link rel="stylesheet" href="../../shared/ui/tokens.css">
+<link rel="stylesheet" href="../../shared/ui/components.css">
+<link rel="stylesheet" href="./styles/beta.css">
+</head>
+<body>
+
+<header class="ehb-hdr" data-tool="beta">
+  <div class="ehb-hdr__brand">
+    <div class="ehb-logo" data-tool="beta"><span class="ehb-logo__glyph"><svg class="ehb-glyph-svg" viewBox="0 -800 600 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M60 180V-516Q60 -583 89.5 -633.5Q119 -684 172 -712Q225 -740 296 -740Q372 -740 428 -715.5Q484 -691 515.5 -647.5Q547 -604 547 -545Q547 -482 513.5 -441.5Q480 -401 418 -387Q483 -371 521.5 -324Q560 -277 560 -209Q560 -147 529 -99.5Q498 -52 442.5 -26Q387 0 312 0H195V180ZM195 -125H307Q355 -125 382 -150.5Q409 -176 409 -221Q409 -266 381.5 -292Q354 -318 307 -318H260V-428H305Q347 -428 371.5 -452Q396 -476 396 -517Q396 -562 369 -588.5Q342 -615 295 -615Q249 -615 222 -588.5Q195 -562 195 -516Z" fill="currentColor"/></svg></span></div>
+    <div class="ehb-hdr__brand-txt">
+      <span class="ehb-hdr__brand-name"><span class="ehb-name-glyph"><svg class="ehb-glyph-svg" viewBox="0 -800 600 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M60 180V-516Q60 -583 89.5 -633.5Q119 -684 172 -712Q225 -740 296 -740Q372 -740 428 -715.5Q484 -691 515.5 -647.5Q547 -604 547 -545Q547 -482 513.5 -441.5Q480 -401 418 -387Q483 -371 521.5 -324Q560 -277 560 -209Q560 -147 529 -99.5Q498 -52 442.5 -26Q387 0 312 0H195V180ZM195 -125H307Q355 -125 382 -150.5Q409 -176 409 -221Q409 -266 381.5 -292Q354 -318 307 -318H260V-428H305Q347 -428 371.5 -452Q396 -476 396 -517Q396 -562 369 -588.5Q342 -615 295 -615Q249 -615 222 -588.5Q195 -562 195 -516Z" fill="currentColor"/></svg></span> Contabilità</span>
+      <span class="ehb-hdr__brand-sub">contabilità dei lavori pubblici · a corpo e a misura</span>
+    </div>
+  </div>
+  <div class="ehb-hdr__spacer"></div>
+  <div class="ehb-hdr__actions">
+    <button id="btnTheme" class="ehb-btn ehb-btn--ghost ehb-btn--icon" onclick="toggleTheme()" title="Cambia tema (chiaro/scuro) di questo tool">☾</button>
+    <button id="btnGuide" class="ehb-guide-btn" onclick="toggleGuida()" title="Guida alla contabilità dei lavori pubblici">? Guida</button>
+  </div>
+</header>
+
+<main class="b-work">
+  <!-- Pannello sinistro: anagrafica, computo, avanzamento nel tempo -->
+  <aside class="b-left">
+    <section class="b-panel">
+      <div class="b-panel__h">Appalto</div>
+      <div id="bAppSummary" class="b-panel__body"></div>
+      <button class="ehb-btn ehb-btn--sm ehb-btn--accent-soft b-block" onclick="openDati()">Dati appalto</button>
+    </section>
+
+    <section class="b-panel">
+      <div class="b-panel__h">Computo</div>
+      <div id="bComputoSummary" class="b-panel__body"></div>
+      <button class="ehb-btn ehb-btn--sm ehb-btn--accent-soft b-block" onclick="openImport()">Importa computo</button>
+    </section>
+
+    <section class="b-panel b-panel--tempo">
+      <div class="b-panel__h">Cronologia del cantiere</div>
+      <div class="b-cursor">
+        <span class="b-cursor__lab">Data corrente</span>
+        <div class="b-cursor__edit">
+          <input id="bDataCorrente" class="b-cursor__inp" type="text" inputmode="numeric" placeholder="gg/mm/aaaa" title="Digita la data corrente del cantiere (gg/mm/aaaa)" onchange="setDataCorrenteIt(this.value)">
+          <input id="bDataCorrenteCal" class="b-cursor__cal" type="date" title="Scegli la data dal calendario" onchange="setDataCorrenteIso(this.value)">
+        </div>
+      </div>
+      <div class="b-timectrl">
+        <button class="ehb-btn ehb-btn--sm ehb-btn--ghost" onclick="avanzaGiorni(-7)" title="Indietro di 7 giorni">◀◀</button>
+        <button class="ehb-btn ehb-btn--sm ehb-btn--ghost" onclick="avanzaGiorni(-1)" title="Indietro di 1 giorno">◀</button>
+        <button class="ehb-btn ehb-btn--sm ehb-btn--ghost" onclick="avanzaGiorni(1)" title="Avanti di 1 giorno">▶</button>
+        <button class="ehb-btn ehb-btn--sm ehb-btn--ghost" onclick="avanzaGiorni(7)" title="Avanti di 7 giorni">▶▶</button>
+      </div>
+      <button class="ehb-btn ehb-btn--sm b-block" onclick="nuovoSalOggi()">＋ SAL alla data corrente</button>
+      <button class="ehb-btn ehb-btn--sm b-block" onclick="openNuovoVerbale()" title="Verbali e comunicazioni del DL (consegna, sospensione, ordini di servizio…)">＋ Verbale / atto del DL</button>
+      <button class="ehb-btn ehb-btn--sm b-block" onclick="creaLista()" title="Lista settimanale dei lavori in economia (operai, mezzi, provviste)">＋ Lista in economia</button>
+      <div id="bFasiList" class="b-fasi"></div>
+    </section>
+  </aside>
+
+  <!-- Pannello centrale: la catena documentale come timeline (protagonista) -->
+  <section class="b-center">
+    <div class="b-center__h">
+      <h1 class="ehb-h2">Catena documentale</h1>
+      <span class="b-center__sub">Le procedure da produrre nel tempo. Ogni scheda genera l'atto alla sua data.</span>
+    </div>
+    <div id="bTimeline" class="b-timeline"></div>
+  </section>
+
+  <!-- Pannello destro: storico dei documenti consegnati -->
+  <aside class="b-right">
+    <div class="b-panel__h">Documenti consegnati</div>
+    <div id="bConsegne" class="b-consegne"></div>
+  </aside>
+</main>
+
+<!-- La guida ora è il manuale unico condiviso (visore F1): apre da «? Guida»
+     e dal tasto F1, contenuti registrati in main.ts (betaGuideSection). -->
+
+<!-- Contenitore per le finestre modali (dati appalto, import) iniettate da main.ts -->
+<div id="bModalHost"></div>
+<input type="file" id="bLogoFile" accept="image/*" hidden>
+
+<div id="toast" class="ehb-toast" hidden></div>
+
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

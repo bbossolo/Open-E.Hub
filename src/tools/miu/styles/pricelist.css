@@ -1,0 +1,1911 @@
+/* ══ THEME ══ μ Prezzi usa i token condivisi (tokens.css + components.css).
+   I nomi propri di μ (--surface/--border/--text2/--danger/…) sono ALIAS verso i
+   token condivisi, che si adattano già a chiaro/scuro. Accento = verde via
+   data-tool="miu" sull'<html>. */
+:root {
+  --bg2: var(--panel2);
+  --surface: var(--panel); --surface2: var(--panel2); --surface3: var(--panel3);
+  --border: var(--line); --border2: var(--line2);
+  --accent-light: var(--accent-dim); --accent-text: var(--accent);
+  --text2: var(--text); --text3: var(--muted); --text4: var(--faint);
+  --danger: var(--bad); --danger-light: var(--bad-soft);
+  --success: var(--ok); --success-light: var(--ok-soft);
+  --warn-light: var(--warn-soft);
+  --row-hover: var(--accent-soft); --row-sel: var(--accent-dim);
+  --shadow-sm: var(--shadow-1); --shadow: var(--shadow-1); --shadow-md: var(--shadow-2);
+  --radius: 8px; --radius-sm: 6px;
+  --desc-lines: 3; /* righe max descrizione voce (Tabella/Capitoli/Elenco); usa un numero alto (es. 99) per mostrarle intere. Il pannello dettaglio mostra sempre il testo intero */
+  --sidebar-w: 320px; --detail-w: 360px;
+}
+
+/* Sistema dei pulsanti a 5 famiglie (✨ Livia): le classi `.ehb-btn-fam-*` e
+   `.ehb-rail*` vivono ora nello SHARED (src/shared/ui/components.css +
+   tokens.css `--fam-assign`/`--fam-export`) — condivise da tutta la suite,
+   non più duplicate qui. μ le consuma da lì; questo file porta solo gli
+   adattamenti specifici del tool (vedi #componi-btn, #ap-compose-btn,
+   .cmp-tbtn--create, .cart-ctx-item.primary, .exp-grp più sotto). */
+
+/* ══ SIDEBAR COLLAPSED ═══════════════════════════════════════ */
+#sidebar.collapsed {
+  width: 36px !important;
+  min-width: 36px !important;
+}
+#sidebar.collapsed #archive-list,
+#sidebar.collapsed #sidebar-footer,
+#sidebar.collapsed .sidebar-section-title { display: none; }
+/* Pulsante comprimi/espandi: prima si vedeva a malapena (nessun bordo/sfondo
+   finché non ci passavi sopra il mouse). Ora è un chip SEMPRE visibile, come
+   gli altri icon-button del tool (es. #theme-toggle). */
+#sidebar-collapse-btn {
+  background: var(--surface2); border: 1px solid var(--border); cursor: pointer;
+  color: var(--text2); font-size: 12px; padding: 4px 7px;
+  border-radius: var(--radius-sm); line-height: 1;
+  transition: color .15s, background .15s, border-color .15s; flex-shrink: 0;
+}
+/* Glifo del bottone via CSS (swap su .collapsed), niente più JS. */
+#sidebar-collapse-btn::before { content: '◀'; }
+#sidebar.collapsed #sidebar-collapse-btn::before { content: ''; }
+#sidebar-collapse-btn:hover { color: var(--accent); background: var(--accent-light); border-color: var(--accent); }
+#sidebar.collapsed #sidebar-collapse-btn { width: 36px; height: 100%; display: flex; align-items: center; justify-content: center; }
+#sidebar-collapsed-icon {
+  display: none; flex-direction: column; align-items: center;
+  justify-content: flex-start; padding-top: 10px; gap: 10px;
+  height: 100%; overflow: hidden;
+}
+#sidebar.collapsed #sidebar-collapsed-icon { display: flex; }
+/* Bottone di espansione (sidebar collassata, strip di 36px): stesso chip
+   sempre-visibile del comprimi, così l'affordance è simmetrica e riconoscibile. */
+#sidebar-collapsed-icon button {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text2);
+  transition: color .15s, background .15s, border-color .15s;
+}
+#sidebar-collapsed-icon button:hover { color: var(--accent); background: var(--accent-light); border-color: var(--accent); }
+#sidebar.collapsed #sidebar-resize { display: none; }
+
+/* ══ DETAIL PANEL ════════════════════════════════════════════ */
+#detail-panel {
+  width: 0; min-width: 0; overflow: hidden;
+  background: var(--surface); border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  transition: width .2s cubic-bezier(.4,0,.2,1), min-width .2s;
+  flex-shrink: 0; position: relative;
+}
+#detail-panel.open { width: var(--detail-w); min-width: var(--detail-w); }
+/* Maniglia di ridimensionamento del pannello dettaglio (shared makeResizer). */
+#detail-resize { position: absolute; left: 0; top: 0; bottom: 0; width: 5px; cursor: col-resize; background: transparent; z-index: 50; transition: background .15s; }
+#detail-resize:hover, #detail-resize.dragging { background: var(--accent); }
+#detail-panel:has(#detail-resize.dragging) { transition: none; } /* niente lag durante il drag */
+#detail-header {
+  padding: 10px 12px 8px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; gap: 8px; flex-shrink: 0;
+}
+#detail-header .dh-code {
+  font-family: var(--mono); font-size: 11px;
+  font-weight: 700; color: var(--accent); flex: 1; min-width: 0;
+  word-break: break-all; line-height: 1.4;
+}
+#detail-close {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 3px 8px;
+  cursor: pointer; font-size: 12px; color: var(--text3);
+  flex-shrink: 0; transition: background .12s;
+}
+#detail-close:hover { background: var(--border); }
+#detail-body { flex: 1; overflow-y: auto; padding: 8px 10px 16px; }
+.df {
+  margin-bottom: 8px; border-radius: var(--radius-sm);
+  border: 1px solid var(--border2); overflow: hidden;
+}
+.df-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .6px; color: var(--text4); background: var(--surface2);
+  padding: 3px 8px; display: flex; align-items: center;
+  justify-content: space-between; gap: 6px;
+}
+.df-copy {
+  background: none; border: none; cursor: pointer; padding: 2px 5px;
+  border-radius: 3px; font-size: 15px; color: var(--text4);
+  transition: color .12s, background .12s; line-height: 1;
+}
+.df-copy:hover { color: var(--accent); background: var(--accent-light); }
+.df-copy.copied { color: var(--success); }
+.df-val {
+  font-size: 11.5px; color: var(--text); line-height: 1.55;
+  padding: 5px 8px; white-space: pre-wrap; word-break: break-word;
+}
+.df-val.mono { font-family: var(--mono); font-size: 11px; }
+.df-val.price { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); }
+#detail-actions {
+  padding: 8px 10px; border-top: 1px solid var(--border2);
+  display: flex; gap: 6px; flex-shrink: 0;
+}
+#detail-actions button {
+  flex: 1; font-size: 11px; font-weight: 600; padding: 6px 0;
+  border: none; border-radius: var(--radius-sm); cursor: pointer;
+  transition: background .12s;
+}
+/* Standard suite (rilievo utente): accento su testo, sfondo accento trasparente. */
+#detail-add-cart { background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent); }
+#detail-add-cart:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+#detail-remove-cart { background: var(--danger-light); color: var(--danger); border: 1px solid var(--danger) !important; }
+#detail-remove-cart:hover { background: var(--danger); color: var(--on-bad); }
+/* Apertura compositore dal dettaglio (mockup: azioni impilate) */
+#detail-actions { flex-direction: column; }
+#detail-compose { background: var(--accent-soft); color: var(--accent-h); border: 1px solid var(--accent-line) !important; }
+#detail-compose:hover { background: var(--accent-dim); }
+
+/* ══ COMPACT VIEW ════════════════════════════════════════════ */
+body.compact td { padding: 3px 8px; }
+body.compact .desc-prev { display: none; }
+body.compact .exp-btn { display: none; }
+body.compact .sub-info { display: none; }
+body.compact .desc-short { font-size: 11px; line-height: 1.3; }
+body.compact .tprice { font-size: 11px; }
+body.compact .tco { font-size: 10px; }
+body.compact .reg-badge { font-size: 9px; padding: 1px 5px; }
+body.compact .disc-badge { font-size: 8px; padding: 1px 4px; }
+body.compact tr.active-detail { background: var(--accent-light) !important; }
+tr.active-detail { background: var(--accent-light) !important; }
+
+/* ── Controlli segmentati: layout (Tabella/Capitoli/Elenco) + densità ── */
+.view-switch { display: inline-flex; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.view-switch button {
+  background: var(--surface2); border: none; border-right: 1px solid var(--border);
+  padding: 4px 9px; font-size: 11px; cursor: pointer; color: var(--text3);
+  transition: all .12s; white-space: nowrap; font-family: inherit;
+}
+.view-switch button:last-child { border-right: none; }
+.view-switch button:hover { color: var(--accent); }
+.view-switch button.active { background: var(--accent-light); color: var(--accent-text); }
+
+/* Menu "Visualizzazione ⋯": densità + righe descrizione fuori dalla barra a vista. */
+#view-menu-btn {
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+  cursor: pointer; padding: 5px 10px; border-radius: var(--radius-sm);
+  font-size: 12px; font-family: inherit; transition: var(--tr);
+}
+#view-menu-btn:hover { color: var(--accent); border-color: var(--accent); }
+#view-menu-btn.active { background: var(--accent-light); color: var(--accent-text); border-color: var(--accent); }
+#view-menu-pop {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 50;
+  display: flex; flex-direction: column; gap: 10px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 12px; box-shadow: var(--shadow-2); min-width: 220px;
+}
+#view-menu-pop[hidden] { display: none; }
+#view-menu-pop .vm-row { display: flex; flex-direction: column; gap: 5px; }
+#view-menu-pop .vm-label { font-size: 9px; font-weight: 700; color: var(--text4); text-transform: uppercase; letter-spacing: .6px; }
+
+/* Header alleggerito — popover "⋯ Altro": stesso pattern di #view-menu-btn/#view-menu-pop,
+   ospita le azioni secondarie dell'header fuori dalla vista a riposo. */
+#more-btn {
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+  cursor: pointer; padding: 5px 10px; border-radius: var(--radius-sm);
+  font-size: 12px; font-family: inherit; transition: var(--tr);
+}
+#more-btn:hover { color: var(--accent); border-color: var(--accent); }
+#more-btn.active { background: var(--accent-light); color: var(--accent-text); border-color: var(--accent); }
+#more-menu-pop {
+  /* z-index 10060: SOPRA #cart-overlay (Computo/Categorizza, fixed z:60) e SOPRA
+     .overlay (Esporta e ogni altro modale, z:10050) — #more-btn è nell'header
+     persistente, raggiungibile da ogni passo, quindi il suo popover non deve mai
+     finire coperto dalla vista-passo aperta (bug osservato: "Altro" invisibile
+     sopra Computo/Categorizza/Esporta, corretto solo su Cerca perché lì niente
+     overlay competeva). Stesso principio del commento su .overlay più sotto. */
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 10060;
+  display: flex; flex-direction: column; gap: 6px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px; box-shadow: var(--shadow-2); min-width: 210px;
+}
+#more-menu-pop[hidden] { display: none; }
+#more-menu-pop button, #more-menu-pop label { width: 100%; justify-content: flex-start; }
+
+/* Popover "Esporta ▾" — stesso pattern, famiglia colore Esporta/Interscambio
+   già sul bottone via .ehb-btn-fam-export (arrow incluso). Stessa taglia per
+   l'azione rapida di copia a fianco (copy-btn): è la stessa azione, solo
+   sempre visibile invece che dentro al popover. */
+#export-menu-btn, #copy-btn { padding: 6px 11px; font-size: 12px; }
+#export-menu-pop {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 50;
+  display: flex; flex-direction: column; gap: 4px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 8px; box-shadow: var(--shadow-2); min-width: 260px;
+}
+#export-menu-pop[hidden] { display: none; }
+#export-menu-pop button {
+  width: 100%; text-align: left; background: none; border: none; color: var(--text);
+  padding: 7px 9px; border-radius: var(--radius-sm); font-size: 12px; cursor: pointer; transition: var(--tr);
+}
+#export-menu-pop button:hover { background: var(--surface2); color: var(--fam-export, var(--accent)); }
+
+/* ── Vista Capitoli (vista ad albero) ── */
+#treeview, .cart-capitoli { padding: 2px 0 12px; }
+.tnode {
+  display: flex; align-items: center; gap: 7px; padding: 5px 8px; cursor: pointer;
+  font-size: 12px; font-weight: 600; color: var(--text);
+  border-bottom: 1px solid var(--border); user-select: none;
+}
+.tnode:hover { background: var(--row-hover); }
+.tnode .tchev { width: 12px; color: var(--text3); flex-shrink: 0; font-size: 10px; }
+.tnode .tlabel { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tnode.open > .tlabel { color: var(--accent-text); }
+.tnode .tcount { flex-shrink: 0; font-family: var(--mono); font-size: 10px; color: var(--text3); background: var(--surface2); border-radius: 9px; padding: 1px 7px; }
+.tnode .tamt { flex-shrink: 0; font-family: var(--mono); font-size: 11px; font-weight: 700; color: var(--accent-text); min-width: 76px; text-align: right; margin-left: 4px; }
+.tvoce {
+  display: grid; grid-template-columns: 20px 140px 1fr 50px 78px 64px; align-items: start; gap: 8px;
+  padding: 4px 8px; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 11.5px;
+}
+.tvoce { transition: background var(--tr, .12s), box-shadow var(--tr, .12s), transform var(--tr, .12s); }
+.tvoce:hover { background: var(--row-hover); box-shadow: inset 3px 0 0 color-mix(in srgb, var(--accent) 55%, transparent); transform: translateX(2px); }
+.tvoce.sel { background: var(--row-sel); }
+.tvoce.active-detail { box-shadow: inset 3px 0 0 var(--accent); }
+.tv-code { font-family: var(--mono); font-size: 10px; color: var(--text3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tv-desc { white-space: normal; overflow-wrap: anywhere; line-height: 1.4; color: var(--text);
+  display: -webkit-box; -webkit-line-clamp: var(--desc-lines); -webkit-box-orient: vertical; overflow: hidden; }
+.tv-um { color: var(--text3); text-align: center; }
+.tv-price { text-align: right; font-weight: 700; color: var(--accent-text); font-family: var(--mono); }
+.tv-mdo { text-align: right; font-size: 9.5px; color: var(--text3); font-family: var(--mono); }
+body.compact .tvoce, body.ultra .tvoce { padding: 2px 8px; font-size: 11px; }
+body.ultra .tnode { padding: 3px 8px; }
+
+/* ── Vista Capitoli: voci "Compatte" (default) — STESSI campi di "Espanse"
+   (codice · descrizione · um · misura · prezzo · MDO, nessuna colonna in più),
+   solo su una riga sola invece che a card multi-riga. Controllo "Voci" nel
+   popover ⋯ Visualizzazione — vedi setTreeVoce. ── */
+#treeview.tvoce-compact .tvoce {
+  grid-template-columns: 20px 130px 1fr 44px 74px 64px 52px;
+  align-items: center; gap: 8px; font-size: 11px;
+}
+#treeview.tvoce-compact .tv-mdo { text-align: left; }
+#treeview.tvoce-compact .tv-desc {
+  -webkit-line-clamp: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+body.compact #treeview.tvoce-compact .tvoce, body.ultra #treeview.tvoce-compact .tvoce { padding: 2px 8px; }
+
+/* ── Vista Elenco essenziale ── */
+#listview { display: flex; flex-direction: column; padding: 2px 0 10px; }
+.litem {
+  display: grid; grid-template-columns: 22px 150px 1fr 60px 90px; align-items: start; gap: 8px;
+  padding: 5px 8px; border-bottom: 1px solid var(--border); cursor: pointer; font-size: 12px;
+}
+.litem { transition: background var(--tr, .12s), box-shadow var(--tr, .12s), transform var(--tr, .12s); }
+.litem:hover { background: var(--row-hover); box-shadow: inset 3px 0 0 color-mix(in srgb, var(--accent) 55%, transparent); transform: translateX(2px); }
+.litem.sel { background: var(--row-sel); }
+.litem.active-detail { box-shadow: inset 3px 0 0 var(--accent); }
+.li-code { font-family: var(--mono); font-size: 10.5px; color: var(--text3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.li-desc { white-space: normal; overflow-wrap: anywhere; line-height: 1.4; color: var(--text);
+  display: -webkit-box; -webkit-line-clamp: var(--desc-lines); -webkit-box-orient: vertical; overflow: hidden; }
+.li-um { color: var(--text3); text-align: center; }
+.li-price { text-align: right; font-weight: 700; color: var(--accent-text); font-family: var(--mono); }
+
+/* ── Densità Ultra (più fitta della Compatta) ── */
+body.ultra td { padding: 1px 6px; }
+body.ultra .desc-prev, body.ultra .exp-btn, body.ultra .sub-info { display: none; }
+body.ultra .desc-short { font-size: 10px; line-height: 1.2; }
+body.ultra .tprice, body.ultra .tco { font-size: 9.5px; }
+body.ultra .reg-badge, body.ultra .disc-badge { font-size: 8px; padding: 0 4px; }
+body.ultra .litem { padding: 2px 8px; font-size: 11px; }
+body.compact .litem { padding: 3px 8px; }
+
+/* (Il tema scuro di μ è ora gestito dai token condivisi via gli alias sopra.) */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 14px; transition: background .2s, color .2s; }
+
+/* ══ HEADER ══════════════════════════════════════════════════
+   Anatomia condivisa .ehb-hdr: brand a sinistra, azioni a destra.
+   Vedi src/shared/ui/components.css. Qui resta solo lo specifico di μ
+   (separatore del brand). */
+.ehb-hdr__brand { cursor: pointer; padding-right: 18px; border-right: 1px solid var(--border); }
+/* Identità μ → titolo E glifo SEMPRE nell'accento verde (mai grigio).
+   Il glifo eredita già --accent dal primitivo .ehb-logo; qui portiamo anche
+   il brand-name sull'accento. */
+.ehb-hdr[data-tool="miu"] .ehb-hdr__brand-name,
+.ehb-hdr[data-tool="miu"] .ehb-logo__glyph { color: var(--accent); }
+
+/* macrocategorie impianti: chip a monte dei filtri */
+#macro-chips {
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  padding: 6px 0 2px;
+}
+#macro-chips:empty { display: none; }
+.macro-chip {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: 99px;
+  font-size: 10px; font-weight: 700; letter-spacing: .03em;
+  cursor: pointer; white-space: nowrap; user-select: none;
+  background: var(--surface2); color: var(--text-dim, var(--text));
+  border: 1.5px solid var(--border);
+  transition: all .15s;
+}
+.macro-chip:hover { border-color: var(--text); opacity: .9; }
+.macro-chip.active {
+  background: var(--accent); color: var(--on-accent);
+  border-color: var(--accent);
+}
+#theme-toggle {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 5px 8px;
+  font-size: 13px; cursor: pointer; color: var(--text3);
+  transition: border-color .12s, color .12s; line-height: 1; flex-shrink: 0;
+}
+#theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+#folder-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--accent); color: var(--on-accent);
+  border: none; border-radius: var(--radius-sm);
+  padding: 7px 14px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: background .15s; white-space: nowrap;
+}
+#folder-btn:hover { background: var(--accent-h); }
+
+/* Bottone Computo Metrico — funzione fondamentale di μ, nella filter-toolbar
+   accanto a "✕ Reset filtri" (non più un'icona in un angolo dell'header: ha
+   lo stesso rilievo di un lavoro in corso). Bottone PRIMARIO, più grande e
+   accentato dei bottoni-utility accanto. Vuoto = contorno accento discreto;
+   con voci = pieno accento, in evidenza, con conteggio e totale. */
+#cart-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1.5px solid var(--accent); border-radius: var(--radius);
+  padding: 8px 15px; font-size: 13px; font-weight: 700;
+  cursor: pointer; flex-shrink: 0; line-height: 1;
+  background: transparent; color: var(--accent-text);
+  transition: transform var(--tr, .12s), box-shadow var(--tr, .12s), background var(--tr, .12s), color var(--tr, .12s), border-color var(--tr, .12s), opacity .12s;
+}
+#cart-btn .cart-glyph { font-size: 16px; }
+#cart-btn .cart-count {
+  font-family: var(--mono); font-size: 11px; font-weight: 800;
+  background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent-text); border-radius: 7px; padding: 2px 7px; min-width: 18px; text-align: center;
+}
+#cart-btn .cart-total { font-family: var(--mono); font-size: 12px; font-weight: 700; }
+/* Vuoto: contorno muto, non urla ma resta un invito chiaro. */
+#cart-btn.disabled { border-color: var(--border); color: var(--text3); background: var(--surface2); cursor: default; }
+/* Con voci: pieno accento + ombra colorata → salta all'occhio come destinazione. */
+#cart-btn.active {
+  background: var(--accent); color: var(--on-accent, #fff); border-color: var(--accent);
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--accent) 38%, transparent);
+}
+#cart-btn.active .cart-count { background: color-mix(in srgb, #fff 26%, transparent); color: var(--on-accent, #fff); }
+#cart-btn.active .cart-total { color: var(--on-accent, #fff); opacity: .95; }
+#cart-btn.active:hover { transform: translateY(-1px); box-shadow: 0 5px 16px color-mix(in srgb, var(--accent) 48%, transparent); }
+/* Pulsazione breve quando il conteggio cambia (aggiunta al carrello) — rispetta reduce-motion. */
+@keyframes cart-bump { 0%{transform:scale(1)} 35%{transform:scale(1.08)} 100%{transform:scale(1)} }
+#cart-btn.bump { animation: cart-bump .32s ease-out; }
+:root[data-motion="reduced"] #cart-btn.bump { animation: none; }
+
+/* Carrelli (alternativi): coerente con l'estetica dei bottoni header di μ. */
+#carts-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 5px 11px; font-size: 12px; font-weight: 600;
+  cursor: pointer; flex-shrink: 0; line-height: 1;
+  background: var(--surface2); color: var(--text4);
+  transition: border-color .12s, color .12s, background .12s, opacity .12s;
+}
+/* «Computi» = salva/carica computi alternativi con nome — Famiglia 5
+   (Esporta/Interscambio): non genera una voce, scambia interi computi. */
+#carts-btn:hover { border-color: var(--fam-export); color: var(--fam-export); }
+
+#drop-zone {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--surface2); color: var(--text2);
+  border: 1.5px dashed var(--border); border-radius: var(--radius-sm);
+  padding: 6px 12px; font-size: 12px; font-weight: 600;
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+#drop-zone:hover { border-color: var(--accent); color: var(--accent); }
+#drop-zone.dragover { border-color: var(--accent); background: var(--accent-light); color: var(--accent-text); border-style: solid; }
+#drop-zone .dz-text { font-size: 12px; }
+
+/* Trascinamento di un FILE sulla finestra: la zona in header sta dentro il
+   popover "⋯ Altro" e all'avvio non si vede, quindi il bersaglio vero è
+   l'intera finestra (vedi initDropZone). Questo velo lo dice a chi trascina. */
+body.file-dragover::after {
+  content: "Rilascia qui il prezzario — .xml (preferibile), .xlsx o listino METEL .txt";
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; text-align: center;
+  background: var(--accent-light); color: var(--accent-text);
+  border: 3px dashed var(--accent);
+  font-size: 15px; font-weight: 700;
+  pointer-events: none;
+}
+
+
+/* ══ LAYOUT ═════════════════════════════════════════════════ */
+/* --chrome-h = header + binario (misurato in JS): il #main e le viste-passo
+   partono esattamente sotto il binario, che resta sempre visibile. */
+#main { display: flex; height: calc(100vh - var(--chrome-h, 48px)); }
+/* Sotto --bp-sm la sidebar «Prezzari caricati» si comprime
+   (icona) per lasciare la larghezza ai risultati; resta espandibile via toggle
+   manuale. Rispecchia i nascondimenti di .collapsed senza richiederne la classe. */
+@media (max-width: 768px) {
+  #sidebar:not(.collapsed):not(.forced-open) { width: 36px; min-width: 36px; }
+  #sidebar:not(.collapsed):not(.forced-open) #archive-list,
+  #sidebar:not(.collapsed):not(.forced-open) #sidebar-footer,
+  #sidebar:not(.collapsed):not(.forced-open) .sidebar-section-title { display: none; }
+  /* Composer: la colonna Libreria collassa e le due colonne editor/anteprima
+     si impilano per non spremere il testo. */
+  .cmp-body { grid-template-columns: 1fr !important; }
+}
+
+/* ══ SIDEBAR ════════════════════════════════════════════════ */
+#sidebar {
+  width: var(--sidebar-w); min-width: 200px; max-width: 600px;
+  background: var(--surface); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+  position: relative; flex-shrink: 0;
+}
+#sidebar-resize {
+  position: absolute; top: 0; right: -3px; width: 6px; height: 100%;
+  cursor: col-resize; z-index: 50; background: transparent;
+  transition: background .15s;
+}
+#sidebar-resize:hover, #sidebar-resize.dragging { background: var(--accent); }
+.sidebar-section-title {
+  padding: 10px 14px 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: .7px;
+  text-transform: uppercase; color: var(--text4);
+  border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sidebar-section-title span { color: var(--text3); font-weight: 400; font-size: 10px; }
+
+#archive-list { flex: 1; overflow-y: auto; padding: 6px; }
+.arch-item {
+  padding: 7px 10px; border-radius: var(--radius-sm);
+  margin-bottom: 3px; cursor: pointer;
+  border: 1px solid transparent;
+  transition: all .12s;
+  display: flex; align-items: center; gap: 8px;
+}
+/* Il bordo della voce sotto il cursore / attiva assume il colore della REGIONE
+   (--reg, impostato inline dal render); fallback ai colori neutri/accento. */
+.arch-item:hover { background: var(--surface2); border-color: var(--reg, var(--border2)); }
+.arch-item.active { background: var(--row-sel); border-color: var(--reg, var(--accent)); }
+.arch-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+.arch-item.loaded .arch-dot { background: var(--success); }
+.arch-item.loading .arch-dot { background: var(--warn); animation: blink 1s infinite; }
+.arch-radio {
+  width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0;
+  border: 2px solid var(--text4); box-sizing: border-box; position: relative;
+  transition: all .12s;
+}
+.arch-radio.on::after {
+  content: ''; position: absolute; inset: 2px; border-radius: 50%; background: #fff;
+}
+.arch-viewing {
+  font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px;
+  background: var(--accent); color: var(--on-accent); padding: 1px 5px; border-radius: 99px;
+  margin-left: 4px; vertical-align: middle;
+}
+.arch-info { flex: 1; min-width: 0; }
+.arch-region { font-weight: 600; font-size: 12px; color: var(--text); line-height: 1.3; word-break: break-word; }
+.arch-file { font-size: 10px; color: var(--text4); margin-top: 2px; line-height: 1.35; word-break: break-word; }
+.top-group-header {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 12px; cursor: pointer; user-select: none;
+  font-size: 12px; font-weight: 700; color: var(--text);
+  background: var(--surface2); border-bottom: 1px solid var(--border2);
+  position: sticky; top: 0; z-index: 5;
+}
+.top-group-header:hover { background: var(--surface3); }
+.tgh-arrow { font-size: 9px; opacity: .6; width: 10px; }
+.tgh-icon { font-size: 15px; line-height: 1; }
+.tgh-name { flex: 1; }
+.tgh-count { font-size: 10px; font-weight: 700; font-family: var(--mono); background: var(--surface); color: var(--text3); padding: 1px 7px; border-radius: 99px; border: 1px solid var(--border); }
+.top-group-body { padding: 4px 6px 8px; }
+.group-empty-hint { padding: 14px 12px; text-align: center; font-size: 11px; color: var(--text4); line-height: 1.6; }
+.reg-group-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 8px 4px; margin-top: 4px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px;
+  cursor: pointer; border-radius: var(--radius-sm); user-select: none;
+  transition: background .12s;
+}
+.reg-group-header:hover { background: var(--surface2); }
+.rgh-arrow { font-size: 8px; opacity: .7; width: 10px; }
+.rgh-name { flex: 0 1 auto; }
+.rgh-year { font-size: 9px; font-weight: 600; opacity: .85; font-family: var(--mono); padding: 1px 6px; border-radius: 99px; border: 1px solid currentColor; }
+.rgh-count { font-size: 9px; font-weight: 600; opacity: .65; font-family: var(--mono); margin-left: auto; }
+.reg-divider {
+  padding: 12px 10px 5px; margin-top: 6px;
+  font-size: 9px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  color: var(--text4); border-top: 1px solid var(--border2);
+}
+.reg-empty {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 10px; opacity: .55;
+}
+.reg-empty-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+.reg-empty-name { font-size: 12px; font-weight: 600; color: var(--text4); }
+.arch-count { font-family: var(--mono); font-size: 10px; color: var(--text3); background: var(--surface2); padding: 1px 5px; border-radius: 99px; white-space: nowrap; flex-shrink: 0; }
+
+#sidebar-footer {
+  padding: 8px 14px; border-top: 1px solid var(--border2);
+  font-size: 11px; color: var(--text4);
+  display: flex; justify-content: space-between;
+}
+#sidebar-footer strong { color: var(--text2); }
+
+/* ══ CONTENT ════════════════════════════════════════════════ */
+#content { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+
+/* ══ ACTIVE PREZZARIO BANNER ═════════════════════════════════ */
+#active-banner {
+  background: var(--surface2); border-bottom: 1px solid var(--border);
+  padding: 8px 16px; display: flex; align-items: center; gap: 10px;
+  font-size: 13px;
+}
+#active-banner .ab-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+#active-banner .ab-label { color: var(--text4); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; font-weight: 700; }
+#active-banner .ab-region { font-weight: 700; font-size: 14px; }
+#active-banner .ab-file { color: var(--text3); font-size: 12px; }
+#active-banner .ab-count { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--text3); background: var(--surface); padding: 2px 8px; border-radius: 99px; border: 1px solid var(--border); }
+
+/* ══ HERO SEARCH (primary) ═══════════════════════════════════ */
+#search-hero {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 12px 16px; display: flex; align-items: center; gap: 10px;
+  position: relative;
+}
+#search-hero .sh-icon { color: var(--text4); flex-shrink: 0; }
+#search-input {
+  flex: 1; border: 2px solid var(--border); border-radius: var(--radius);
+  padding: 10px 14px; font-size: 15px; font-family: inherit;
+  background: var(--bg); color: var(--text); outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+#search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+#search-hint { font-size: 10px; color: var(--text4); white-space: nowrap; flex-shrink: 0; }
+
+/* «Componi descrizione» accanto alla ricerca: azione prominente, sempre visibile */
+#componi-btn {
+  flex-shrink: 0; background: var(--accent); color: var(--on-accent);
+  border: none; border-radius: var(--radius); padding: 10px 16px;
+  font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer;
+  white-space: nowrap; transition: background .15s, transform .1s;
+}
+#componi-btn:hover { background: var(--accent-h); }
+#componi-btn:active { transform: scale(.97); }
+
+/* «Σ Analisi Prezzi» — ingresso diretto, a fianco del Compositore di descrizione
+   (stesso overlay/motore, apre già in modalità 'analisi'): variante
+   secondaria, meno prominente del bottone primario ma sempre a vista. */
+/* Famiglia 2 (Componi/Crea) come #componi-btn, ma "ghost": stessa scheda
+   Σ Analisi Prezzi, ingresso secondario — dashed invece di pieno. */
+#ap-compose-btn {
+  flex-shrink: 0; background: transparent; color: var(--accent);
+  border: 1px dashed var(--accent); border-radius: var(--radius);
+  padding: 9px 15px; font-size: 13px; font-weight: 700; font-family: inherit;
+  cursor: pointer; white-space: nowrap; transition: background .15s, border-color .15s, transform .1s;
+}
+#ap-compose-btn:hover { background: var(--accent-light); }
+#ap-compose-btn:active { transform: scale(.97); }
+
+/* ══ FILTER BAR ══════════════════════════════════════════════ */
+#filter-bar {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 8px 14px;
+}
+.filter-toolbar {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;
+}
+/* spinge i gruppi export a destra, di fianco a «✕ Reset filtri» */
+.exp-sp { flex: 1; }
+/* "Filtri ▾" — un solo bottone in barra, il drawer (macro-chips + filter-grid)
+   sta a riposo (display:none) finché non lo si apre (makeAccordion, main.ts). */
+#filtri-btn {
+  background: var(--surface2); border: 1px solid var(--border); color: var(--text3);
+  cursor: pointer; padding: 5px 11px; border-radius: var(--radius-pill, 999px);
+  font-size: 12px; font-family: inherit; transition: var(--tr); flex-shrink: 0;
+}
+#filtri-btn:hover { color: var(--text); border-color: var(--border2); background: var(--surface3); }
+#filtri-btn.acc-collapsed { /* drawer chiuso: nessuna trasformazione, resta un testo leggibile */ }
+#filtri-btn.has-active { color: var(--accent-text); border-color: var(--accent); background: var(--accent-light); }
+#filtri-drawer { padding-top: 8px; }
+.filtri-drawer-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+#filter-mini-search {
+  flex: 0 0 auto; width: 240px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 5px 10px; font-size: 12px; font-family: inherit;
+  background: var(--bg); color: var(--text);
+}
+#filter-mini-search:focus { border-color: var(--accent); }
+.filter-grid {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end;
+}
+.fg { display: flex; flex-direction: column; gap: 2px; }
+.fg.hidden-filter { display: none; }
+.fg label { font-size: 9px; font-weight: 700; color: var(--text4); text-transform: uppercase; letter-spacing: .6px; }
+.fg select, .fg input {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 4px 8px; font-size: 12px; font-family: inherit;
+  background: var(--bg); color: var(--text);
+  /* niente outline:none: il ring condiviso :focus-visible (tokens.css) deve restare visibile */
+  transition: border-color .15s; min-width: 90px;
+}
+.fg select:focus, .fg input:focus { border-color: var(--accent); }
+.price-range { display: flex; gap: 4px; align-items: center; }
+.price-range input { width: 80px; min-width: 0; }
+.price-range .sep { font-size: 11px; color: var(--text4); }
+#btn-reset {
+  border: 1px solid var(--border); background: var(--surface2);
+  color: var(--text3); border-radius: var(--radius-sm);
+  padding: 5px 11px; font-size: 12px; cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+/* Famiglia 1 (Naviga/Filtra): hover neutro, non tinto d'accento — l'accento
+   verde è riservato alla famiglia Componi/Crea, altrimenti si confondono. */
+#btn-reset:hover { border-color: var(--border2); color: var(--text); background: var(--surface3); }
+/* separatore visivo tra "Reset filtri" e "Computo Metrico" (spostato qui
+   dall'header: stesso rilievo di un lavoro in corso, non un'icona in un angolo) */
+.filter-toolbar-sep { width: 1px; align-self: stretch; background: var(--border); flex-shrink: 0; }
+
+/* ══ RESULTS BAR ════════════════════════════════════════════ */
+#results-bar {
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  padding: 5px 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+#results-count { font-size: 12px; color: var(--text3); }
+#results-count strong { color: var(--text); }
+#btn-cart-clear { font-size: 11px; color: var(--danger); background: none; border: none; cursor: pointer; text-decoration: underline; padding: 0 2px; flex-shrink: 0; }
+.rbar-spacer { flex: 1; }
+#per-page-sel {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 3px 6px; font-size: 11px; background: var(--surface);
+  color: var(--text3); cursor: pointer;
+}
+#btn-sel-all { font-size: 11px; font-weight: 500; color: var(--accent); background: none; border: none; cursor: pointer; }
+#btn-sel-all:hover { text-decoration: underline; }
+/* «N selezionate» — voci scelte nei risultati, non ancora nel computo (S.searchSel). */
+#sel-count {
+  font-family: var(--mono); font-size: 11px; font-weight: 800;
+  background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent-text);
+  border-radius: 7px; padding: 2px 8px;
+}
+/* ══ EXPORT raggruppati per destinazione (mockup export-toolbar-miu, variante A):
+   cornice tratteggiata + etichetta verticale sottile; bottoni TUTTI uniformi
+   allo stile del mockup (neutri, hover accento) — l'appartenenza la dice il
+   gruppo, non il colore del bottone. Il gruppo Σ è bordato d'accento. ══ */
+.exp-grp { display: inline-flex; align-items: center; gap: 6px; border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 4px 7px 4px 5px; }
+.exp-grp-label { font-size: 8px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--text3); writing-mode: sideways-lr; text-orientation: mixed; user-select: none; }
+.exp-grp.ap { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.exp-grp.ap .exp-grp-label { color: var(--accent); }
+.exp-grp button {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+  background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+  border-radius: var(--radius-sm); padding: 6px 11px; cursor: pointer; transition: var(--tr); white-space: nowrap;
+}
+/* Famiglia 5 (Esporta/Interscambio): il dato ESCE da μ verso METEL/PDF —
+   viola (colore dell'export nel tool), mai verde (che è la famiglia
+   Componi/Crea: qui non si genera nulla di nuovo). */
+.exp-grp button:hover { border-color: var(--fam-export); color: var(--fam-export); background: var(--surface2); }
+.exp-grp.ap button:hover { border-color: var(--accent); color: var(--accent-h, var(--accent)); }
+#ap-fascicolo-btn.disabled, #ap-fascicolo-pdf-btn.disabled { opacity: .4; pointer-events: auto; cursor: not-allowed; }
+#ap-fascicolo-btn.disabled:hover, #ap-fascicolo-pdf-btn.disabled:hover { border-color: var(--border); color: var(--text); }
+.exp-badge { background: var(--accent); color: var(--on-accent, #fff); border-radius: 99px; font-size: 9px; font-weight: 800; padding: 1px 6px; }
+#ap-fascicolo-btn.disabled .exp-badge { background: var(--border); }
+
+/* ══ COPY POPUP ══════════════════════════════════════════════ */
+#copy-box {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 18px; max-width: 900px; width: 94%; max-height: 86vh;
+  display: flex; flex-direction: column; gap: 12px;
+  box-shadow: var(--shadow-md); border: 1px solid var(--border);
+}
+#copy-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+#copy-head h3 { font-size: 15px; font-weight: 700; color: var(--text); }
+.copy-sub { font-size: 12px; color: var(--text3); margin-top: 3px; }
+.copy-sub strong { color: var(--accent-text); font-family: var(--mono); }
+#copy-close { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 4px 9px; cursor: pointer; font-size: 13px; color: var(--text3); flex-shrink: 0; }
+#copy-close:hover { background: var(--border); }
+#copy-textarea {
+  flex: 1; min-height: 320px; resize: vertical;
+  font-family: var(--mono); font-size: 11px; line-height: 1.5;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px; background: var(--bg); color: var(--text);
+  white-space: pre; overflow: auto;
+}
+#copy-textarea:focus { border-color: var(--accent); }
+#copy-actions { display: flex; gap: 8px; justify-content: flex-end; }
+/* Standard suite (rilievo utente): accento su testo/bordo, sfondo accento trasparente. */
+.btn-primary { background: var(--accent-soft); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent); border-radius: var(--radius-sm); padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-primary:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.btn-secondary { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 16px; font-size: 13px; font-weight: 500; cursor: pointer; }
+.btn-secondary:hover { background: var(--border); }
+
+/* ══ TABLE ══════════════════════════════════════════════════ */
+#table-wrap { flex: 1; overflow: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead { position: sticky; top: 0; z-index: 10; }
+th {
+  background: var(--surface2); border-bottom: 2px solid var(--border);
+  padding: 7px 10px; text-align: left;
+  font-weight: 700; font-size: 10px; color: var(--text3);
+  white-space: nowrap; user-select: none; letter-spacing: .3px;
+}
+th.sortable { cursor: pointer; }
+th.sortable:hover { color: var(--accent); }
+th.sort-asc::after { content: ' ↑'; color: var(--accent); }
+th.sort-desc::after { content: ' ↓'; color: var(--accent); }
+td { padding: 6px 10px; border-bottom: 1px solid var(--border2); vertical-align: top; }
+tbody tr { transition: background var(--tr, .12s), box-shadow var(--tr, .12s); }
+/* Micro-interazione: su hover la barra accento scorre dal bordo sinistro. */
+tbody tr:hover { background: var(--row-hover); box-shadow: inset 3px 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
+tbody tr.sel { background: var(--row-sel); box-shadow: inset 3px 0 0 var(--accent); }
+tbody tr:active { filter: brightness(.985); }
+
+/* ── SELEZIONE VOCI (click/drag/shift/frecce) ───────────────────────────────── */
+/* La riga intera è un bersaglio di selezione: cursore a mano; gli input restano testo. */
+#tbody tr, .litem, .tvoce { cursor: pointer; }
+.qty-in { cursor: text; }
+/* Checkbox più grandi e leggibili (prima erano minuscole). */
+#tbody input[type=checkbox], #listview input[type=checkbox], #treeview input[type=checkbox] {
+  width: 15px; height: 15px; cursor: pointer; accent-color: var(--accent);
+}
+/* Cursore tastiera (frecce): anello accento attorno alla riga focalizzata. */
+.row-focus { outline: 2px solid color-mix(in srgb, var(--accent) 70%, transparent); outline-offset: -2px; border-radius: 3px; }
+/* Durante il trascinamento: niente selezione-testo, cursore "cella". */
+body.sel-dragging { user-select: none; }
+body.sel-dragging #tbody tr, body.sel-dragging .litem, body.sel-dragging .tvoce { cursor: cell; }
+
+.tc { width: 28px; text-align: center; }
+.tco { font-family: var(--mono); font-size: 10px; color: var(--text3); white-space: nowrap; line-height: 1.3; }
+.tr { white-space: nowrap; }
+.ty { text-align: center; font-weight: 600; font-size: 11px; }
+.td { max-width: 560px; min-width: 320px; }
+.desc-short { line-height: 1.4; color: var(--text); font-weight: 600;
+  overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: var(--desc-lines); -webkit-box-orient: vertical; overflow: hidden; }
+.desc-prev {
+  font-size: 11px; color: var(--text3); margin-top: 3px; line-height: 1.45;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; text-overflow: ellipsis;
+}
+.desc-long { display: none; font-size: 11px; color: var(--text2); margin-top: 4px; line-height: 1.55; border-top: 1px dashed var(--border2); padding-top: 5px; white-space: pre-wrap; }
+.exp-btn { font-size: 10px; color: var(--accent); cursor: pointer; border: none; background: none; padding: 2px 0 0; display: block; }
+.exp-btn:hover { text-decoration: underline; }
+tr.expanded .desc-prev { display: none; }
+tr.expanded .desc-long { display: block; }
+.sub-info { font-size: 10px; color: var(--text4); margin-top: 2px; }
+
+/* Descrizioni voce (Tabella/Elenco/Capitoli): usano --sans così SEGUONO il font di
+   sistema scelto dal pannello Impostazioni, come tutto il resto della UI (prima erano
+   inchiodate a --prose, l'unico binario che il selettore font non rimappa → restavano
+   indietro). Codici, prezzi e u.m. restano monospace (vedi .tv-code/.tv-price/.li-code). */
+.desc-short, .desc-prev, .desc-long, .tv-desc, .li-desc { font-family: var(--sans); }
+.tum { text-align: center; font-weight: 600; color: var(--text3); white-space: nowrap; }
+.tprice { text-align: right; font-family: var(--mono); font-weight: 700; font-size: 13px; white-space: nowrap; color: var(--text); }
+.tnet { text-align: right; font-family: var(--mono); font-size: 11px; color: var(--text4); white-space: nowrap; }
+/* Colonna "%MDO": incidenza manodopera (r.ru) — stretta, monospace, non a capo. */
+.tmdo-h { text-align: right; white-space: nowrap; }
+.tmdo { text-align: right; font-family: var(--mono); font-size: 11px; color: var(--text4); white-space: nowrap; }
+
+/* Schermata leggera — "Colonne: Meno" (view-menu ⋯ Visualizzazione): nasconde le
+   colonne di CONTESTO (regione, anno, %MDO, importo netto). La Descrizione
+   NON è coinvolta: si autocomprime già per riga con .exp-btn/expand(). */
+#dtable.cols-lean thead th[data-col="regione"],
+#dtable.cols-lean thead th[data-col="anno"],
+#dtable.cols-lean thead th[data-col="ru"],
+#dtable.cols-lean thead th[data-col="importo_netto"],
+#dtable.cols-lean tbody .tr,
+#dtable.cols-lean tbody .ty,
+#dtable.cols-lean tbody .tmdo,
+#dtable.cols-lean tbody .tnet { display: none; }
+
+/* Colonna "Misura": quantità editabile per voce → Misurazioni.
+   ⇪ = importata da una distinta · ✎ = inserita a mano. */
+.tmis-h { text-align: center; white-space: nowrap; }
+.tmis { text-align: right; white-space: nowrap; }
+.qty-in {
+  width: 64px; text-align: right; font-family: var(--mono);
+  font-size: 12px; padding: 3px 6px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); background: var(--surface2); color: var(--text);
+  transition: border-color .12s, background .12s;
+}
+.qty-in::placeholder { color: var(--text4); }
+.qty-in:hover { border-color: var(--border-strong, var(--line2)); }
+.qty-in:focus { border-color: var(--src-import); background: var(--surface); }
+.mis-src { margin-left: 4px; font-size: 11px; font-weight: 700; }
+.mis-src.imp { color: var(--src-import); }
+.mis-src.man { color: var(--warn); }
+body.compact .qty-in { width: 56px; font-size: 11px; padding: 2px 5px; }
+body.ultra .qty-in { width: 50px; font-size: 10px; padding: 1px 4px; }
+
+/* badges */
+.reg-badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 7px; border-radius: var(--radius-pill);
+  font-size: 10px; font-weight: 700;
+}
+.disc-badge {
+  display: inline-block; padding: 1px 6px; border-radius: var(--radius-pill);
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px;
+}
+.disc-mec { background: #dbeafe; color: #1e40af; }
+.disc-ele { background: #fef9c3; color: #854d0e; }
+.disc-idr { background: #dcfce7; color: #166534; }
+.disc-ant { background: #fee2e2; color: #991b1b; }
+.disc-ict { background: #f3e8ff; color: #6b21a8; }
+.disc-gen { background: var(--surface3); color: var(--text4); }
+[data-theme="dark"] .disc-mec { background: #1e3a6e; color: #93c5fd; }
+[data-theme="dark"] .disc-ele { background: #3b2a0a; color: #fcd34d; }
+[data-theme="dark"] .disc-idr { background: #143d20; color: #86efac; }
+[data-theme="dark"] .disc-ant { background: #3b1a1a; color: #fca5a5; }
+[data-theme="dark"] .disc-ict { background: #2e1a4e; color: #c4b5fd; }
+
+.mat-badge {
+  display: inline-block; padding: 1px 6px; border-radius: var(--radius-pill);
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .3px;
+  background: #f1f5f9; color: #475569; vertical-align: middle;
+}
+[data-theme="dark"] .mat-badge { background: #334155; color: #cbd5e1; }
+
+/* ══ PAGINATION ══════════════════════════════════════════════ */
+#pagination {
+  background: var(--surface); border-top: 1px solid var(--border);
+  padding: 6px 14px; display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+}
+.pg-btn {
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text3);
+  padding: 3px 9px; font-size: 11px; cursor: pointer;
+  transition: all .1s; min-width: 30px; text-align: center;
+}
+.pg-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.pg-btn.act { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 700; }
+.pg-btn:disabled { opacity: .35; cursor: default; }
+.pg-sep { font-size: 11px; color: var(--text4); padding: 0 2px; }
+.pg-info { font-size: 11px; color: var(--text4); margin-left: 6px; }
+
+/* ══ STATE PANEL ═════════════════════════════════════════════ */
+#state-panel {
+  flex: 1; display: none; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 14px; padding: 40px; text-align: center;
+}
+#state-panel.show { display: flex; }
+.state-icon { font-size: 52px; opacity: .4; }
+.state-h2 { font-size: 17px; font-weight: 700; color: var(--text2); }
+.state-p { font-size: 13px; color: var(--text3); max-width: 400px; line-height: 1.6; }
+.state-hint { font-size: 11px; color: var(--text4); background: var(--surface2); padding: 7px 14px; border-radius: var(--radius); border: 1px solid var(--border2); }
+/* accesso di riserva al Computo Metrico dalla schermata idle (nessun prezzario
+   aperto): la filter-toolbar che ospita il pulsante primario è nascosta qui. */
+.state-cart-link {
+  margin-top: 4px; display: inline-flex; align-items: center; gap: 7px;
+  border: 1.5px solid var(--accent); border-radius: var(--radius);
+  background: var(--accent); color: var(--on-accent, #fff); font-weight: 700;
+  padding: 8px 15px; font-size: 13px; cursor: pointer; font-family: inherit;
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--accent) 38%, transparent);
+}
+.state-cart-link:hover { transform: translateY(-1px); }
+#prog-wrap { width: 300px; height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }
+#prog-bar { height: 100%; background: var(--accent); border-radius: 99px; width: 0%; transition: width .2s; }
+#prog-label { font-size: 11px; color: var(--text3); }
+
+/* ══ TABLE AREA ══════════════════════════════════════════════ */
+#table-area { flex: 1; display: none; flex-direction: column; overflow: hidden; }
+#table-area.show { display: flex; }
+
+/* ══ MODAL ═══════════════════════════════════════════════════ */
+/* z-index 10050: SOPRA il Computo Metrico e le distinte (creati via JS
+   con z-index:9999) e sopra popover/menu del computo (10015-10030) — bug
+   corretto: "Σ modifica" apriva il Compositore (.overlay, prima z-index:200)
+   DIETRO l'overlay del Computo Metrico già aperto, invisibile a schermo. */
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 10050; align-items: center; justify-content: center; }
+.overlay.open { display: flex; }
+#modal-box {
+  background: var(--surface); border-radius: var(--radius);
+  padding: 22px; max-width: 660px; width: 94%; max-height: 82vh;
+  overflow-y: auto; box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
+}
+#modal-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 14px; color: var(--text); font-family: var(--mono); }
+.mf { margin-bottom: 9px; }
+.ml { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--text4); margin-bottom: 2px; }
+.mv { font-size: 12px; color: var(--text); line-height: 1.5; }
+.mv.mono { font-family: var(--mono); font-size: 11px; }
+#modal-close { float: right; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px 9px; cursor: pointer; font-size: 12px; color: var(--text3); }
+
+/* ── Help / Guida ── */
+.help-box {
+  background: var(--surface); border-radius: var(--radius); padding: 22px;
+  max-width: 600px; width: 94%; max-height: 86vh; overflow-y: auto;
+  box-shadow: var(--shadow-md); border: 1px solid var(--border);
+}
+.help-box h3 { font-size: 14px; font-weight: 700; margin-bottom: 10px; color: var(--text); font-family: var(--mono); }
+.help-close { float: right; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 3px 9px; cursor: pointer; font-size: 12px; color: var(--text3); }
+.help-p { font-size: 12px; color: var(--text2); line-height: 1.55; margin-bottom: 10px; }
+.help-ol { font-size: 12px; color: var(--text); line-height: 1.7; padding-left: 18px; margin: 6px 0 10px; }
+.help-ol li { margin-bottom: 4px; }
+.help-box2 {
+  font-size: 12px; color: var(--text); line-height: 1.6; margin: 8px 0 12px;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 11px;
+}
+.help-note { font-size: 11px; color: var(--text3); line-height: 1.5; }
+
+/* ══ TOAST ═══════════════════════════════════════════════════ */
+#toast {
+  position: fixed; bottom: 20px; right: 20px;
+  background: var(--text); color: var(--bg);
+  padding: 9px 16px; border-radius: var(--radius);
+  font-size: 12px; box-shadow: var(--shadow-md);
+  transform: translateY(60px); opacity: 0;
+  transition: all .22s; z-index: 9999; max-width: 340px;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.ok { background: var(--success); color: var(--on-ok); }
+#toast.err { background: var(--danger); color: var(--on-bad); }
+#toast.warn { background: var(--warn); color: var(--on-warn); }
+
+input[type=checkbox] { accent-color: var(--accent); width: 13px; height: 13px; cursor: pointer; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ══ COMPONI DESCRIZIONE — modal dal mockup ══ */
+#componi-box {
+  width: min(1000px, calc(100% - 48px)); max-height: 92vh; display: flex; flex-direction: column;
+  background: var(--panel); border: 1px solid var(--line2); border-radius: var(--radius);
+  box-shadow: var(--shadow-2); overflow: hidden; transition: width .15s ease;
+}
+/* Analisi Prezzi: 4 sezioni affiancate hanno bisogno di più respiro dei soli
+   2 pannelli (Descrizione/Editor) della modalità testo — modal più largo. */
+#componi-box:has(.cmp-body.mode-analisi) { width: min(1320px, calc(100% - 48px)); }
+.cmp-sp { flex: 1; }
+.cmp-hd {
+  display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 60%);
+}
+.cmp-hd h3 { font-size: 13px; font-weight: 800; letter-spacing: .02em; margin: 0; font-family: var(--mono); }
+.cmp-step-tag { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-h); background: var(--accent-dim); border-radius: 99px; padding: 2px 9px; }
+.cmp-close { background: none; border: 1px solid var(--line2); border-radius: var(--radius-sm); color: var(--muted); cursor: pointer; padding: 3px 9px; font-size: 12px; font-family: var(--mono); }
+.cmp-close:hover { color: var(--text); background: var(--panel3); }
+
+.cmp-body { display: grid; grid-template-columns: 232px 1fr 1fr; flex: 1; min-height: 0; overflow: hidden; transition: grid-template-columns .16s ease; }
+.cmp-body.lib-collapsed { grid-template-columns: 34px 1fr 1fr; }
+
+/* Libreria voci pronte — pannello a scomparsa (rail) a sinistra */
+.cmp-lib-panel { display: flex; flex-direction: column; min-width: 0; border-right: 1px solid var(--line); background: var(--panel2); overflow: hidden; }
+.cmp-lib-hd { display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; user-select: none;
+  font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--faint); border-bottom: 1px solid var(--line); }
+.cmp-lib-hd:hover { color: var(--accent-h); background: color-mix(in srgb, var(--accent) 6%, transparent); }
+.cmp-lib-star { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; flex: 0 0 auto;
+  border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 9px; }
+.cmp-lib-name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cmp-lib-name .soft { font-weight: 500; letter-spacing: 0; text-transform: none; }
+.cmp-lib-arrow { flex: 0 0 auto; color: var(--muted); font-size: 11px; }
+.cmp-lib-body { padding: 12px; overflow-y: auto; flex: 1; }
+/* stato collassato: rail verticale, solo la ★ + etichetta ruotata */
+.lib-collapsed .cmp-lib-panel { }
+.lib-collapsed .cmp-lib-hd { flex-direction: column; gap: 10px; height: 100%; padding: 12px 4px; border-bottom: none; align-items: center; }
+.lib-collapsed .cmp-lib-name { writing-mode: vertical-rl; text-align: start; }
+.lib-collapsed .cmp-lib-name .soft { display: none; }
+.lib-collapsed .cmp-lib-arrow { transform: rotate(180deg); }
+.lib-collapsed .cmp-lib-body { display: none; }
+
+.cmp-left { padding: 14px 16px; overflow-y: auto; border-right: 1px solid var(--line); }
+.cmp-right { padding: 14px 16px; overflow-y: auto; background: var(--panel2); }
+.cmp-sec { margin-bottom: 18px; }
+.cmp-sec-title { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--faint); margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
+.cmp-sec-title .n { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 9px; }
+.cmp-sec-title .soft { font-weight: 500; letter-spacing: 0; text-transform: none; }
+.cmp-empty { font-size: 10.5px; color: var(--faint); }
+
+/* libreria voci pronte */
+/* niente max-height fisso: lo scroll è del pannello (.cmp-lib-body, flex:1) a tutta
+   altezza — prima la lista si tagliava a 190px lasciando vuoto sotto nel resto del modale. */
+#cmp-lib-wrap { display: flex; flex-direction: column; gap: 10px; }
+/* due menu a scomparsa indipendenti dentro la Libreria: «tue» separate dalle «curate» */
+.cmp-lib-group { display: flex; flex-direction: column; }
+.cmp-lib-group-hd { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; padding: 2px 0 6px;
+  font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--faint); }
+.cmp-lib-group-hd:hover { color: var(--accent-h); }
+.cmp-lib-group-name .soft { font-weight: 500; letter-spacing: 0; text-transform: none; }
+.cmp-lib-group-arrow { flex: 0 0 auto; font-size: 9px; transition: transform .12s ease; }
+.cmp-lib-group.collapsed .cmp-lib-group-arrow { transform: rotate(-90deg); }
+.cmp-lib-group.collapsed .cmp-lib-group-body { display: none; }
+.cmp-lib-group-list { display: flex; flex-direction: column; gap: 5px; }
+/* card su 2 righe (testata: nome+sottotitolo+badge · azioni sotto): il nome/descrizione
+   VANNO A CAPO invece di troncare — prima erano su un'unica riga strizzati da badge e
+   pulsanti, illeggibili con ellissi dopo pochi caratteri. */
+.cmp-lib-item {
+  display: flex; align-items: flex-start; flex-direction: column; gap: 6px; padding: 8px 9px; cursor: pointer;
+  background: var(--panel2); border: 1px solid var(--line); border-radius: var(--radius-sm); transition: border-color .15s;
+}
+.cmp-lib-item:hover { border-color: var(--accent); }
+.cmp-lib-head { display: flex; align-items: flex-start; gap: 8px; width: 100%; }
+.cmp-lib-main { flex: 1; min-width: 0; }
+.cmp-lib-name { font-size: 11px; font-weight: 700; color: var(--text); white-space: normal; overflow-wrap: anywhere; line-height: 1.35; }
+.cmp-lib-sub { font-size: 9.5px; color: var(--faint); white-space: normal; overflow-wrap: anywhere; line-height: 1.3; margin-top: 1px; }
+.cmp-lib-actions { display: flex; gap: 6px; width: 100%; justify-content: flex-end; }
+.cmp-lib-badge { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 2px 6px; border-radius: 99px; background: var(--line); color: var(--muted); }
+.cmp-lib-badge.mine { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+.cmp-lib-badge.ap { background: color-mix(in srgb, var(--accent-h, var(--accent)) 22%, transparent); color: var(--accent-h, var(--accent)); }
+.cmp-lib-add, .cmp-lib-x, .cmp-lib-edit {
+  flex: 0 0 auto; width: 22px; height: 22px; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--line2); background: var(--panel); color: var(--muted); font-size: 13px; line-height: 1;
+}
+.cmp-lib-add:hover, .cmp-lib-edit:hover { border-color: var(--accent); color: var(--accent); }
+.cmp-lib-add.copied { color: var(--accent); border-color: var(--accent); }
+.cmp-lib-x:hover { border-color: var(--danger, #c0392b); color: var(--danger, #c0392b); }
+
+/* Import scheda tecnica (PDF) → voci candidate */
+.cmp-beta {
+  font-size: 8px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 99px; background: var(--accent-dim); color: var(--accent-h);
+  border: 1px solid var(--accent-line);
+}
+.cmp-ds-btn { margin-left: auto; }
+/* Standard suite (rilievo utente): accento su testo/bordo, sfondo accento trasparente. */
+.cmp-ds-hero { background: var(--accent-soft); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); font-weight: 700; }
+.cmp-ds-hero:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.cmp-ds-info-link { color: var(--faint); cursor: pointer; text-decoration: none; white-space: nowrap; }
+.cmp-ds-info-link:hover { color: var(--accent); text-decoration: underline; }
+.cmp-ds-info { font-size: 10px; color: var(--muted); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin: 6px 0; display: flex; flex-direction: column; gap: 5px; background: var(--panel); }
+/* [hidden] va forzato: il display:flex sopra vincerebbe sullo useragent (stesso
+   pattern già visto su .cmp-ft/.cmp-fam-crumb) — senza, ✕ e clic-fuori non chiudono */
+.cmp-ds-info[hidden] { display: none; }
+.cmp-ds-info-head { color: var(--text); display: flex; align-items: baseline; gap: 6px; }
+.cmp-ds-info-close { margin-left: auto; background: none; border: none; color: var(--faint); cursor: pointer; font-size: 11px; padding: 0; }
+.cmp-ds-info-close:hover { color: var(--accent); }
+.cmp-ds-info-row { line-height: 1.5; }
+.cmp-ds-info-row .cmp-ds-settore { margin-right: 4px; }
+.cmp-ds-info-foot { color: var(--faint); border-top: 1px dashed var(--line); padding-top: 5px; }
+.cmp-ds-item { align-items: flex-start; flex-direction: column; gap: 6px; }
+.cmp-ds-head { display: flex; align-items: center; gap: 8px; width: 100%; }
+.cmp-ds-ident { font-size: 10px; color: var(--text); width: 100%; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.cmp-ds-metel { font-size: 8px; font-weight: 800; letter-spacing: .04em; padding: 1px 5px; border-radius: 99px; background: color-mix(in srgb, var(--ok, #2e7d32) 18%, transparent); color: var(--ok, #2e7d32); }
+.cmp-ds-settore { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 2px 6px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.cmp-ds-marca { font-weight: 700; padding: 1px 5px; border-radius: 99px; background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--accent); }
+.cmp-ds-chips { display: flex; flex-wrap: wrap; gap: 4px; width: 100%; }
+.cmp-ds-chip { font-size: 9px; padding: 1px 6px; border-radius: 99px; background: var(--panel); border: 1px solid var(--line); color: var(--muted); }
+.cmp-conf { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; padding: 2px 6px; border-radius: 99px; }
+.cmp-conf.alta { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); }
+.cmp-conf.media { background: var(--line); color: var(--muted); }
+.cmp-conf.bassa { background: transparent; color: var(--faint); border: 1px solid var(--line); }
+.cmp-ds-acts { display: flex; gap: 6px; width: 100%; }
+.cmp-ds-acts .cmp-tbtn { flex: 1; }
+
+/* famiglia */
+.cmp-fam-search { width: 100%; font-family: var(--mono); font-size: 11.5px; padding: 7px 10px; background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--radius-sm); color: var(--text); margin-bottom: 8px; }
+/* macro-filtro orizzontale */
+.cmp-macrobar { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.cmp-macro-chip {
+  font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; cursor: pointer; user-select: none;
+  padding: 4px 10px; border-radius: 99px; background: var(--panel2); color: var(--muted); border: 1px solid var(--line2);
+}
+.cmp-macro-chip:hover { border-color: var(--accent-line); color: var(--text); }
+.cmp-macro-chip.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+/* griglia famiglie ALLINEATA: celle uniformi in colonne, non pastiglie sparse */
+.cmp-fam-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(126px, 1fr)); gap: 5px; }
+.cmp-fam-chip {
+  display: block; width: 100%; padding: 5px 9px; border-radius: var(--radius-sm);
+  font-size: 10.5px; font-weight: 600; letter-spacing: .01em; cursor: pointer; user-select: none;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  background: var(--panel2); color: var(--muted); border: 1px solid var(--line); transition: border-color .15s, color .15s;
+}
+.cmp-fam-chip:hover { border-color: var(--accent-line); color: var(--text); }
+.cmp-fam-chip.active { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 700; }
+/* breadcrumb famiglia scelta */
+.cmp-fam-crumb { display: flex; align-items: center; gap: 8px; padding: 7px 11px; border-radius: 99px;
+  border: 1px solid var(--accent-line); background: var(--accent-soft); font-size: 11px; }
+/* BUG «Nuova voce»/«cambia»: senza questo override [hidden] non ha alcun effetto —
+   la regola display:flex sopra (stessa specificità, origine author) vince sempre sullo
+   useragent [hidden]{display:none}, quindi il crumb restava visibile anche a hidden=true. */
+.cmp-fam-crumb[hidden] { display: none; }
+.cmp-crumb-ic { width: 15px; height: 15px; flex: 0 0 auto; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: inline-flex; align-items: center; justify-content: center; font-size: 8px; }
+.cmp-crumb-path { color: var(--muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cmp-crumb-path b { color: var(--accent-h); }
+.cmp-crumb-edit { flex: 0 0 auto; background: none; border: 1px solid var(--line2); border-radius: 99px; color: var(--muted); font-family: var(--mono); font-size: 10px; padding: 2px 10px; cursor: pointer; }
+.cmp-crumb-edit:hover { border-color: var(--accent); color: var(--accent-h); }
+
+/* caratteristiche */
+.cmp-char-row { display: grid; grid-template-columns: 96px 1fr; gap: 8px; align-items: start; margin-bottom: 10px; }
+.cmp-char-row label { font-size: 10px; font-weight: 700; color: var(--muted); padding-top: 5px; }
+.cmp-char-row label .opt { display: block; font-weight: 500; color: var(--faint); font-size: 9px; }
+.cmp-opt-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.cmp-opt-chip {
+  padding: 3px 9px; border-radius: 99px; font-size: 10px; font-weight: 600; cursor: pointer;
+  background: var(--panel2); color: var(--muted); border: 1px solid var(--line2); transition: all .12s;
+}
+.cmp-opt-chip:hover { border-color: var(--accent-line); color: var(--text); }
+.cmp-opt-chip.on { background: var(--accent-dim); color: var(--accent-h); border-color: var(--accent-line); }
+.cmp-char-input { font-family: var(--mono); font-size: 11px; padding: 5px 8px; background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--radius-sm); color: var(--text); width: 130px; }
+.cmp-rule-note { font-size: 10px; color: var(--faint); border-left: 2px solid var(--accent-line); padding: 4px 8px; margin-top: 4px; line-height: 1.5; }
+/* Didascalia famiglia fuori prezzario — più risalto della nota generica */
+.cmp-fuori-prezzario {
+  font-size: 11.5px; font-weight: 600; color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 12%, transparent);
+  border-left: 2px solid var(--warn); padding: 7px 10px; margin: 0 0 8px;
+}
+
+/* categorie di suggerimenti ad accordion (punto 2) */
+.cmp-acc { border: 1px solid var(--line2); border-radius: var(--radius-sm); margin-bottom: 8px; overflow: hidden; }
+.cmp-acc-hd {
+  display: flex; align-items: center; gap: 6px; padding: 7px 10px; cursor: pointer; user-select: none;
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--muted);
+  background: var(--panel3); transition: color .12s;
+}
+.cmp-acc-hd:hover { color: var(--text); }
+.cmp-acc-chev { font-size: 9px; width: 10px; display: inline-block; color: var(--faint); }
+.cmp-acc-count { font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--faint); }
+.cmp-acc-body { padding: 10px; }
+
+/* voce di computo — card della colonna destra (unica superficie, niente anteprima separata) */
+.cmp-prev-card { border: 1px solid var(--line2); border-radius: var(--radius); overflow: hidden; margin-bottom: 12px; background: var(--panel); }
+.cmp-prev-label { display: flex; align-items: center; justify-content: space-between; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--faint); background: var(--panel3); padding: 4px 10px; }
+.cmp-copy-btn { font-family: var(--mono); background: none; border: 1px solid var(--line2); border-radius: 4px; color: var(--muted); cursor: pointer; font-size: 9px; font-weight: 700; padding: 2px 8px; letter-spacing: .05em; }
+.cmp-copy-btn:hover { color: var(--accent-h); border-color: var(--accent-line); }
+.cmp-copy-btn.copied { color: var(--ok); border-color: var(--ok); }
+/* voce non ancora toccata: mostra live il testo composto dalle scelte, attenuato */
+.cmp-ed-auto { color: var(--muted); font-style: italic; }
+/* battitura in corso: sottolineatura-accento lampeggiante come cursore
+   (lampeggia SOLO la riga, non il testo del campo) */
+@keyframes caret-line-blink { 50% { box-shadow: inset 0 -2px 0 transparent; } }
+.typing-live { box-shadow: inset 0 -2px 0 var(--accent); animation: caret-line-blink .9s step-end infinite; }
+
+/* bandierina di modalità: accento, a filo del bordo destro del footer */
+.cmp-mode-flag {
+  font-family: var(--mono); font-size: 10.5px; font-weight: 800; cursor: pointer;
+  background: var(--accent); color: var(--on-accent, #fff); border: none;
+  padding: 7px 14px 7px 18px; margin-right: -16px; /* aggancio al bordo della finestra */
+  border-radius: 99px 0 0 99px; letter-spacing: .02em; white-space: nowrap;
+  clip-path: polygon(8px 0, 100% 0, 100% 100%, 8px 100%, 0 50%); /* punta a bandierina */
+}
+.cmp-mode-flag:hover { filter: brightness(1.1); }
+.cmp-mode-flag.back { clip-path: none; border-radius: 99px 0 0 99px; }
+
+/* editor — voce finale modificabile (punto 4) */
+.cmp-editor-input, .cmp-editor-textarea {
+  width: 100%; border: none; background: var(--panel); color: var(--text);
+  font-family: inherit; font-size: 11.5px; line-height: 1.6; padding: 9px 11px;
+  resize: vertical;
+}
+.cmp-editor-input:focus, .cmp-editor-textarea:focus { background: var(--accent-soft); }
+
+/* famiglia personalizzata (poche categorie: a volte serve una voce ad hoc) */
+.cmp-custom-row { display: flex; gap: 6px; margin-top: 8px; }
+.cmp-custom-input {
+  flex: 1; font-family: var(--mono); font-size: 11px; padding: 6px 9px;
+  background: var(--panel2); border: 1px dashed var(--line2); border-radius: var(--radius-sm); color: var(--text);
+}
+
+.cmp-ft { display: flex; gap: 8px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--line); background: var(--panel); }
+/* [hidden] va sempre forzato con !important-equivalente (stessa specificità author
+   di sopra vincerebbe altrimenti sullo useragent [hidden]{display:none} — visto
+   già su .cmp-fam-crumb): senza, i due footer (desc/analisi) restano ENTRAMBI visibili. */
+.cmp-ft[hidden] { display: none; }
+.cmp-hint { font-size: 10px; color: var(--faint); }
+.cmp-tbtn {
+  font-family: var(--mono); font-size: 11px; font-weight: 600;
+  background: var(--panel2); color: var(--text); border: 1px solid var(--line2);
+  border-radius: var(--radius-sm); padding: 5px 11px; cursor: pointer; transition: all .15s;
+}
+.cmp-tbtn:hover { border-color: var(--accent); color: var(--accent-h); }
+/* Famiglia 2 (Componi/Crea): SOLO l'azione che genera la voce nel computo
+   ("+ Aggiungi al computo"/"✓ Aggiorna nel computo") — le altre .cmp-tbtn
+   (copia, salva in libreria, nuova voce…) restano neutre, non sono l'azione
+   generativa. Standard suite (rilievo utente): accento su testo/bordo, sfondo
+   accento trasparente — mai fill pieno. */
+.cmp-tbtn--create { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 50%, transparent); color: var(--accent); font-weight: 700; }
+.cmp-tbtn--create:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); border-color: color-mix(in srgb, var(--accent) 50%, transparent); color: var(--accent); }
+
+/* ══ ANALISI PREZZI (Σ) — manodopera/materiale/noli/varie + SG%/UI% ══════════ */
+.cmp-mode-toggle { display: flex; gap: 2px; background: var(--panel2); border: 1px solid var(--line2); border-radius: 99px; padding: 2px; }
+.cmp-mode-btn { font-family: var(--mono); font-size: 10.5px; font-weight: 700; background: none; border: none; border-radius: 99px; color: var(--muted); padding: 4px 12px; cursor: pointer; transition: all .15s; }
+.cmp-mode-btn:hover { color: var(--text); }
+.cmp-mode-btn.active { background: var(--accent); color: var(--on-accent); }
+
+/* pannello: sostituisce cmp-left+cmp-right (colonne 2-3 della grid di cmp-body) */
+.cmp-ap-body { display: none; grid-column: 2 / span 2; padding: 14px 16px; overflow-y: auto; }
+.cmp-body.mode-analisi .cmp-left, .cmp-body.mode-analisi .cmp-right { display: none; }
+.cmp-body.mode-analisi .cmp-ap-body { display: block; }
+
+.cmp-ap-head { display: flex; gap: 12px; flex-wrap: wrap; }
+.cmp-ap-head label { display: flex; flex-direction: column; gap: 4px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--faint); }
+.cmp-ap-input {
+  font-family: var(--mono); font-size: 11.5px; padding: 6px 9px; background: var(--panel2);
+  border: 1px solid var(--line2); border-radius: var(--radius-sm); color: var(--text); min-width: 90px;
+}
+.cmp-ap-input:focus { border-color: var(--accent-line); }
+.cmp-ap-pct { width: 90px; }
+
+/* descrizione CONDIVISA con la scheda ✎ Descrizione — sola lettura qui, con
+   scorciatoia per andare a comporla/modificarla (niente più doppia digitazione). */
+.cmp-ap-desc-shared { margin-top: 10px; }
+.cmp-ap-desc-label { display: flex; align-items: center; gap: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--faint); margin-bottom: 5px; }
+.cmp-ap-desc-text { font-size: 12px; line-height: 1.5; padding: 8px 10px; background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--radius-sm); color: var(--text); }
+/* doppio input descrizione: textarea diretta nella scheda Σ, sorgente unica con l'editor ✎ */
+.cmp-ap-desc-input { width: 100%; font-size: 12px; line-height: 1.5; padding: 8px 10px; background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--radius-sm); color: var(--text); font-family: inherit; resize: vertical; }
+.cmp-ap-desc-input:focus { border-color: var(--accent-line); }
+.cmp-ap-desc-empty { font-size: 11px; color: var(--warn); background: color-mix(in srgb, var(--warn) 10%, transparent); border-left: 2px solid var(--warn); padding: 8px 10px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* le 4 sezioni AFFIANCATE in orizzontale (manodopera/materiale/noli/varie) */
+#cmp-ap-sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin: 14px 0; }
+.cmp-ap-sec { border: 1px solid var(--line2); border-radius: var(--radius); background: var(--panel); overflow: visible; /* il dropdown risultati/tendina NON va tagliato (rilievo utente) */ }
+.cmp-ap-sec-lettera { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 4px; background: var(--accent); color: var(--on-accent, #fff); font-size: 10px; font-weight: 800; }
+.cmp-ap-sec-hd { display: flex; align-items: center; gap: 6px; padding: 7px 10px; background: var(--panel3); border-radius: var(--radius) var(--radius) 0 0; font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); }
+.cmp-ap-sec-tot { margin-left: auto; font-family: var(--mono); font-weight: 700; color: var(--accent-h); text-transform: none; letter-spacing: 0; }
+.cmp-ap-rows { padding: 6px; display: flex; flex-direction: column; gap: 6px; }
+/* Riga VERTICALE (rilievo utente: la griglia orizzontale a colonne strette era
+   difficile da leggere) — descrizione in testa a piena larghezza, poi UM/Q.tà/
+   Prezzo/Importo impilati sotto con etichetta sopra ogni valore. */
+.cmp-ap-row { display: flex; flex-direction: column; gap: 6px; padding: 7px 8px; background: var(--panel2); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+.cmp-ap-row-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.cmp-ap-row-actions { display: flex; align-items: center; gap: 6px; flex: 0 0 auto; }
+/* conferma visiva del pick da ricerca/duplica, senza richiudere il dropdown (rilievo utente) */
+@keyframes cmpApJustAdded { 0% { background: var(--accent-h, #2e8b57); } 100% { background: var(--panel2); } }
+.cmp-ap-row.just-added { animation: cmpApJustAdded 900ms ease-out; }
+.cmp-ap-row-fields { display: flex; flex-wrap: wrap; gap: 10px 16px; }
+.cmp-ap-row-fields label { display: flex; flex-direction: column; gap: 2px; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); }
+.cmp-ap-row-imp-wrap { display: flex; flex-direction: column; gap: 2px; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--faint); margin-left: auto; }
+.cmp-ap-row-imp { font-family: var(--mono); font-size: 11px; font-weight: 700; text-align: right; color: var(--accent-h); white-space: nowrap; }
+.cmp-ap-mo-primario { font-size: 11px; }
+.cmp-ap-row-swap { background: none; border: none; color: var(--faint); cursor: pointer; font-size: 11px; padding: 0; }
+.cmp-ap-row-swap:hover { color: var(--accent); }
+.cmp-ap-mo-menu { max-width: 520px; }
+.cmp-ap-row-desc { font-size: 10.5px; color: var(--text); overflow-wrap: break-word; min-width: 0; }
+.cmp-ap-row-desc .cmp-ap-row-fonte { display: block; font-size: 8.5px; color: var(--faint); font-family: var(--mono); margin-top: 1px; }
+.cmp-ap-row-um { font-family: var(--mono); font-size: 11px; padding: 4px 6px; background: var(--panel); border: 1px solid var(--line2); border-radius: 4px; color: var(--text); width: 56px; text-align: center; }
+.cmp-ap-row-qty, .cmp-ap-row-prezzo { font-family: var(--mono); font-size: 11px; padding: 4px 6px; background: var(--panel); border: 1px solid var(--line2); border-radius: 4px; color: var(--text); width: 72px; text-align: right; }
+/* niente frecce spinner: rubano spazio prezioso su colonne già strette */
+.cmp-ap-row-qty::-webkit-inner-spin-button, .cmp-ap-row-prezzo::-webkit-inner-spin-button,
+.cmp-ap-row-qty::-webkit-outer-spin-button, .cmp-ap-row-prezzo::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.cmp-ap-row-rm { background: none; border: none; color: var(--faint); cursor: pointer; font-size: 12px; padding: 0; }
+.cmp-ap-row-rm:hover { color: var(--danger, #c0392b); }
+.cmp-ap-row-dup { background: none; border: none; color: var(--faint); cursor: pointer; font-size: 11px; padding: 0; }
+.cmp-ap-row-dup:hover { color: var(--accent); }
+.cmp-ap-sec-add { padding: 6px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 5px; }
+.cmp-ap-search-wrap { position: relative; }
+/* voce di riferimento: barra in testa alla modalità Σ Analisi */
+.cmp-ap-ref { margin-top: 8px; }
+.cmp-ap-search { width: 100%; font-family: var(--mono); font-size: 10.5px; padding: 5px 8px; background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--radius-sm); color: var(--text); }
+/* dropdown risultati: si stacca dalla larghezza stretta della colonna (min-width
+   maggiore del contenitore, non right:0) — prima era "microscopica", stretta
+   quanto la sezione e col testo minuscolo, illeggibile con voci lunghe. */
+.cmp-ap-search-results { position: absolute; z-index: 20; top: 100%; left: 0; min-width: 100%; width: max-content; max-width: 440px; max-height: 320px; overflow-y: auto; background: var(--panel); border: 1px solid var(--accent-line); border-radius: var(--radius-sm); box-shadow: var(--shadow-2); margin-top: 4px; }
+.cmp-ap-search-item { padding: 9px 11px; font-size: 12px; line-height: 1.5; cursor: pointer; border-bottom: 1px solid var(--line); }
+.cmp-ap-search-item:last-child { border-bottom: none; }
+.cmp-ap-search-item:hover { background: var(--accent-soft); }
+.cmp-ap-search-item .um { color: var(--faint); font-family: var(--mono); font-size: 10.5px; }
+.cmp-ap-search-item .prz { float: right; font-family: var(--mono); font-weight: 700; font-size: 12px; color: var(--accent-h); }
+.cmp-ap-custom-row { display: flex; gap: 4px; }
+.cmp-ap-custom-row input { flex: 1; min-width: 0; }
+.cmp-ap-custom-add { flex: 0 0 auto; }
+
+.cmp-ap-pct-row { display: flex; gap: 16px; margin-bottom: 4px; }
+.cmp-ap-pct-note { font-size: 9px; color: var(--faint); line-height: 1.5; margin-bottom: 10px; }
+#cmp-ap-totals .dtable-like { width: 100%; font-size: 11px; border-collapse: collapse; }
+#cmp-ap-totals tr td { padding: 4px 6px; border-bottom: 1px solid var(--line); }
+#cmp-ap-totals tr td:last-child { text-align: right; font-family: var(--mono); }
+#cmp-ap-totals tr.tot td { font-weight: 800; border-top: 1px solid var(--ink, var(--line2)); background: var(--accent-soft); }
+#cmp-ap-totals tr.final td { font-weight: 800; color: var(--accent-h); font-size: 13px; }
+
+/* ══ COMPUTO METRICO — chip categoria + popover di assegnazione veloce ══
+   Colore deterministico per Supercategoria (categoriaColor in index.html):
+   la stessa chip si ritrova, colorata uguale, in Tabella/Categorie/Elenco. */
+.cat-chip {
+  display: inline-flex; align-items: center; gap: 5px; max-width: 190px;
+  padding: 3px 8px 3px 6px; border-radius: var(--radius-pill, 999px); cursor: pointer;
+  font-size: 10px; font-family: inherit; border: 1px solid transparent; transition: filter .12s;
+  background: color-mix(in srgb, var(--chip-color, var(--text4)) 16%, var(--surface2));
+  color: var(--chip-color, var(--text3));
+  border-color: color-mix(in srgb, var(--chip-color, var(--border2)) 45%, transparent);
+}
+.cat-chip:hover { filter: brightness(1.12); }
+.cat-chip .dot { width: 6px; height: 6px; border-radius: 2px; flex: none; background: currentColor; }
+.cat-chip .path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cat-chip .sub { opacity: .7; }
+.cat-chip.empty { color: var(--text4); border-style: dashed; border-color: var(--border2); background: transparent; }
+.cat-chip.empty:hover { color: var(--text3); border-color: var(--text4); }
+/* incidenza % manodopera nel Computo Metrico — dato richiesto nei nuovi prezzi
+   (rilievo utente), stesso linguaggio pillola dei chip categoria. */
+.cm-mdo-badge {
+  display: inline-flex; align-items: center; flex: none;
+  padding: 2px 7px; border-radius: var(--radius-pill, 999px);
+  font-size: 10px; font-weight: 700; font-family: var(--mono);
+  background: color-mix(in srgb, var(--warn, #d99412) 16%, var(--surface2));
+  color: var(--warn, #d99412);
+  border: 1px solid color-mix(in srgb, var(--warn, #d99412) 40%, transparent);
+}
+
+.cat-pop {
+  position: fixed; z-index: 10020; width: 280px; background: var(--panel);
+  border: 1px solid var(--border2); border-radius: var(--radius); box-shadow: var(--shadow-2);
+  padding: 10px;
+}
+.cat-pop-hd { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--text3); margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+.cat-pop-hd .n { color: var(--text4); text-transform: none; letter-spacing: 0; }
+.cat-pop-search { width: 100%; background: var(--surface2); border: 1px solid var(--border2); color: var(--text); padding: 6px 9px; border-radius: var(--radius-sm); font-family: inherit; font-size: 11px; margin-bottom: 6px; box-sizing: border-box; }
+.cat-pop-search:focus { border-color: var(--accent); }
+.cat-pop-list { max-height: 220px; overflow: auto; display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px; }
+.cat-pop-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: var(--radius-sm); cursor: pointer; font-size: 11px; color: var(--text3); }
+.cat-pop-item:hover { background: var(--surface3); }
+.cat-pop-item .dot { width: 6px; height: 6px; border-radius: 2px; flex: none; background: var(--chip-color); }
+.cat-pop-item .path b { color: var(--text); }
+.cat-pop-item .path span { color: var(--text4); }
+.cat-pop-empty { color: var(--text4); font-size: 11px; padding: 6px 4px; }
+.cat-pop-newtoggle { width: 100%; text-align: left; background: none; border: none; color: var(--text3); cursor: pointer; font-size: 11px; padding: 4px 2px; }
+.cat-pop-newtoggle:hover { color: var(--accent); }
+.cat-pop-new { border-top: 1px solid var(--line); padding-top: 8px; margin-top: 4px; display: none; flex-direction: column; gap: 5px; }
+.cat-pop-new.show { display: flex; }
+.cat-pop-new .lv { display: flex; align-items: center; gap: 6px; }
+.cat-pop-new .lv-lbl { font-size: 9.5px; color: var(--text4); width: 78px; flex: none; text-align: right; }
+.cat-pop-new input { flex: 1; background: var(--surface2); border: 1px solid var(--border2); color: var(--text); padding: 5px 8px; border-radius: var(--radius-sm); font-family: inherit; font-size: 11px; box-sizing: border-box; }
+.cat-pop-new input:focus { border-color: var(--accent); }
+/* Standard suite (rilievo utente): accento su testo/bordo, sfondo accento trasparente. */
+.cat-pop-apply { margin-top: 4px; background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent); color: var(--accent); border-radius: var(--radius-sm); padding: 6px; font-size: 11px; font-weight: 700; cursor: pointer; }
+.cat-pop-apply:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+
+/* ══ COMPUTO METRICO — switch Viste (Tabella/Categorie/Elenco) ══ */
+.cm-view-switch { display: inline-flex; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-pill, 999px); padding: 3px; gap: 2px; flex-shrink: 0; }
+.cm-view-switch button { border: 0; background: transparent; color: var(--text3); font-family: inherit; font-size: 11px; font-weight: 600; padding: 6px 13px; border-radius: var(--radius-pill, 999px); cursor: pointer; transition: background .12s, color .12s; }
+.cm-view-switch button.active { background: var(--accent); color: var(--on-accent, #fff); }
+
+/* ══ COMPUTO METRICO — vista Categorie: pannello DATABASE a sinistra (golden
+   minato da computi metrici reali + vocabolario utente, chips trascinabili per
+   livello) + voci a destra con le 3 chip del percorso (Supercategoria ›
+   Categoria › Sottocategoria). ══ */
+.cat-tree-empty { color: var(--text4); font-size: 12px; padding: 20px 4px; text-align: center; font-style: italic; }
+.cat2col { display: flex; gap: 16px; align-items: flex-start; padding: 8px 0; }
+.catdb-panel {
+  flex: 0 0 220px; position: sticky; top: 0; max-height: 60vh; overflow: auto;
+  background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius-sm);
+  padding: 10px; display: flex; flex-direction: column; gap: 8px;
+}
+.catdb-hd { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: var(--text2); }
+.catdb-search, .catdb-add {
+  width: 100%; box-sizing: border-box; font-family: inherit; font-size: 11px; padding: 5px 8px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text);
+}
+.catdb-add { margin-top: 6px; font-size: 10px; border-style: dashed; }
+.catdb-group { border-top: 1px solid var(--line); padding-top: 8px; }
+.catdb-group-hd { font-size: 9px; text-transform: uppercase; letter-spacing: .08em; color: var(--text4); font-weight: 800; margin-bottom: 6px; }
+.catdb-group-hint { text-transform: none; font-weight: 500; letter-spacing: 0; opacity: .75; }
+.catdb-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.catdb-chip {
+  --chip-color: var(--text3);
+  display: inline-flex; align-items: center;
+  font-size: 10.5px; padding: 3px 9px; border-radius: var(--radius-pill, 999px);
+  border: 1px solid color-mix(in srgb, var(--chip-color) 55%, transparent);
+  color: var(--chip-color); background: color-mix(in srgb, var(--chip-color) 10%, transparent);
+  cursor: grab; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis;
+}
+.catdb-chip:active { cursor: grabbing; }
+.catdb-chip:hover { filter: brightness(1.15); }
+.catdb-none { font-size: 10px; color: var(--text4); font-style: italic; }
+.catdb-hint { font-size: 9.5px; color: var(--text4); line-height: 1.5; }
+.catdb-chip.from-primus { border-style: dashed; }
+.from-primus-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--src-import); margin-right: 4px; flex: none; }
+.cat2col-rows { flex: 1; min-width: 0; }
+.cat2-head {
+  --chip-color: var(--text3);
+  display: flex; align-items: center; gap: 7px; padding: 12px 4px 4px;
+  font-size: 9.5px; text-transform: uppercase; letter-spacing: .6px; font-weight: 800; color: var(--text3);
+}
+.cat2-head .dot { width: 7px; height: 7px; border-radius: 2px; background: var(--chip-color); flex: none; }
+.cm-crow { display: flex; align-items: center; gap: 10px; padding: 7px 6px; border-bottom: 1px solid var(--line); font-size: 12px; border-radius: var(--radius-sm); }
+.cm-crow:hover { background: var(--surface2); }
+.cm-crow.drop-target { background: var(--accent-soft); outline: 1px dashed var(--accent); }
+.cat3 { display: inline-flex; align-items: center; gap: 3px; flex: none; max-width: 46%; }
+.cat3-sep { color: var(--text4); font-size: 10px; }
+.cat3-chip {
+  --chip-color: var(--text2);
+  font-size: 10px; padding: 2px 8px; border-radius: var(--radius-pill, 999px);
+  border: 1px solid color-mix(in srgb, var(--chip-color) 55%, transparent);
+  color: var(--chip-color); background: color-mix(in srgb, var(--chip-color) 10%, transparent);
+  cursor: pointer; white-space: nowrap; max-width: 120px; overflow: hidden; text-overflow: ellipsis;
+}
+.cat3-chip.empty { color: var(--text4); border-style: dashed; border-color: var(--border2); background: transparent; min-width: 18px; text-align: center; }
+.cat3-chip.empty:hover { color: var(--text3); border-color: var(--text4); }
+.cat3-chip.drop-target { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-h); }
+.cat3-chip.editing { padding: 0; overflow: visible; }
+.cat3-chip.editing input {
+  font-family: inherit; font-size: 10.5px; width: 130px; padding: 2px 8px;
+  border: 1px solid var(--accent); border-radius: var(--radius-pill, 999px);
+  background: var(--surface); color: var(--text);
+}
+
+/* ══ COMPUTO METRICO — vista Elenco (scansione densa, minima) ══ */
+.cm-list { display: flex; flex-direction: column; }
+.cm-lrow { display: flex; align-items: center; gap: 12px; padding: 7px 4px; border-bottom: 1px solid var(--line); font-size: 12px; }
+.cm-lrow:hover { background: var(--surface2); }
+.cm-lcode { width: 84px; flex: none; font-family: var(--mono); font-size: 10.5px; color: var(--accent-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cm-ldesc { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text3); }
+.cm-lamt { width: 90px; text-align: right; font-family: var(--mono); flex: none; font-size: 11px; }
+
+/* ══ COMPUTO METRICO — selezione multipla: lazo + menu contestuale ══ */
+.cm-sel-row.selected { background: var(--accent-soft) !important; }
+.cm-selbar {
+  display: none; align-items: center; gap: 10px; padding: 8px 20px;
+  background: var(--accent-soft); border-bottom: 1px solid var(--accent-line);
+  font-size: 12px; color: var(--text2); flex-shrink: 0;
+}
+.cm-selbar.show { display: flex; }
+.cm-selbar-sp { flex: 1; }
+.cm-selbar button {
+  border: 1px solid var(--border2); background: var(--surface); color: var(--text2);
+  border-radius: var(--radius-sm); padding: 5px 11px; font-size: 11px; font-family: inherit;
+  cursor: pointer; transition: background .12s, border-color .12s;
+}
+.cm-selbar button:hover { background: var(--surface3); }
+.cm-selbar button.danger { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
+.cm-selbar button.danger:hover { background: var(--danger-light); }
+.cm-selbar button.ghost { border-color: transparent; background: none; }
+/* Famiglia 3: "Assegna categoria" nella selection-bar — stesso rosa
+   (--fam-assign, shared/ui/tokens.css) del menu contestuale, coerenza fra i
+   due punti d'ingresso alla stessa azione. */
+.cm-selbar button.fam-assign { color: var(--fam-assign); border-color: color-mix(in srgb, var(--fam-assign) 45%, transparent); background: color-mix(in srgb, var(--fam-assign) 12%, var(--surface)); font-weight: 700; }
+.cm-selbar button.fam-assign:hover { background: color-mix(in srgb, var(--fam-assign) 24%, var(--surface)); }
+
+.cart-lasso-box {
+  position: fixed; z-index: 10015; border: 1px solid var(--accent);
+  /* Trasparente (non --accent-soft, opaco perché color-mix fra due colori
+     pieni): durante il trascinamento deve lasciar intravedere le righe sotto. */
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  pointer-events: none; border-radius: 2px;
+}
+
+.cart-ctx {
+  position: fixed; z-index: 10030; min-width: 210px; background: var(--panel);
+  border: 1px solid var(--border2); border-radius: var(--radius-sm); box-shadow: var(--shadow-2); padding: 5px;
+}
+.cart-ctx-hint { padding: 6px 10px 4px; font-size: 9.5px; color: var(--text4); text-transform: uppercase; letter-spacing: .06em; }
+.cart-ctx-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: var(--radius-sm); cursor: pointer; font-size: 11px; color: var(--text); }
+.cart-ctx-item:hover { background: var(--surface3); }
+/* Famiglia 3 (Assegna/Smart) — "Assegna categoria" COLLEGA un dato
+   esistente, non ne crea uno: --fam-assign (rosa, shared/ui/tokens.css),
+   mai il verde di Componi/Crea né il ciano dei dati importati
+   (--fam-assign è dedicato, non un accento-tool). */
+.cart-ctx-item.primary { color: var(--fam-assign); font-weight: 700; }
+.cart-ctx-item.danger { color: var(--danger); }
+.cart-ctx-sep { height: 1px; background: var(--line); margin: 5px 4px; }
+.cart-ctx-lv3 { display: flex; gap: 4px; padding: 2px 6px 6px; }
+.cart-ctx-lv3 button {
+  flex: 1; font-family: inherit; font-size: 9.5px; padding: 5px 4px; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--fam-assign) 45%, transparent);
+  background: color-mix(in srgb, var(--fam-assign) 12%, var(--surface2)); color: var(--fam-assign);
+  border-radius: var(--radius-sm); white-space: nowrap; font-weight: 600;
+}
+.cart-ctx-lv3 button:hover { background: color-mix(in srgb, var(--fam-assign) 24%, var(--surface2)); border-color: var(--fam-assign); }
+
+/* Badge "Σ modifica" — editor Analisi Prezzi A POSTERIORI (voce già nel
+   computo): dice esplicitamente cosa fa il click, non un'icona muta. */
+.cm-ap-edit-badge {
+  display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;
+  padding: 2px 8px 2px 7px; border-radius: var(--radius-sm); cursor: pointer;
+  background: var(--accent-soft); border: 1px solid var(--accent-line);
+  color: var(--accent-h); font-size: 10px; font-weight: 700; font-family: inherit;
+}
+.cm-ap-edit-badge:hover { background: var(--accent-dim, var(--accent-soft)); filter: brightness(1.1); }
+
+/* ══════════════════════════════════════════════════════════════
+   BINARIO = NAVIGAZIONE (setStep) + viste-passo + menu Importa
+   Il binario di flusso, prima decorativo dentro i filtri, ora è la
+   navigazione persistente di primo livello: Cerca · Componi · Misura ·
+   Categorizza · Esporta. Le superfici pesanti diventano viste montate
+   SOTTO il binario invece che modali a schermo intero.
+   ══════════════════════════════════════════════════════════════ */
+.miu-rail {
+  padding: 7px 16px; margin: 0; gap: 0; flex-wrap: nowrap;
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  position: relative; z-index: 30;
+}
+.miu-rail .ehb-rail-step {
+  cursor: pointer; padding: 6px 12px; font-size: 11.5px; user-select: none;
+}
+.miu-rail .ehb-rail-step:hover { color: var(--text2); background: var(--panel2); }
+.miu-rail .ehb-rail-step.active[data-fam="nav"] { color: var(--text); background: var(--panel2); }
+.miu-rail .ehb-rail-step.active[data-fam="nav"] .dot { background: var(--text3); }
+.miu-rail .rail-k {
+  font-family: var(--mono); font-size: 9px; line-height: 14px; min-width: 15px;
+  text-align: center; color: var(--text4); border: 1px solid var(--border); border-radius: 4px;
+}
+.miu-rail .ehb-rail-step.active .rail-k { border-color: currentColor; color: inherit; }
+.miu-rail-sp { flex: 1; }
+.miu-rail-ctx { font-size: 11px; color: var(--text4); white-space: nowrap; padding-left: 8px; }
+.miu-rail-ctx b { color: var(--accent-text, var(--accent)); font-weight: 700; }
+
+/* Viste-passo: overlay .miu-step montato SOTTO il chrome, fondo opaco (non modale
+   scuro), riempie tutto. Il binario resta sopra e cliccabile. */
+.overlay.miu-step.open {
+  inset: var(--chrome-h, 48px) 0 0 0; background: var(--bg);
+  align-items: stretch; justify-content: stretch; padding: 0; z-index: 60;
+}
+.overlay.miu-step.open > #componi-box {
+  width: 100%; max-width: none; max-height: none; height: 100%; border: none; border-radius: 0;
+}
+.overlay.miu-step.open > #componi-box:has(.cmp-body.mode-analisi) { width: 100%; }
+
+/* Pannello Esporta (passo 5) */
+#export-box {
+  width: 100%; height: 100%; display: flex; flex-direction: column;
+  background: var(--surface); overflow: hidden;
+}
+.exp-hd {
+  display: flex; align-items: center; gap: 12px; padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--fam-export) 12%, transparent), transparent 55%);
+}
+.exp-sub { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.exp-close {
+  background: none; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--muted); cursor: pointer; padding: 3px 9px; font-size: 12px; font-family: var(--mono);
+}
+.exp-close:hover { color: var(--text); background: var(--panel3); }
+.exp-panels {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;
+  padding: 20px; overflow: auto; align-content: start;
+}
+.exp-card {
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px;
+}
+.exp-card-lab {
+  font-size: 10.5px; text-transform: uppercase; letter-spacing: .6px; font-weight: 700;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px; color: var(--text3);
+}
+.exp-card.ap .exp-card-lab { color: var(--accent-text, var(--accent)); }
+.exp-primary-tag {
+  font-size: 8.5px; letter-spacing: .06em; background: color-mix(in srgb, var(--fam-export) 18%, var(--panel));
+  color: var(--fam-export); border-radius: 99px; padding: 1px 7px; font-weight: 800;
+}
+.exp-row {
+  display: flex; align-items: center; gap: 11px; width: 100%; text-align: left;
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 9px;
+  padding: 10px 12px; margin-bottom: 8px; cursor: pointer; color: var(--text2); font-size: 12.5px;
+  font-family: inherit; transition: var(--tr);
+}
+.exp-row:hover { background: var(--panel3); border-color: var(--line3); }
+.exp-row:disabled { opacity: .45; cursor: not-allowed; }
+.exp-row:disabled:hover { background: var(--surface2); border-color: color-mix(in srgb, var(--fam-export) 26%, var(--border)); }
+.exp-row small { display: block; font-size: 10px; color: var(--text4); font-weight: 400; margin-top: 1px; }
+.exp-row-ic {
+  width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; flex: none;
+  font-size: 13px; background: var(--panel3); color: var(--text2);
+}
+.exp-card.ap .exp-row-ic { background: var(--accent-soft); color: var(--accent-text, var(--accent)); }
+.exp-help {
+  margin-top: 4px; background: none; border: none; color: var(--fam-export); cursor: pointer;
+  font-size: 11px; font-family: inherit; padding: 2px 0;
+}
+.exp-help:hover { text-decoration: underline; }
+
+/* Menu "Importa da…" nell'header (computi salvati + distinte) */
+.import-wrap { position: relative; display: inline-flex; }
+#import-menu-btn { display: inline-flex; align-items: center; gap: 5px; }
+.import-badge {
+  background: var(--accent); color: var(--accent-text, #fff); border-radius: 99px;
+  font-size: 9px; font-weight: 800; min-width: 15px; text-align: center; padding: 0 4px; line-height: 15px;
+}
+.import-menu {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 200; min-width: 210px;
+  background: var(--surface); border: 1px solid var(--line2); border-radius: 10px;
+  box-shadow: var(--shadow-2); padding: 6px; display: flex; flex-direction: column; gap: 2px;
+}
+.import-menu[hidden] { display: none; }
+.import-menu button {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+  background: none; border: none; border-radius: 7px; padding: 8px 10px; cursor: pointer;
+  color: var(--text2); font-size: 12px; font-family: inherit;
+}
+.import-menu button:hover { background: var(--panel3); color: var(--text); }
+.import-menu button.disabled { opacity: .5; }
+.import-menu button.active { color: var(--text); font-weight: 600; }
+.import-menu .im-ic { width: 18px; text-align: center; color: var(--text3); }
+.import-menu-sep { height: 1px; background: var(--line); margin: 3px 2px; }
+/* ── Computo: categoria SOTTO la descrizione (non più tagliata) + rimozione ── */
+.cm-crow { align-items: flex-start; }
+.cm-cmain { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.cm-cdesc { color: var(--text2); line-height: 1.4; }
+.cm-catrow { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+/* la fila delle 3 chip ora può andare a capo e usare tutta la larghezza */
+.cm-crow .cat3 { max-width: none; flex-wrap: wrap; }
+/* ✕ per togliere la categoria da una voce */
+.cat-clear {
+  border: none; background: none; color: var(--text4); cursor: pointer;
+  font-size: 12px; line-height: 1; padding: 2px 5px; border-radius: 5px; flex: none;
+}
+.cat-clear:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 14%, transparent); }
+.cat-chip-wrap { display: inline-flex; align-items: center; gap: 2px; min-width: 0; max-width: 100%; }
+/* ✕ per rimuovere un nome dal database categorie (appare su hover della chip) */
+.catdb-chip { position: relative; }
+.catdb-x {
+  display: none; margin-left: 5px; color: var(--text4); cursor: pointer; font-weight: 700;
+  border-radius: 4px; padding: 0 3px;
+}
+.catdb-chip:hover .catdb-x { display: inline-block; }
+.catdb-x:hover { color: var(--danger); background: color-mix(in srgb, var(--danger) 16%, transparent); }
+
+/* "⇪ Altri export…" nella toolbar home (Report PDF/Σ A.P. vivono nel passo Esporta) */
+.exp-more {
+  display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 5px 11px; font-size: 12px; font-weight: 600;
+  background: var(--surface2); color: var(--text3); cursor: pointer;
+}
+.exp-more:hover { color: var(--fam-export); border-color: var(--fam-export); }
+
+/* Ricerca nel Computo Metrico (header dell'overlay Misura) */
+.cart-search {
+  flex: 1; min-width: 140px; max-width: 320px;
+  background: var(--surface2); border: 1px solid var(--border2); color: var(--text);
+  padding: 7px 11px; border-radius: 8px; font-family: inherit; font-size: 12px;
+}
+.cart-search:focus { border-color: var(--accent); }
+
+/* Etichetta verticale nella sidebar collassata (strip 36px): di default "Prezzari",
+   ma mostra il prezzario ATTIVO quando ce n'è uno caricato (updateSidebarCollapsedLabel). */
+.sidebar-collapsed-label {
+  writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
+  font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--text4); margin-top: 6px; user-select: none; white-space: nowrap;
+  max-height: calc(100vh - 160px); overflow: hidden;
+}
+
+/* ── ＋ Aggiungi (risultati ricerca) + bottone bulk + pannello ELENCO PREZZI ── */
+.add-ep {
+  margin-left: 8px; font-size: 10px; font-weight: 700; cursor: pointer;
+  border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--accent-text, var(--accent));
+  border-radius: 6px; padding: 1px 7px; vertical-align: 1px; white-space: nowrap;
+}
+.add-ep:hover { background: var(--accent-dim); }
+.add-ep.in { border-color: var(--border); background: var(--surface2); color: var(--text4); cursor: default; }
+#btn-add-sel { margin-left: 2px; }
+
+/* Contenuto dell'Elenco Prezzi — righe compatte con scroll SOLO al proprio
+   interno (.ep-rows). Usato sia standalone (.ep-panel, con titolo proprio) sia
+   dentro il guscio del pannello FLOTTANTE (.ep-float-body, vedi sotto — lì il
+   titolo lo dà già l'header del guscio, elencoPrezziPanelHtml(map,{compact:true})
+   salta .ep-panel/.ep-hd e restituisce solo .ep-rows). */
+.ep-panel {
+  margin: 8px 0; border: 1px solid var(--border); border-radius: 10px;
+  background: var(--panel); overflow: hidden;
+}
+.ep-hd {
+  padding: 7px 12px; font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+  color: var(--text2); background: var(--surface2); border-bottom: 1px solid var(--border);
+}
+.ep-hd .ep-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--text4); }
+.ep-rows { max-height: 160px; overflow: auto; }
+.ep-row {
+  display: grid; grid-template-columns: 120px 1fr 54px 90px auto; align-items: center; gap: 10px;
+  padding: 5px 12px; border-bottom: 1px solid var(--line); font-size: 12px;
+}
+.ep-row:last-child { border-bottom: none; }
+.ep-row:hover { background: var(--surface2); }
+.ep-code { font-family: var(--mono); font-size: 10.5px; color: var(--accent-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ep-desc { color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ep-um { font-family: var(--mono); font-size: 10.5px; color: var(--text4); text-align: center; }
+.ep-price { font-family: var(--mono); font-size: 11.5px; text-align: right; color: var(--text2); }
+.ep-actions { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-end; }
+.ep-edit {
+  border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--accent-text, var(--accent));
+  border-radius: 6px; font-size: 10px; font-weight: 700; padding: 2px 8px; cursor: pointer; white-space: nowrap;
+}
+.ep-edit:hover { background: var(--accent-dim); }
+.ep-locked { font-size: 9.5px; color: var(--text4); font-style: italic; white-space: nowrap; }
+.ep-del {
+  border: 1px solid var(--danger); background: var(--danger-light); color: var(--danger);
+  border-radius: 6px; width: 22px; height: 22px; font-size: 12px; line-height: 1; cursor: pointer; flex: none;
+}
+.ep-empty { padding: 16px 12px; text-align: center; color: var(--text4); font-size: 11.5px; }
+
+/* ── Elenco Prezzi FLOTTANTE — guscio persistente fuori da #cart-overlay
+   (mountEpFloat/wireEpFloat in legacy/index.js). Sopra l'overlay del Computo
+   (z-index:60): ridimensionabile nativamente (resize:both), trascinabile
+   dall'header, nascondibile in una pillola (.ep-pill). ── */
+.ep-float {
+  position: fixed; top: 130px; right: 28px; z-index: 65;
+  min-width: 300px; min-height: 180px; max-width: 90vw; max-height: 80vh;
+  background: var(--panel); border: 1px solid var(--border2); border-radius: var(--radius);
+  box-shadow: var(--shadow-md); display: flex; flex-direction: column; overflow: hidden;
+  resize: both;
+}
+.ep-float-hd {
+  flex: none; display: flex; align-items: center; gap: 8px; padding: 9px 12px;
+  background: var(--surface3); border-bottom: 1px solid var(--border2); cursor: move; user-select: none;
+}
+.ep-float-ico { color: var(--accent-text); }
+.ep-float-ttl { font-weight: 800; font-size: 12px; flex: 1; }
+.ep-float-cnt { font-size: 10px; color: var(--text4); background: var(--surface2); border: 1px solid var(--border2); border-radius: 99px; padding: 1px 7px; }
+.ep-float-min {
+  appearance: none; border: 1px solid var(--border2); background: var(--surface2); color: var(--text3);
+  width: 22px; height: 22px; border-radius: 6px; font-size: 11px; cursor: pointer;
+}
+.ep-float-min:hover { color: var(--text); background: var(--surface3); }
+.ep-float-body { flex: 1; overflow: auto; display: flex; flex-direction: column; }
+.ep-float-body .ep-rows { max-height: none; flex: 1; overflow: auto; }
+
+.ep-pill {
+  position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%); z-index: 65;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--panel); border: 1px solid var(--border2); border-radius: 99px; padding: 13px 24px 13px 20px;
+  box-shadow: var(--shadow-md); cursor: pointer; font-size: 14px; font-weight: 700; color: var(--text);
+}
+.ep-pill:hover { transform: translateX(-50%) translateY(-2px); border-color: var(--accent-line); }
+.ep-pill-ico { color: var(--accent-text); font-size: 17px; }
+.ep-pill-cnt { background: var(--accent); color: var(--on-accent, #fff); border-radius: 99px; padding: 2px 9px; font-size: 12px; }
+
+/* ── Editor RAPIDO voce del computo (modifica descrizione/prezzo/U.M.) ── */
+#qe-box {
+  width: min(560px, calc(100% - 40px)); max-height: 88vh; display: flex; flex-direction: column;
+  background: var(--panel); border: 1px solid var(--line2); border-radius: var(--radius);
+  box-shadow: var(--shadow-2); overflow: hidden;
+}
+.qe-hd {
+  display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--accent-soft), transparent 60%);
+}
+.qe-hd h3 { font-size: 13px; font-weight: 800; margin: 0; font-family: var(--mono); }
+.qe-code { font-family: var(--mono); font-size: 10.5px; color: var(--accent-text); background: var(--accent-soft); border-radius: 99px; padding: 2px 9px; }
+.qe-body { padding: 14px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
+.qe-f { display: flex; flex-direction: column; gap: 4px; }
+.qe-f > span { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text4); }
+.qe-f input, .qe-f textarea {
+  width: 100%; box-sizing: border-box; background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text); border-radius: 8px; padding: 8px 10px; font-family: inherit; font-size: 13px; resize: vertical;
+}
+.qe-f input:focus, .qe-f textarea:focus { border-color: var(--accent); }
+.qe-row { display: flex; gap: 12px; }
+.qe-sm { flex: 1; }
+.qe-f input:disabled { opacity: .55; cursor: not-allowed; }
+.qe-note { font-size: 11px; color: var(--text3); background: var(--surface2); border-radius: 8px; padding: 8px 10px; }
+.qe-link { border: none; background: none; color: var(--accent); cursor: pointer; font: inherit; font-size: 11px; padding: 0; }
+.qe-link:hover { text-decoration: underline; }
+.qe-ft { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-top: 1px solid var(--line); }
+.qe-adv { background: var(--surface2); border: 1px solid var(--border); color: var(--text3); border-radius: 8px; padding: 7px 12px; font-size: 12px; cursor: pointer; }
+.qe-adv:hover { color: var(--text); border-color: var(--line3); }
+.qe-cancel { background: none; border: 1px solid var(--border); color: var(--text3); border-radius: 8px; padding: 7px 14px; font-size: 12px; cursor: pointer; }
+.qe-cancel:hover { color: var(--text); }
+.qe-save { padding: 7px 16px; font-size: 12px; }
+
+/* marcatore discreto "già nel computo" accanto al codice nei risultati */
+.in-computo { color: var(--accent); font-weight: 700; font-size: 11px; margin-left: 4px; }
+
+/* Bottone «⇪ Ampère» nell'header — import lista cavi (Lc) → computo */
+#ampere-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 5px 11px; font-size: 12px; font-weight: 600;
+  cursor: pointer; flex-shrink: 0; line-height: 1;
+  background: var(--surface2); color: var(--text3);
+  transition: border-color .12s, color .12s, background .12s;
+}
+#ampere-btn .amp-glyph { font-family: var(--mono); font-size: 14px; font-weight: 700; color: #f59e0b; }
+#ampere-btn:hover { color: #f59e0b; border-color: #f59e0b; background: color-mix(in srgb, #f59e0b 12%, transparent); }
+
+/* ══ MODALITÀ RAPIDA / COMPLETA ══════════════════════════════
+   Due modi della stessa schermata. «Rapida» (predefinita) è la consultazione:
+   cerca nei prezzari, seleziona, copia l'Elenco Prezzi. «Completa»
+   è il flusso di computo intero, invariato rispetto a prima.
+   Meccanica: gli elementi del flusso computo portano l'attributo [data-full] nel
+   markup e qui vengono nascosti — nessuna logica riscritta, nessun dato toccato
+   (il computo resta popolato anche mentre è fuori vista). Governo in
+   legacy/index.js -> setMode(). */
+body.miu-rapida [data-full] { display: none !important; }
+/* la colonna "Misura" (quantità per le Misurazioni) è flusso computo:
+   un elenco prezzi da incollare non ha quantità. Vale nelle tre viste. */
+body.miu-rapida .tmis-h,
+body.miu-rapida .tmis,
+body.miu-rapida .tv-mis,
+body.miu-rapida .li-mis { display: none; }
+/* badge "✓ già nel computo" sulle righe: idem */
+body.miu-rapida .in-computo { display: none; }
+
+/* Il toggle: due posizioni con pastiglia che scorre, in testa alla barra filtri. */
+.miu-mode-toggle {
+  position: relative; display: inline-flex; align-items: center; flex-shrink: 0;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-pill, 999px); padding: 2px;
+}
+.miu-mode-toggle .mode-thumb {
+  position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc(50% - 2px);
+  border-radius: var(--radius-pill, 999px); background: var(--surface);
+  border: 1px solid var(--accent);
+  transition: transform .28s cubic-bezier(.4, 1.3, .5, 1);
+}
+body.miu-completa .miu-mode-toggle .mode-thumb { transform: translateX(100%); }
+.miu-mode-toggle button {
+  position: relative; z-index: 1; background: none; border: none;
+  padding: 4px 13px; font-size: 12px; font-family: inherit; cursor: pointer;
+  color: var(--text4); white-space: nowrap; border-radius: var(--radius-pill, 999px);
+  transition: color .2s;
+}
+.miu-mode-toggle button:hover { color: var(--text); }
+.miu-mode-toggle button.active { color: var(--accent-text); font-weight: 700; }
+/* niente movimento se l'utente ha chiesto di ridurlo */
+html[data-motion="reduced"] .miu-mode-toggle .mode-thumb { transition: none; }
+@media (prefers-reduced-motion: reduce) { .miu-mode-toggle .mode-thumb { transition: none; } }
+
+/* ══ DOCK SELEZIONE ══════════════════════════════════════════
+   Le voci selezionate nei risultati sono ciò che l'utente sta costruendo mentre
+   consulta: qui si vedono per nome, si tolgono con la ✕ e si copiano. Vive in
+   fondo a #content (flex column), fuori da #table-area che scorre. */
+#sel-dock {
+  position: relative; flex-shrink: 0; border-top: 2px solid var(--accent);
+  background: var(--surface); display: flex; flex-direction: column;
+}
+#sel-dock[hidden] { display: none; }
+/* Maniglia sul bordo superiore: --sel-dock-h è il tetto dell'elenco (non del
+   pannello: intestazione e piede restano sempre a vista). Default 3-4 voci. */
+#sel-dock-resize {
+  position: absolute; top: -3px; left: 0; right: 0; height: 7px;
+  cursor: row-resize; z-index: 2;
+}
+#sel-dock-resize:hover, #sel-dock-resize.dragging { background: var(--accent); opacity: .35; }
+#sel-dock-hd {
+  display: flex; align-items: center; gap: 8px; padding: 6px 14px;
+  background: var(--accent-light); border-bottom: 1px solid var(--border);
+}
+#sel-dock-hd .sd-title { font-size: 12px; font-weight: 700; color: var(--accent-text); }
+#sel-dock-hd .sd-count {
+  font-family: var(--mono); font-size: 11px; background: var(--surface);
+  color: var(--accent-text); border-radius: var(--radius-pill, 999px); padding: 1px 7px;
+}
+#sel-dock-hd .sd-tot { font-family: var(--mono); font-size: 11px; color: var(--text3); }
+#sel-dock .sd-sp { flex: 1; }
+#sel-dock-clear {
+  background: none; border: none; cursor: pointer; font-family: inherit;
+  font-size: 11px; color: var(--danger); text-decoration: underline; padding: 0 2px;
+}
+#sel-dock-fold {
+  background: none; border: none; cursor: pointer; font-size: 12px;
+  color: var(--text3); padding: 0 4px; transition: transform .18s;
+}
+#sel-dock.folded #sel-dock-fold { transform: rotate(180deg); }
+#sel-dock.folded #sel-dock-list { display: none; }
+
+#sel-dock-list {
+  list-style: none; margin: 0; padding: 4px 8px; gap: 1px;
+  display: flex; flex-direction: column;
+  /* il tetto: oltre queste voci si scorre, il dock non cresce più sotto i piedi
+     dei risultati. Regolabile con la maniglia (--sel-dock-h). */
+  max-height: var(--sel-dock-h, 124px); overflow: auto;
+}
+#sel-dock-list li {
+  display: flex; align-items: center; gap: 10px;
+  padding: 3px 6px; border-radius: var(--radius-sm); font-size: 12px;
+}
+#sel-dock-list li:hover { background: var(--surface2); }
+#sel-dock-list .sd-code { font-family: var(--mono); font-size: 11px; color: var(--text3); white-space: nowrap; }
+#sel-dock-list .sd-desc { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#sel-dock-list .sd-um { font-size: 11px; color: var(--text4); white-space: nowrap; }
+#sel-dock-list .sd-price { font-family: var(--mono); font-size: 11px; color: var(--text3); white-space: nowrap; }
+#sel-dock-list .sd-x {
+  background: none; border: none; cursor: pointer; color: var(--text4);
+  font-size: 13px; line-height: 1; padding: 1px 5px; border-radius: var(--radius-sm);
+  transition: var(--tr);
+}
+#sel-dock-list .sd-x:hover { background: var(--danger); color: #fff; }
+
+#sel-dock-ft {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 7px 14px; border-top: 1px solid var(--border);
+}
+#sel-dock-ft .sd-hint { font-size: 11px; color: var(--text4); }
+#sel-dock-cta { font-size: 12.5px; padding: 7px 14px; }
+
+/* La riga selezionata si legge a colpo d'occhio anche nelle viste Capitoli ed
+   Elenco (in Tabella la barra d'accento c'era già). */
+.tvoce.sel, .litem.sel { box-shadow: inset 3px 0 0 var(--accent); }
+tbody tr.sel .desc-short, .tvoce.sel .tv-desc, .litem.sel .li-desc { font-weight: 600; }
+
+/* Il dock entra scivolando dal basso (è comparso qualcosa, non è saltato un
+   pezzo di pagina), e le voci si accodano una a una. Rispetta «riduci movimento». */
+@keyframes miu-dock-in { from { transform: translateY(10px); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes miu-dock-row-in { from { opacity: 0; transform: translateX(-6px) } to { opacity: 1; transform: none } }
+#sel-dock:not([hidden]) { animation: miu-dock-in .22s ease-out; }
+#sel-dock-list li { animation: miu-dock-row-in .18s ease-out; }
+html[data-motion="reduced"] #sel-dock:not([hidden]),
+html[data-motion="reduced"] #sel-dock-list li { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  #sel-dock:not([hidden]), #sel-dock-list li { animation: none; }
+}
+
+/* In Rapida «Copia Elenco Prezzi» è l'unica azione della barra: prende peso. */
+body.miu-rapida #copy-btn { box-shadow: 0 0 0 3px var(--accent-light); }

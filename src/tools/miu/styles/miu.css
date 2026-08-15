@@ -1,0 +1,12 @@
+
+/* ── Trascinare una voce dall'ELENCO PREZZI dentro le MISURAZIONI ────────────────────
+   Le due liste sono affiancate (catalogo sotto, computo sopra) e il gesto che uno si
+   aspetta è prendere una voce e portarla dove va misurata. Il bersaglio si ACCENDE solo
+   mentre trascini: fuori dal gesto non c'è nessuna decorazione da capire. */
+.ep-row[draggable="true"] { cursor: grab; }
+.ep-row[draggable="true"]:active { cursor: grabbing; }
+#cart-ov-body.ep-drop-armed { outline: 1px dashed color-mix(in srgb, var(--accent) 45%, transparent); outline-offset: -4px; }
+#cart-ov-body.ep-drop-over {
+  outline: 2px dashed var(--accent); outline-offset: -4px;
+  background: color-mix(in srgb, var(--accent) 6%, transparent);
+}

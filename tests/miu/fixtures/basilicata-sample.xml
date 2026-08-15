@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Prezzario>
+  <anno>2025</anno>
+  <capitoli>
+    <Capitolo>
+      <codice>A</codice>
+      <descrizione>NOLEGGI</descrizione>
+      <categorie>
+        <Categoria>
+          <codice>01</codice>
+          <descrizione>Noleggi</descrizione>
+          <voci>
+            <Voce>
+              <codice>001</codice>
+              <descrizione>Veicolo peso totale:</descrizione>
+              <sottovoci>
+                <Sottovoce>
+                  <codice>01</codice>
+                  <descrizione>fino a kg. 1.200 (portata kg. 600) a caldo</descrizione>
+                  <unitaMisura><codice>ora    </codice></unitaMisura>
+                  <prezzo>61.77</prezzo>
+                  <manodopera>46.75</manodopera>
+                </Sottovoce>
+                <Sottovoce>
+                  <codice>03</codice>
+                  <descrizione>fino a kg. 1.200 (portata kg. 600) a freddo</descrizione>
+                  <unitaMisura><codice>ora    </codice></unitaMisura>
+                  <prezzo>6.11</prezzo>
+                  <manodopera>0.0</manodopera>
+                </Sottovoce>
+              </sottovoci>
+            </Voce>
+          </voci>
+        </Categoria>
+      </categorie>
+    </Capitolo>
+  </capitoli>
+</Prezzario>

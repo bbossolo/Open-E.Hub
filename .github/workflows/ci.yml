@@ -1,0 +1,40 @@
+name: CI
+
+# Controlli di qualità sul codice sorgente: type-check + lint UI + test unitari
+# dei motori + verifica che hub e tool compilino dai sorgenti (build:web).
+# Gira a ogni push su main e su ogni pull request. Nessun deploy: Open E.Hub
+# è offline/self-hosted, non c'è un servizio esterno da aggiornare.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Lint UI (design system — pulsanti/identità condivisi)
+        run: npm run lint:css
+
+      - name: Test
+        run: npm test
+
+      # I bundle .html sono artefatti, non sorgenti (gitignored): qui non si
+      # confrontano con nulla di committato, si verifica che hub e tool
+      # compilino davvero dai sorgenti. Gli installer li produce release.yml.
+      - name: Build (web) — hub + tool dai sorgenti
+        run: npm run build:web

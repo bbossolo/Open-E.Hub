@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Documento xmlns="six.xsd">
+  <intestazione autore="S.T.R. s.p.a." versione="11.47.1" />
+  <unitaDiMisura unitaDiMisuraId="62" simbolo="m²"><udmDescrizione lingua="it" breve="m²" /></unitaDiMisura>
+  <unitaDiMisura unitaDiMisuraId="44" simbolo="CDM"><udmDescrizione lingua="it" breve="CDM" /></unitaDiMisura>
+  <gruppo vlrStruttura="zzzz.zz" tipo="Capitolo" gruppoId="2">
+    <prodotto prodottoId="1" prdId="01">
+      <prdDescrizione lingua="it" breve="OPERE PROVVISIONALI" />
+      <prdQuotazione valore="0" listaQuotazioneId="84" />
+    </prodotto>
+    <prodotto prodottoId="2" prdId="01.1">
+      <prdDescrizione lingua="it" breve="PUNTELLAZIONI" />
+      <prdQuotazione valore="0" listaQuotazioneId="84" />
+    </prodotto>
+    <prodotto prodottoId="140" prdId="01.1.AB1.01.A" unitaDiMisuraId="62">
+      <incidenzaManodopera>29.13</incidenzaManodopera>
+      <incidenzaMateriali>38.55</incidenzaMateriali>
+      <prdDescrizione lingua="it" breve="Puntellazione di travi, rampe scale, solai piani e di copertura fino a 3 m di altezza" />
+      <prdQuotazione valore="27.32" validita="2017-05-16T00:00:00+02:00" listaQuotazioneId="84" />
+    </prodotto>
+    <prodotto prodottoId="141" prdId="01.1.AB1.01.B" unitaDiMisuraId="44">
+      <incidenzaManodopera>32.48</incidenzaManodopera>
+      <prdDescrizione lingua="it" breve="Per ogni metro in più oltre i primi 3 m di altezza di puntellazione" />
+      <prdQuotazione valore="9.80" listaQuotazioneId="84" />
+    </prodotto>
+  </gruppo>
+</Documento>

@@ -1,0 +1,26 @@
+{
+  "rules": {},
+  "overrides": [
+    {
+      "files": ["src/tools/**/styles/*.css"],
+      "rules": {
+        "selector-disallowed-list": [
+          ["/\\.p-btn/", "/\\.p-icon-btn/", "/\\.btn(?![-\\w])/", "/\\.p-tabs?\\b/"],
+          {
+            "message": "Design system: usa i controlli condivisi .ehb-btn* / .ehb-icon-btn / .ehb-tab (shared/ui/components.css). Non reintrodurre primitive locali (.p-btn/.p-icon-btn/.btn/.p-tab); aggiungi le varianti nuove allo shared, non al tool."
+          }
+        ],
+        "declaration-property-value-disallowed-list": [
+          {
+            "/^(color|background|background-color|border|border-color|fill|stroke|box-shadow)$/": [
+              "/#(19b6d8|48cfeb|22d3ee|1ca371|2fc78d|b23a5c|d2607f)/i"
+            ]
+          },
+          {
+            "message": "Design system: le identità cross-tool (φ/μ/π) vengono dai token --phi/--miu/--pi (shared/ui/tokens.css), mai da un hex hardcoded."
+          }
+        ]
+      }
+    }
+  ]
+}

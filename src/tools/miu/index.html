@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="light" data-tool="miu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- CSP — nessuno schema http:/https: compare in questa policy: la suite non può
+     caricare nulla dalla rete né spedire nulla fuori, e non è più solo una promessa
+     del codice. 'unsafe-inline'/'unsafe-eval' servono perché i bundle sono file
+     unici (tutto inlinato) e pdf.js/JSZip usano eval al proprio interno; la via
+     d'esecuzione JS dei PDF ostili è chiusa alla fonte con isEvalSupported:false. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob:; script-src 'self' file: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' file: data: 'unsafe-inline'; img-src 'self' file: data: blob:; font-src 'self' file: data:; connect-src 'self' file: data: blob:; worker-src 'self' file: blob:; frame-src 'self' file: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>μ Prezzi — Consultazione prezzari</title>
+<link href="vendor/fonts.css" rel="stylesheet">
+<script src="vendor/xlsx.full.min.js"></script>
+<script src="vendor/jszip.min.js"></script>
+<!-- Manifest dei prezzari interni (i dataset si caricano poi a richiesta). -->
+<script src="prezzari/_bundle/manifest.js"></script>
+<!-- Design system condiviso (STEP 8): token + libreria componenti. μ Prezzi parte in light, accento verde (data-tool="miu"). -->
+<link rel="stylesheet" href="../../shared/ui/tokens.css">
+<link rel="stylesheet" href="../../shared/ui/components.css">
+<link rel="stylesheet" href="./styles/pricelist.css">
+</head>
+<body>
+
+<header class="ehb-hdr" id="app-header">
+  <div class="ehb-hdr__brand" id="app-logo" title="μ Prezzi">
+    <div class="ehb-logo" data-tool="miu"><span class="ehb-logo__glyph"><svg class="ehb-glyph-svg" viewBox="0 -800 600 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M66 180V-550H216V-210Q216 -167 239.0 -143.5Q262 -120 303 -120Q344 -120 367.0 -143.5Q390 -167 390 -210V-550H540V0H390L395 -105H393Q387 -51 363.5 -20.5Q340 10 303 10Q266 10 242.5 -20.5Q219 -51 213 -105H211L216 30V180Z" fill="currentColor"/></svg></span></div>
+    <div class="ehb-hdr__brand-txt">
+      <span class="ehb-hdr__brand-name"><span class="ehb-name-glyph"><svg class="ehb-glyph-svg" viewBox="0 -800 600 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M66 180V-550H216V-210Q216 -167 239.0 -143.5Q262 -120 303 -120Q344 -120 367.0 -143.5Q390 -167 390 -210V-550H540V0H390L395 -105H393Q387 -51 363.5 -20.5Q340 10 303 10Q266 10 242.5 -20.5Q219 -51 213 -105H211L216 30V180Z" fill="currentColor"/></svg></span> Prezzi</span>
+      <span class="ehb-hdr__brand-sub" id="appLogoSub">consultazione prezzari · Elenco Prezzi</span>
+    </div>
+  </div>
+  <div class="ehb-hdr__spacer"></div>
+  <div class="ehb-hdr__actions">
+  <button id="theme-toggle" class="ic" onclick="toggleTheme()" title="Cambia tema (chiaro/scuro) di questo tool">☾</button>
+  <button id="guide-btn" class="ehb-guide-btn" onclick="openGuide()" title="Guida rapida all'uso di μ Prezzi">? Guida</button>
+  <!-- Header alleggerito: solo tema e guida restano sempre a vista; le altre
+       azioni secondarie (Computi, import Ampère/prezzario, cartella) vivono in
+       questo popover — stesso pattern di #view-menu-wrap/#view-menu-pop. -->
+  <span id="more-menu-wrap" style="position:relative;display:inline-flex">
+    <button id="more-btn" onclick="toggleMoreMenu()" aria-haspopup="true" aria-expanded="false" title="Altre azioni: computi salvati, import">⋯ Altro</button>
+    <div id="more-menu-pop" role="menu" aria-label="Altre azioni" hidden>
+      <button id="carts-btn" data-full onclick="openCartsMenu()" title="Salva e carica computi alternativi (sorgenti diverse)">Computi</button>
+      <label id="drop-zone" title="Trascina qui un prezzario — .xml (formato preferibile: μ lo legge con un parser dedicato al prezzario) o .xlsx — oppure un listino METEL (.txt). Il file si può trascinare ovunque nella finestra; da qui si sfoglia.">
+        <input type="file" id="file-input" accept=".xlsx,.xls,.xml,.txt" multiple style="display:none" onchange="handleFileInput(event)">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg>
+        <span class="dz-text">Trascina file</span>
+      </label>
+      <button id="ampere-btn" data-full onclick="pickAmpere()" title="Importa una lista cavi da Ampère (.xls): le lunghezze Lc diventano le quantità del computo">
+        <span class="amp-glyph">⇪</span>
+        <span class="amp-label">Ampère</span>
+      </button>
+      <input type="file" id="ampere-input" accept=".xls,.xlsx" style="display:none" onchange="ampereFilePicked(event)">
+      <button id="folder-btn" onclick="openFolder()">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h4l2 2h4a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>
+        Apri Cartella Prezzari
+      </button>
+    </div>
+  </span>
+  </div>
+</header>
+
+<!-- BINARIO = navigazione REALE di primo livello (persistente sopra ogni schermata).
+     4 passi: "Cerca o componi" (home; il Compositore è un modale sopra la vista,
+     aperto dal bottone ✎) · Misura · Categorizza · Esporta. Guida setStep(). -->
+<nav id="miu-rail" class="ehb-rail miu-rail" aria-label="Fasi di lavoro">
+  <div class="ehb-rail-step active" data-step="cerca" data-fam="nav" onclick="setStep('cerca')" title="Cerca nei prezzari o componi una voce (1)"><span class="rail-k">1</span><span class="dot"></span>Cerca o componi</div>
+  <div class="ehb-rail-sep" data-full></div>
+  <div class="ehb-rail-step" data-step="misura" data-fam="create" data-full onclick="setStep('misura')" title="Computo Metrico e misurazioni (2)"><span class="rail-k">2</span><span class="dot"></span>Misura</div>
+  <div class="ehb-rail-sep" data-full></div>
+  <div class="ehb-rail-step" data-step="categorizza" data-fam="assign" data-full onclick="setStep('categorizza')" title="Assegna categorie alle voci (3)"><span class="rail-k">3</span><span class="dot"></span>Categorizza</div>
+  <div class="ehb-rail-sep" data-full></div>
+  <div class="ehb-rail-step" data-step="esporta" data-fam="export" data-full onclick="setStep('esporta')" title="Esporta / documenti (4)"><span class="rail-k">4</span><span class="dot"></span>Esporta</div>
+  <div class="miu-rail-sp"></div>
+  <div class="miu-rail-ctx" id="rail-computo" data-full title="Computo metrico attivo"></div>
+</nav>
+
+<div id="main">
+  <aside id="sidebar">
+    <div class="sidebar-section-title">
+      <span style="display:flex;align-items:center;gap:6px">
+        Prezzari caricati
+        <span id="arch-total"></span>
+      </span>
+      <button id="sidebar-collapse-btn" title="Comprimi/espandi sidebar"></button>
+    </div>
+    <div id="sidebar-collapsed-icon">
+      <button style="cursor:pointer;font-size:15px;padding:5px 7px" title="Espandi sidebar">▶</button>
+      <div class="sidebar-collapsed-label" id="sidebar-collapsed-label" title="Prezzari caricati — clic su ▶ per espandere">Prezzari</div>
+    </div>
+    <div id="archive-list">
+      <div style="padding:18px 12px;text-align:center;color:var(--text4);font-size:11px;line-height:1.7">
+        Nessun prezzario.<br>Apri una cartella per iniziare.
+      </div>
+    </div>
+    <div id="sidebar-footer">
+      <span>Voci totali: <strong id="tot-voci">0</strong></span>
+      <span id="tot-loaded" style="color:var(--text4)"></span>
+    </div>
+    <div id="sidebar-resize" title="Trascina per ridimensionare"></div>
+  </aside>
+
+  <div id="content">
+    <!-- ACTIVE PREZZARIO BANNER -->
+    <div id="active-banner" style="display:none"></div>
+    <!-- BIG SEARCH (primary) -->
+    <div id="search-hero" style="display:none">
+      <svg class="sh-icon" width="18" height="18" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+      <!-- Placeholder asciutto: com'è fatta la ricerca lo dice già #search-hint qui
+           accanto — ripeterlo dentro il campo è testo doppio. -->
+      <input type="search" id="search-input" placeholder="Ricerca" oninput="debouncedFilter()" autocomplete="off">
+      <button id="componi-btn" data-full onclick="openComponi()" title="Componi la descrizione di una voce di computo dalle famiglie del thesaurus">✎ Compositore di descrizione</button>
+      <button id="ap-compose-btn" data-full onclick="openComponiAnalisi()" title="Apri direttamente la scheda Σ Analisi Prezzi, senza passare dal Compositore di descrizione">Σ Analisi Prezzi</button>
+      <span id="search-hint">Parole tue o del prezzario — i risultati più pertinenti salgono in alto</span>
+    </div>
+
+    <!-- FILTERS -->
+    <div id="filter-bar" style="display:none">
+      <div class="filter-toolbar">
+        <!-- MODALITÀ (US-modalita-rapida): due modi della stessa schermata.
+             «Rapida» (predefinita) = consultazione: cerca, seleziona, copia l'Elenco Prezzi;
+             «Completa» = il flusso di computo intero, invariato. Nulla si perde passando
+             a Rapida: gli elementi marcati [data-full] sono solo nascosti (CSS), il
+             computo resta popolato. Vive qui, in testa alla barra, perché governa
+             proprio i comandi che la seguono. -->
+        <span class="miu-mode-toggle" id="mode-toggle" role="group" aria-label="Modalità di lavoro">
+          <span class="mode-thumb" aria-hidden="true"></span>
+          <button data-mode="rapida" onclick="setMode('rapida')" title="Consultazione: cerca nei prezzari, seleziona e copia l'Elenco Prezzi">Rapida</button>
+          <button data-mode="completa" onclick="setMode('completa')" title="Flusso completo: computo metrico, misure, categorie, export PDF, compositore e analisi prezzi">Completa</button>
+        </span>
+        <span class="filter-toolbar-sep"></span>
+        <button id="filtri-btn" class="filter-toggle" title="Filtri: macrocategoria, regione, anno e altri campi" aria-haspopup="true" aria-expanded="false">Filtri ▾</button>
+        <span class="filter-toolbar-sep" data-full></span>
+        <button id="cart-btn" class="disabled" data-full onclick="openCart()" title="Computo Metrico vuoto">
+          <span class="cart-glyph">▤</span>
+          <span class="cart-label">Computo Metrico</span>
+          <span class="cart-count" style="display:none">0</span>
+          <span class="cart-total" style="display:none"></span>
+        </button>
+        <button id="btn-cart-clear" data-full onclick="clearCart()" title="Svuota computo metrico" style="display:none">svuota</button>
+        <span class="filter-toolbar-sep"></span>
+        <!-- Azione rapida di copia: sempre visibile qui (non dentro il menu Esporta,
+             che resta per gli export sull'INTERO computo) — opera sulla selezione
+             corrente (ricerca o carrello) se presente, altrimenti su tutto il carrello. -->
+        <button id="copy-btn" class="ehb-btn-fam-export" onclick="showCopyPopup()" title="Copia il testo dell'Elenco Prezzi — le voci selezionate se presenti, altrimenti tutto il computo">Copia Elenco Prezzi</button>
+        <span class="exp-sp"></span>
+      <!-- Esporta — export sull'intero computo (le azioni per singola voce/selezione
+           sono a sinistra, sempre visibili). Un solo punto d'accesso rapido (popover),
+           le stesse destinazioni dell'export overlay completo. -->
+      <span id="export-menu-wrap" data-full style="position:relative;display:inline-flex">
+        <button id="export-menu-btn" class="ehb-btn-fam-export" onclick="toggleExportMenu()" aria-haspopup="true" aria-expanded="false" title="Esporta il computo verso Excel o Analisi Prezzi">Esporta <span class="arrow">▾</span></button>
+        <div id="export-menu-pop" role="menu" aria-label="Esporta" hidden>
+          <button id="pdf-report-btn" onclick="openComputoPDF()" title="Report PDF del computo metrico">Report PDF</button>
+          <button id="export-computo-xls-btn" onclick="exportComputoExcel()" title="Computo metrico in Excel editabile">Computo Excel</button>
+          <button id="export-ap-xls-btn" onclick="exportFascicoloAP()" title="Fascicolo Analisi Prezzi in Excel">Σ Fascicolo Analisi Prezzi (Excel)</button>
+          <button id="export-ap-pdf-btn" onclick="exportFascicoloAPPdf()" title="Fascicolo Analisi Prezzi in PDF">Σ Fascicolo Analisi Prezzi (PDF)</button>
+          <button id="goto-esporta-btn" class="exp-more" onclick="setStep('esporta')" title="Tutte le destinazioni di esportazione">⇪ Tutte le destinazioni…</button>
+        </div>
+      </span>
+      </div>
+      <!-- Drawer filtri: macrocategorie + griglia campi, a riposo dietro #filtri-btn.
+           #macro-chips resta discendente di #filter-bar e PRIMA di .filter-grid
+           nell'ordine del documento. -->
+      <div id="filtri-drawer" role="region" aria-label="Filtri" style="display:none">
+        <div class="filtri-drawer-hd">
+          <input type="search" id="filter-mini-search" placeholder="⌕ filtra opzioni…" aria-label="Filtra le opzioni dei menu" title="Filtra le opzioni dei menu (distinta dalla ricerca voci in alto)" oninput="filterMiniSearch(this.value)">
+          <button id="btn-reset" onclick="resetFilters()">✕ Reset filtri</button>
+        </div>
+        <!-- MACROCATEGORIE IMPIANTI: filtro a monte dei capitoli, selezione singola con de-selezione -->
+        <div id="macro-chips" role="group" aria-label="Macrocategorie impianti"></div>
+        <div class="filter-grid">
+        <div class="fg" data-fname="regione">
+          <label>Regione</label>
+          <select id="f-reg" onchange="cascade('reg')"><option value="">Tutte</option></select>
+        </div>
+        <div class="fg" data-fname="anno">
+          <label>Anno</label>
+          <select id="f-anno" onchange="cascade('anno')"><option value="">Tutti</option></select>
+        </div>
+        <div class="fg" data-fname="tematica">
+          <label>Tematica</label>
+          <select id="f-tema" onchange="cascade('tema')"><option value="">Tutte</option></select>
+        </div>
+        <div class="fg" data-fname="disciplina">
+          <label>Disciplina</label>
+          <select id="f-disc" onchange="cascade('disc')"><option value="">Tutte</option></select>
+        </div>
+        <div class="fg" data-fname="sistema">
+          <label>Sistema</label>
+          <select id="f-sis" onchange="cascade('sis')"><option value="">Tutti</option></select>
+        </div>
+        <div class="fg" data-fname="materia">
+          <label>Materiale</label>
+          <select id="f-mat" onchange="cascade('mat')"><option value="">Tutti</option></select>
+        </div>
+        <div class="fg" data-fname="attivita">
+          <label>Attività</label>
+          <select id="f-att" onchange="cascade('att')"><option value="">Tutte</option></select>
+        </div>
+        <div class="fg" data-fname="um">
+          <label>U.M.</label>
+          <select id="f-um" onchange="cascade('um')"><option value="">Tutte</option></select>
+        </div>
+        <div class="fg" data-fname="prezzo">
+          <label>Prezzo €</label>
+          <div class="price-range">
+            <input type="number" id="f-pmin" placeholder="Min" oninput="doFilter()" style="width:75px">
+            <span class="sep">–</span>
+            <input type="number" id="f-pmax" placeholder="Max" oninput="doFilter()" style="width:75px">
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULTS BAR -->
+    <div id="results-bar" style="display:none">
+      <span id="results-count"><strong>0</strong> voci</span>
+      <div class="rbar-spacer"></div>
+      <button id="btn-sel-all" onclick="toggleSelAll()">Seleziona tutti filtrati</button>
+      <!-- «N selezionate» e «Svuota» non vivono più qui: la selezione è il soggetto del
+           lavoro di consultazione e ha il suo pannello a fondo pagina (#sel-dock), dove
+           si vede COSA si è scelto e si toglie una voce con un clic. -->
+      <button id="btn-add-sel" class="ehb-btn-fam-create" data-full onclick="addSelectedToComputo()" title="Aggiunge le voci selezionate al computo (Elenco Prezzi del progetto)">＋ Aggiungi al computo</button>
+      <span class="view-switch" id="layout-switch" title="Modalità di visualizzazione">
+        <button data-view="table" onclick="setView('table')" title="Tabella">▦ Tabella</button>
+        <button data-view="tree" onclick="setView('tree')" title="Capitoli (vista ad albero)">⊞ Capitoli</button>
+        <button data-view="list" onclick="setView('list')" title="Elenco essenziale">☰ Elenco</button>
+      </span>
+      <span id="view-menu-wrap" style="position:relative;display:inline-flex">
+        <button id="view-menu-btn" onclick="toggleViewMenu()" aria-haspopup="true" aria-expanded="false" title="Opzioni di visualizzazione: densità e righe descrizione">⋯ Visualizzazione</button>
+        <div id="view-menu-pop" role="menu" aria-label="Opzioni di visualizzazione" hidden>
+          <div class="vm-row">
+            <span class="vm-label">Densità</span>
+            <span class="view-switch" id="density-switch" title="Densità">
+              <button data-density="normal" onclick="setDensity('normal')" title="Normale">Normale</button>
+              <button data-density="compact" onclick="setDensity('compact')" title="Compatta">Compatta</button>
+              <button data-density="ultra" onclick="setDensity('ultra')" title="Ultra-compatta">Ultra</button>
+            </span>
+          </div>
+          <div class="vm-row">
+            <span class="vm-label">Righe descrizione</span>
+            <select id="desc-lines-sel" onchange="setDescLines(this.value)" title="Righe massime delle descrizioni voce (viste Capitoli ed Elenco)">
+              <option value="1">Descr. 1 riga</option>
+              <option value="2">Descr. 2 righe</option>
+              <option value="3">Descr. 3 righe</option>
+              <option value="5">Descr. 5 righe</option>
+              <option value="99">Descr. intera</option>
+            </select>
+          </div>
+          <div class="vm-row">
+            <span class="vm-label">Colonne (vista Tabella)</span>
+            <span class="view-switch" id="columns-switch" title="Colonne">
+              <button data-columns="tutte" onclick="setColumns('tutte')" title="Mostra anche regione, anno, %MDO e importo netto">Tutte</button>
+              <button data-columns="meno" onclick="setColumns('meno')" title="Nasconde regione, anno, %MDO e importo netto">Meno</button>
+            </span>
+          </div>
+          <div class="vm-row">
+            <span class="vm-label">Voci (vista Capitoli)</span>
+            <span class="view-switch" id="tvoce-switch" title="Voci">
+              <button data-tvoce="compatta" onclick="setTreeVoce('compatta')" title="Una riga per voce, stile Tabella">Compatte</button>
+              <button data-tvoce="espansa" onclick="setTreeVoce('espansa')" title="Card multi-riga (default)">Espanse</button>
+            </span>
+          </div>
+        </div>
+      </span>
+      <select id="per-page-sel" onchange="S.pp=+this.value;S.page=1;render()">
+        <option value="25">25/pag</option>
+        <option value="50">50/pag</option>
+        <option value="100">100/pag</option>
+      </select>
+
+    </div>
+
+    <!-- STATE PANEL -->
+    <div id="state-panel" class="show">
+      <div class="state-icon">↥</div>
+      <div class="state-h2">Apri o trascina un prezzario</div>
+      <p class="state-p"><strong>Trascina</strong> il file <strong>ovunque in questa finestra</strong>, oppure clicca <strong>Apri Cartella Prezzari</strong> per caricare un'intera cartella di prezzari regionali.</p>
+      <p class="state-p"><strong>Formato consigliato: .xml.</strong> Se la Regione (o il fornitore) pubblica il prezzario sia in XML sia in Excel, prendi l'XML: μ ha un parser dedicato per ciascuna famiglia di prezzario e ne legge i campi veri — codice, articolazione, unità di misura. Dell'<strong>.xlsx</strong> legge invece il <em>primo foglio</em> e deve indovinare le colonne dalle intestazioni: funziona, ma perde di più. Accettati anche i listini <strong>METEL .txt</strong> dei fornitori di materiale elettrico.</p>
+      <div class="state-hint">✦ I file vengono letti al volo — nessun dato viene salvato</div>
+    </div>
+
+    <!-- TABLE AREA -->
+    <div id="table-area">
+      <div id="table-wrap">
+        <table id="dtable">
+          <thead>
+            <tr>
+              <th class="tc"><input type="checkbox" id="chk-all" onchange="checkPage(this)"></th>
+              <th class="sortable" data-col="codice">Codice</th>
+              <th class="sortable" data-col="regione">Regione</th>
+              <th class="sortable" data-col="anno">Anno</th>
+              <th class="sortable tmdo-h" data-col="ru" title="Incidenza manodopera (% del prezzo)">%MDO</th>
+              <th class="sortable" data-col="desc_short">Descrizione</th>
+              <th class="sortable" data-col="um">U.M.</th>
+              <th class="tmis-h" title="Quantità per le Misurazioni — ⇪ se importata da una distinta, ✎ se manuale">Misura</th>
+              <th class="sortable" data-col="prezzo">Prezzo €</th>
+              <th class="sortable" data-col="importo_netto">Imp. Netto</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <!-- Vista Capitoli (vista ad albero) -->
+        <div id="treeview" style="display:none"></div>
+        <!-- Vista Elenco essenziale -->
+        <div id="listview" style="display:none"></div>
+      </div>
+      <div id="pagination"></div>
+    </div>
+
+    <!-- DOCK SELEZIONE — le voci scelte nei risultati (S.searchSel) non sono un
+         contatore in una barra: sono ciò che si sta costruendo. Qui si vedono per
+         nome, si toglie quella sbagliata con la ✕ (senza ricercarla nella tabella)
+         e si copia. Compare solo a selezione non vuota; il contenuto lo disegna
+         renderSelDock() (selezione.js), chiamata da updateCartInfo(). -->
+    <div id="sel-dock" hidden>
+      <!-- Il dock non deve mangiarsi i risultati: l'elenco ha un tetto (var
+           --sel-dock-h) e questa maniglia lo alza/abbassa a piacere (resizer
+           condiviso, asse y — doppio clic torna al default). -->
+      <div id="sel-dock-resize" title="Trascina per alzare o abbassare l'elenco · doppio clic reset"></div>
+      <div id="sel-dock-hd">
+        <span class="sd-title">Da copiare</span>
+        <span class="sd-count" id="sel-dock-n">0</span>
+        <span class="sd-tot" id="sel-dock-tot"></span>
+        <span class="sd-sp"></span>
+        <button id="sel-dock-clear" onclick="clearSearchSel()" title="Deseleziona tutte le voci">svuota selezione</button>
+        <button id="sel-dock-fold" onclick="toggleSelDock()" title="Comprimi/espandi l'elenco delle voci selezionate">▾</button>
+      </div>
+      <ul id="sel-dock-list"></ul>
+      <div id="sel-dock-ft">
+        <button id="sel-dock-cta" class="ehb-btn-fam-export" onclick="showCopyPopup()" title="Copia le voci selezionate">⎘ Copia Elenco Prezzi</button>
+        <span class="sd-hint">poi <b>Ctrl+V</b> dove ti serve</span>
+        <span class="sd-sp"></span>
+        <button id="sel-dock-add" class="ehb-btn-fam-create" data-full onclick="addSelectedToComputo()" title="Aggiunge le voci selezionate al computo (Elenco Prezzi del progetto)">＋ Aggiungi al computo</button>
+      </div>
+    </div>
+  </div><!-- /content -->
+
+  <!-- DETAIL PANEL -->
+  <div id="detail-panel">
+    <div id="detail-resize" title="Trascina per ridimensionare · doppio-click reset"></div>
+    <div id="detail-header">
+      <div class="dh-code" id="detail-code"></div>
+      <button id="detail-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div id="detail-body"></div>
+    <div id="detail-actions">
+      <button id="detail-add-cart" data-full onclick="detailCartAction()">+ Aggiungi al computo</button>
+      <button id="detail-compose" data-full onclick="openComponiFromDetail()" title="Componi la descrizione di computo agganciata a questa voce">✎ Componi descrizione voce</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- MODAL -->
+<div class="overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div id="modal-box">
+    <button id="modal-close" onclick="closeModal()">✕ Chiudi</button>
+    <h3 id="modal-title"></h3>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- COMPONI DESCRIZIONE — modal per la composizione guidata della descrizione -->
+<div class="overlay" id="componi-overlay" onclick="if(event.target===this)closeComponi()">
+  <div id="componi-box">
+    <div class="cmp-hd">
+      <h3>✎ Compositore di descrizione</h3>
+      <span class="cmp-step-tag" id="cmp-step-tag">voce di computo</span>
+      <div class="cmp-mode-toggle" id="cmp-mode-toggle">
+        <button class="cmp-mode-btn active" id="cmp-mode-desc" onclick="cmpSetMode('desc')">✎ Descrizione</button>
+        <button class="cmp-mode-btn" id="cmp-mode-ap" onclick="cmpSetMode('analisi')" title="Componi un prezzo unitario: manodopera + materiale + noli + varie, Spese Generali e Utile d'Impresa">Σ Analisi Prezzi</button>
+      </div>
+      <span class="cmp-sp"></span>
+      <button class="cmp-close" onclick="closeComponi()">Esc ✕</button>
+    </div>
+    <div class="cmp-body lib-collapsed" id="cmp-body">
+      <!-- Libreria voci pronte: pannello a scomparsa a sinistra (collassato di default) -->
+      <div class="cmp-lib-panel" id="cmp-lib-panel">
+        <div class="cmp-lib-hd" onclick="cmpToggleLib()" title="Mostra/nascondi la Libreria voci pronte">
+          <span class="cmp-lib-star">★</span>
+          <span class="cmp-lib-name">Libreria voci pronte <span class="soft" id="cmp-lib-count"></span></span>
+          <span class="cmp-lib-arrow">◂</span>
+        </div>
+        <div class="cmp-lib-body"><div id="cmp-lib-wrap"></div></div>
+      </div>
+      <!-- colonna centrale: scheda tecnica + famiglia + caratteristiche -->
+      <div class="cmp-left">
+        <div class="cmp-sec" id="cmp-ds-sec">
+          <div class="cmp-sec-title"><span class="n" style="background:var(--accent)">⤓</span> Da scheda tecnica <span class="soft">— PDF, riconoscimento offline <a class="cmp-ds-info-link" onclick="cmpDsInfoToggle()" title="Per quali comparti e produttori l'import è ottimizzato">ⓘ produttori</a></span>
+            <button class="cmp-tbtn cmp-ds-btn cmp-ds-hero" onclick="cmpDatasheetPick()" title="Importa una scheda tecnica PDF: μ ne riconosce famiglia, caratteristiche, marca e modello e propone voci di computo da rivedere.">⤓ Importa scheda PDF</button>
+          </div>
+          <input type="file" id="cmp-ds-input" accept="application/pdf" style="display:none" onchange="cmpDatasheetFile(this)">
+          <div id="cmp-ds-info" class="cmp-ds-info" hidden></div>
+          <div id="cmp-ds-wrap"></div>
+        </div>
+        <div class="cmp-sec" id="cmp-fam-sec">
+          <div class="cmp-sec-title"><span class="n">1</span> Famiglia componente <span class="soft" id="cmp-fam-count">— thesaurus μ</span></div>
+          <!-- breadcrumb: quando la famiglia è scelta, il picker collassa qui -->
+          <div id="cmp-fam-crumb" class="cmp-fam-crumb" hidden></div>
+          <!-- picker: mini-ricerca + macro-filtro orizzontale + griglia ordinata -->
+          <div id="cmp-fam-picker">
+            <input class="cmp-fam-search" id="cmp-fam-search" placeholder="Cerca famiglia… (es. proiettore, differenziale)" oninput="cmpFamSearch(this.value)">
+            <div class="cmp-macrobar" id="cmp-macrobar"></div>
+            <div id="cmp-fam-grid-wrap"></div>
+            <div class="cmp-custom-row">
+              <input class="cmp-custom-input" id="cmp-custom-input" placeholder="Non c'è? Crea una famiglia personalizzata…" onkeydown="if(event.key==='Enter')cmpAddCustom(this.value)">
+              <button class="cmp-tbtn" onclick="cmpAddCustom(document.getElementById('cmp-custom-input').value)">+ Crea</button>
+            </div>
+          </div>
+        </div>
+        <div class="cmp-sec">
+          <div class="cmp-sec-title"><span class="n">2</span> Caratteristiche <span class="soft">— dinamiche per famiglia</span></div>
+          <div id="cmp-chars"></div>
+          <div class="cmp-rule-note">Regola «se non c'è non si menziona»: le caratteristiche lasciate vuote <b>non compaiono</b> nella descrizione. Deseleziona un chip per escluderla.</div>
+        </div>
+      </div>
+      <!-- colonna destra: LA voce di computo — si compone live dalle scelte ed è
+           direttamente modificabile (unica superficie: niente anteprima separata) -->
+      <div class="cmp-right">
+        <div class="cmp-sec">
+          <div class="cmp-sec-title"><span class="n" style="background:var(--accent)">3</span> Voce di computo <span class="soft">— si compone dalle scelte, modificabile: va in computo e Analisi Prezzi</span></div>
+          <div class="cmp-prev-card">
+            <div class="cmp-prev-label">Descrizione breve
+              <button class="cmp-copy-btn" id="cmp-ed-pull-breve" onclick="cmpEditorPull('breve')" title="Scarta le modifiche manuali e torna al testo composto dalle scelte">↺ rigenera</button>
+              <button class="cmp-copy-btn" id="cmp-ed-copy-breve" onclick="cmpEditorCopy('breve',this)">⧉ copia</button>
+            </div>
+            <input class="cmp-editor-input" id="cmp-ed-breve" placeholder="— scegli famiglia e caratteristiche: la voce si compone qui, poi la rifinisci —" oninput="cmpEditorInput('breve',this.value)">
+          </div>
+          <div class="cmp-prev-card">
+            <div class="cmp-prev-label">Descrizione estesa
+              <button class="cmp-copy-btn" id="cmp-ed-pull-estesa" onclick="cmpEditorPull('estesa')" title="Scarta le modifiche manuali e torna al testo composto dalle scelte">↺ rigenera</button>
+              <button class="cmp-copy-btn" id="cmp-ed-copy-estesa" onclick="cmpEditorCopy('estesa',this)">⧉ copia</button>
+            </div>
+            <textarea class="cmp-editor-textarea" id="cmp-ed-estesa" rows="7" placeholder="— scegli famiglia e caratteristiche: la voce si compone qui, poi la rifinisci —" oninput="cmpEditorInput('estesa',this.value)"></textarea>
+          </div>
+        </div>
+      </div>
+      <!-- ANALISI PREZZI (Σ): manodopera/materiale/noli/varie + SG%/UI% → prezzo unitario.
+           Sostituisce cmp-left/cmp-right quando CMP.mode==='analisi' (US-ap01). -->
+      <div class="cmp-ap-body" id="cmp-ap-body">
+        <div class="cmp-sec">
+          <div class="cmp-sec-title"><span class="n">1</span> Voce</div>
+          <div class="cmp-ap-head">
+            <label>Codice <input class="cmp-ap-input" id="cmp-ap-codice" placeholder="AP01" oninput="cmpAPSetField('codice',this.value)"></label>
+            <label>U.M. <input class="cmp-ap-input" id="cmp-ap-um" placeholder="cad" oninput="cmpAPSetField('um',this.value)"></label>
+          </div>
+          <!-- La descrizione è UNICA per la voce: si compone nella scheda ✎ Descrizione
+               (anche da scheda tecnica PDF) e si riusa qui, non si riscrive. -->
+          <div class="cmp-ap-desc-shared" id="cmp-ap-desc-shared"></div>
+          <!-- Voce di riferimento: importa la scomposizione UFFICIALE del
+               prezzario (componenti con quantità e prezzi reali) come base A/B/C. -->
+          <div class="cmp-ap-ref">
+            <div class="cmp-ap-search-wrap">
+              <input class="cmp-ap-search" id="cmp-ap-search-ref" placeholder="⚗ Voce di riferimento con analisi prezzi ufficiale…" title="Cerca tra le sole voci del prezzario che portano la scomposizione ufficiale: la importi come base dell'analisi, con quantità e prezzi reali" oninput="cmpAPRefSearchInput(this.value)" onfocus="cmpAPRenderRefResults()">
+              <div class="cmp-ap-search-results" id="cmp-ap-search-res-ref" style="display:none"></div>
+            </div>
+          </div>
+        </div>
+        <div id="cmp-ap-sections"></div>
+        <div class="cmp-sec">
+          <div class="cmp-sec-title"><span class="n">3</span> Spese Generali e Utile d'Impresa</div>
+          <div class="cmp-ap-pct-row">
+            <label>Spese Generali % <input class="cmp-ap-input cmp-ap-pct" id="cmp-ap-sg" type="number" min="0" step="0.5" oninput="cmpAPSetPct('speseGeneraliPct',this.value)"></label>
+            <label>Utile d'Impresa % <input class="cmp-ap-input cmp-ap-pct" id="cmp-ap-ui" type="number" min="0" step="0.5" oninput="cmpAPSetPct('utileImpresaPct',this.value)"></label>
+          </div>
+          <div class="cmp-ap-pct-note">Valori di prassi: Spese Generali 13–17%, Utile d'Impresa 10% (art. 32 c.2 DPR 207/2010) — verificare le percentuali indicate dal prezzario regionale di riferimento o dal capitolato.</div>
+          <div id="cmp-ap-totals"></div>
+        </div>
+      </div>
+    </div>
+    <div class="cmp-ft" id="cmp-ft-desc">
+      <span class="cmp-hint">Esc chiude · i chip si deselezionano con un secondo clic · la copia usa l'editor se l'hai modificato</span>
+      <span class="cmp-sp"></span>
+      <button class="cmp-tbtn" onclick="cmpNewVoce()" title="Riparte da zero: descrizione, famiglia e Analisi Prezzi della voce in corso">Nuova voce</button>
+      <button class="cmp-tbtn" onclick="cmpCopy('breve',this)">Copia breve</button>
+      <button class="cmp-tbtn" onclick="cmpCopy('estesa',this)">Copia estesa</button>
+      <button class="cmp-tbtn" onclick="cmpSaveToLibreria(this)" title="Salva la voce corrente nella tua libreria personale, per richiamarla in futuro">★ Salva in libreria</button>
+      <button class="cmp-tbtn cmp-tbtn--create" onclick="cmpAddToCart(this)" title="Aggiunge la descrizione al computo come voce a sé, senza doverla agganciare a una voce di prezzario">+ Aggiungi al computo</button>
+      <button class="cmp-mode-flag" onclick="cmpSetMode('analisi')" title="Passa all'Analisi Prezzi: manodopera + materiale + SG% e UI% → prezzo unitario">Σ Analisi Prezzi ▸</button>
+    </div>
+    <div class="cmp-ft" id="cmp-ft-ap" hidden>
+      <span class="cmp-hint">Manodopera/materiale/noli pescati dal prezzario o custom · SG% e UI% modificabili per questa analisi</span>
+      <span class="cmp-sp"></span>
+      <button class="cmp-tbtn" onclick="cmpAPNewVoce()" title="Riparte da zero: righe dell'analisi e descrizione della voce in corso">Nuova analisi</button>
+      <button class="cmp-tbtn" onclick="cmpAPExportExcel()" title="Scarica l'elaborato Analisi Prezzi in Excel">⭳ Esporta Excel</button>
+      <button class="cmp-tbtn" onclick="cmpAPExportPdf()" title="Apre l'elaborato Analisi Prezzi stampabile (Salva come PDF)">⭳ Esporta PDF</button>
+      <button class="cmp-tbtn" onclick="cmpAPSaveToLibreria(this)" title="Salva questa Analisi Prezzi nella tua libreria personale, per riusarla in futuro">★ Salva in libreria</button>
+      <button class="cmp-tbtn cmp-tbtn--create" id="cmp-ap-addcart-btn" onclick="cmpAPAddToCart(this)" title="Aggiunge l'Analisi Prezzi al computo come voce a sé, col prezzo unitario calcolato">+ Aggiungi al computo</button>
+      <button class="cmp-mode-flag back" onclick="cmpSetMode('desc')" title="Torna alla composizione della descrizione">◂ ✎ Descrizione</button>
+    </div>
+  </div>
+</div>
+
+<!-- ESPORTA (passo 5) — pannello che raccoglie TUTTE le destinazioni in un posto. -->
+<div class="overlay miu-step" id="export-overlay" onclick="if(event.target===this)setStep('cerca')">
+  <div id="export-box">
+    <div class="exp-hd">
+      <span style="font-size:20px">⇪</span>
+      <div style="flex:1">
+        <h3 style="margin:0;font-size:15px">Esporta</h3>
+        <div class="exp-sub" id="export-sub">Il Computo Metrico e i suoi elaborati verso documenti e Analisi Prezzi.</div>
+      </div>
+      <button class="exp-close" onclick="setStep('cerca')" title="Torna alla ricerca (Esc)">Esc ✕</button>
+    </div>
+    <div class="exp-panels">
+      <section class="exp-card doc">
+        <div class="exp-card-lab">Documento</div>
+        <button class="exp-row" onclick="openComputoPDF()" title="Apri un report stampabile (computo/estratto) — Stampa → Salva come PDF">
+          <span class="exp-row-ic">⎙</span><span>Report PDF <small>computo/estratto stampabile</small></span></button>
+        <button class="exp-row" onclick="exportComputoExcel()" title="Scarica il computo metrico in un file Excel editabile (codice, descrizione, categoria, U.M., quantità, prezzo, importo)">
+          <span class="exp-row-ic">⭳</span><span>Computo Excel <small>editabile — codice, quantità, importi</small></span></button>
+      </section>
+      <section class="exp-card ap">
+        <div class="exp-card-lab">Σ Analisi Prezzi</div>
+        <button class="exp-row" id="export-ap-xls" onclick="exportFascicoloAP()" title="Fascicolo Analisi Prezzi in Excel">
+          <span class="exp-row-ic">⭳</span><span>Fascicolo Excel <small>tutte le Analisi Prezzi del computo</small></span></button>
+        <button class="exp-row" id="export-ap-pdf" onclick="exportFascicoloAPPdf()" title="Fascicolo Analisi Prezzi stampabile">
+          <span class="exp-row-ic">⎙</span><span>Fascicolo PDF <small>elaborato stampabile</small></span></button>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- COPY POPUP -->
+<div class="overlay" id="copy-overlay" onclick="if(event.target===this)closeCopyPopup()">
+  <div id="copy-box">
+    <div id="copy-head">
+      <div>
+        <h3>Copia Elenco Prezzi</h3>
+        <p class="copy-sub" id="copy-sub"><strong id="copy-count">0</strong> voci · seleziona tutto, copia e incolla dove ti serve</p>
+      </div>
+      <button id="copy-close" onclick="closeCopyPopup()">✕</button>
+    </div>
+    <textarea id="copy-textarea" readonly spellcheck="false"></textarea>
+    <div id="copy-actions">
+      <button class="btn-secondary" onclick="closeCopyPopup()">Chiudi</button>
+      <button class="btn-primary" onclick="copyToClipboard()">
+        <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor" style="vertical-align:-2px;margin-right:4px"><path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"/><path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/></svg>
+        Copia tutto
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Guida rapida μ Prezzi: ora sezione del manuale unico condiviso (visore F1) -->
+
+<div id="toast"></div>
+
+<script type="module" src="./legacy/index.js"></script>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>

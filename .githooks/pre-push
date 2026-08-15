@@ -1,0 +1,26 @@
+#!/bin/sh
+# pre-push Open E.Hub — un presidio:
+#   Alla release su main aggiorna SEMPRE versione app + changelog
+#   (scripts/release.mjs) a partire dai commit nuovi. Su altri rami non fa nulla.
+#   Crea un commit "release:" e interrompe il push: ripetere `git push`.
+#
+# Nota: qui i bundle .html sono gitignored (si rigenerano con `npm run build:web`),
+# quindi non c'è nessun allineamento sorgenti↔artefatti da controllare prima del
+# push; che i sorgenti compilino lo verifica la CI.
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main)
+      before=$(git rev-parse HEAD)
+      node scripts/release.mjs || { echo "✗ release.mjs fallito — push annullato."; exit 1; }
+      after=$(git rev-parse HEAD)
+      if [ "$before" != "$after" ]; then
+        echo ""
+        echo "▶ Release/changelog aggiornati automaticamente (nuovo commit di release)."
+        echo "  Ripeti il push per inviarlo:  git push"
+        exit 1
+      fi
+      ;;
+  esac
+done
+exit 0

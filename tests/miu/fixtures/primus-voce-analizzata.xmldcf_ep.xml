@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DCFdocument>
+		<InfoDoc IdSrcDoc="{5732E51D-56B2-4ED1-B981-C210D336C8C6}" CopyRight="Copyright ACCA software S.p.A." CopyRightFUPP="" TpDoc="0" TpFrmt="XMLFormat" Vrsn="6" VrsnFix="1.07" SrcNm="PriMus" SrcVrsn="usBIM (54.00i)" Cmd="0" FlnmDoc="" Fgs="4" TpCtDoc="0" SystmPltfrm="32-bit" SrcLng="IT" CdOff="" TpOFS="4" />
+	<DGDatiGenerali Cmn="esempio: Comune di ..." Prvnc="esempio: Provincia di ..." Ogg="" Comm="" Imprs="" PrtOpr="" />
+	<DGPassword PswOpen="" PswMod="" />
+	<DatiGenerali> 
+	<DGDatiGenerali Oprtr="" PrcPrz="0" Cmn="esempio: Comune di ..." Prvnc="esempio: Provincia di ..." Ogg="" Comm="" Imprs="" PrtOpr="" DsTrf="" >
+	<DGCollectionCncsn/>
+	</DGDatiGenerali>
+	<DGQuadroEconomico NrOnrSic="13" NrSmmDsp="39" >
+	<DGCollectionQE>
+		<ItemQE Des="Importo per l&apos;esecuzione delle Lavorazioni" Imprt="" Frml="|EM|" TpImprt="0" />
+		<ItemQE Des="A misura" Imprt="0" Frml="|VL|0" TpImprt="102" />
+		<ItemQE Des="A corpo" Imprt="0" Frml="|VL|0" TpImprt="101" />
+		<ItemQE Des="In economia" Imprt="0" Frml="|VL|0" TpImprt="103" />
+		<ItemQE Des="" Imprt="" Frml="|SL|$line$" TpImprt="0" />
+		<ItemQE Des="Sommano" Imprt="0" Frml="|FR|$T2..T5$" TpImprt="0" />
+		<ItemQE Des="" Imprt="" Frml="|SL|$line$" TpImprt="0" />
+		<ItemQE Des="b) Importo per l&apos;attuazione dei Piani di Sicurezza (NON soggetti a Ribasso d&apos;asta)" Imprt="" Frml="|EM|" TpImprt="0" />
+		<ItemQE Des="A misura" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="A corpo" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="In economia" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="" Imprt="" Frml="|SL|$line$" TpImprt="0" />
+		<ItemQE Des="Sommano" Imprt="0" Frml="|FR|$T9..T11$" TpImprt="0" />
+		<ItemQE Des="" Imprt="" Frml="|SL|$line$" TpImprt="0" />
+		<ItemQE Des="c) Importo relativo all&apos;aliquota per l&apos;attuazione di misure volte alla prevenzione e repressione della criminalità e tentativi di infiltrazione mafiosa, di cui all&apos;articolo 204, comma 6, lettera e), del codice, non soggetto a ribasso;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="" Imprt="" Frml="|SL|$line$" TpImprt="0" />
+		<ItemQE Des="d) Opere di mitigazione e di compensazione dell&apos;impatto ambientale e sociale, nel limite di importo del 2 per cento del costo complessivo dell&apos;opera; costi per il monitoraggio ambientale;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="" Imprt="" Frml="|SL|$line$" TpImprt="0" />
+		<ItemQE Des="e) Somme a disposizione della stazione appaltante per:" Imprt="" Frml="|EM|" TpImprt="0" />
+		<ItemQE Des="e1) Lavori in amministrazione diretta previsti in progetto ed esclusi dall&apos;appalto, ivi inclusi i rimborsi previa fattura;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e2) Rilievi, accertamenti e indagini da eseguire ai diversi livelli di progettazione a cura della stazione appaltante;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e3) Rilievi, accertamenti e indagini da eseguire ai diversi livelli di progettazione a cura del progettista;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e4) Allacciamenti ai pubblici servizi e superamento eventuali interferenze;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e5) Imprevisti, secondo quanto precisato al comma 2, articolo 5, allegato I.7;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e6) Accantonamenti in relazione alle modifiche di cui agli articoli 60 e 120, comma 1, lettera a), del codice;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e7) Acquisizione aree o immobili, indennizzi;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e8) Spese tecniche relative alla progettazione, alle attività preliminari, ivi compreso l&apos;eventuale monitoraggio di parametri necessari ai fini della progettazione ove pertinente, al coordinamento della sicurezza in fase di progettazione, alle conferenze dei servizi, alla direzione lavori e al coordinamento della sicurezza in fase di esecuzione, all&apos;assistenza giornaliera e contabilità, all&apos;incentivo di cui all&apos;articolo 45 del codice, nella misura corrispondente alle prestazioni che dovranno essere svolte dal personale dipendente;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e9) Spese per attività tecnico-amministrative e strumentali connesse alla progettazione, di supporto al RUP qualora si tratti di personale dipendente, di assicurazione dei progettisti qualora dipendenti dell&apos;amministrazione, ai sensi dell&apos;articolo 2, comma 4, del codice nonché per la verifica preventiva della progettazione ai sensi dell&apos;articolo 42 del codice;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e10) Spese di cui all&apos;articolo 45, commi 6 e 7, del codice;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e11) Eventuali spese per commissioni giudicatrici;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e12) Spese per pubblicità;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e13) Spese per prove di laboratorio, accertamenti e verifiche tecniche obbligatorie o specificamente previste dal capitolato speciale d&apos;appalto, di cui all&apos;articolo 116 comma 11, del codice, nonché per l&apos;eventuale monitoraggio successivo alla realizzazione dell&apos;opera, ove prescritto;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e14) Spese per collaudo tecnico-amministrativo, collaudo statico e altri eventuali collaudi specialistici;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e15) Spese per la verifica preventiva dell&apos;interesse archeologico, di cui all&apos;articolo 41, comma 4, del codice;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e16) Spese per i rimedi alternativi alla tutela giurisdizionale;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e17) Nei casi in cui sono previste, spese per le opere artistiche di cui alla legge 20 luglio 1949, n. 717;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="e18) IVA ed eventuali altre imposte;" Imprt="0" Frml="|VL|0" TpImprt="0" />
+		<ItemQE Des="" Imprt="" Frml="|SL|$line$" TpImprt="0" />
+		<ItemQE Des="Sommano" Imprt="0" Frml="|FR|$T20..T37$" TpImprt="0" />
+		<ItemQE Des="" Imprt="" Frml="|DL|$dline$" TpImprt="0" />
+		<ItemQE Des="TOTALE" Imprt="0" Frml="|FR|$T6$+$T13$+$T15$+$T17$+$T39$" TpImprt="0" />
+		<ItemQE Des="" Imprt="" Frml="|DL|$dline$" TpImprt="0" />
+	</DGCollectionQE>
+	</DGQuadroEconomico>
+	<DGImportiRibassi ImpAtcp="0" PnlGrn="0" NoRibSic="true" TplgApp="2" TplgOff="0" SICoffNt="true" UseALQT="true" CmpVrs30="false" ImpSicSIO="0" ImpSicDir="0" ImpSicSpcl="0" >
+	<DGCollectionIR>
+		<ItemIR Id="0" Des="Progetto" Tot="0" RbsAmnt="0" ImpMsr="0" ImpCrp="0" ImpEcnm="0" ImpMdo="0" ImpSic="0" SomDisp="0" ImpOffCRP="0" ImpOffMIS="0" ImpOffECNM="0" ImpOFF="0" ImpCntrt="0" ImpCntCrp="0" IncMDO="0" IncSIC="0" ImpSicCRP="0" ImpSicMIS="0" ImpSicECnm="0" FlgEdRbs="false" Dsp1Dbl="0" Dsp2Dbl="0" Dsp1Str="" Dsp1Int="0" Dsp1Bln="false" ImpSicSIS="0" />
+		<ItemIR Id="1" Des="Progetto" Tot="0" RbsAmnt="0" ImpMsr="0" ImpCrp="0" ImpEcnm="0" ImpMdo="0" ImpSic="0" SomDisp="0" ImpOffCRP="0" ImpOffMIS="0" ImpOffECNM="0" ImpOFF="0" ImpCntrt="0" ImpCntCrp="0" IncMDO="0" IncSIC="0" ImpSicCRP="0" ImpSicMIS="0" ImpSicECnm="0" FlgEdRbs="false" Dsp1Dbl="0" Dsp2Dbl="0" Dsp1Str="" Dsp1Int="0" Dsp1Bln="false" ImpSicSIS="0" />
+		<ItemIR Id="2" Des="Progetto" Tot="0" RbsAmnt="0" ImpMsr="0" ImpCrp="0" ImpEcnm="0" ImpMdo="0" ImpSic="0" SomDisp="0" ImpOffCRP="0" ImpOffMIS="0" ImpOffECNM="0" ImpOFF="0" ImpCntrt="0" ImpCntCrp="0" IncMDO="0" IncSIC="0" ImpSicCRP="0" ImpSicMIS="0" ImpSicECnm="0" FlgEdRbs="false" Dsp1Dbl="0" Dsp2Dbl="0" Dsp1Str="" Dsp1Int="0" Dsp1Bln="false" ImpSicSIS="0" />
+		<ItemIR Id="3" Des="Progetto" Tot="0" RbsAmnt="0" ImpMsr="0" ImpCrp="0" ImpEcnm="0" ImpMdo="0" ImpSic="0" SomDisp="0" ImpOffCRP="0" ImpOffMIS="0" ImpOffECNM="0" ImpOFF="0" ImpCntrt="0" ImpCntCrp="0" IncMDO="0" IncSIC="0" ImpSicCRP="0" ImpSicMIS="0" ImpSicECnm="0" FlgEdRbs="false" Dsp1Dbl="0" Dsp2Dbl="0" Dsp1Str="" Dsp1Int="0" Dsp1Bln="false" ImpSicSIS="0" />
+		<ItemIR Id="4" Des="Progetto" Tot="0" RbsAmnt="0" ImpMsr="0" ImpCrp="0" ImpEcnm="0" ImpMdo="0" ImpSic="0" SomDisp="0" ImpOffCRP="0" ImpOffMIS="0" ImpOffECNM="0" ImpOFF="0" ImpCntrt="0" ImpCntCrp="0" IncMDO="0" IncSIC="0" ImpSicCRP="0" ImpSicMIS="0" ImpSicECnm="0" FlgEdRbs="false" Dsp1Dbl="0" Dsp2Dbl="0" Dsp1Str="" Dsp1Int="0" Dsp1Bln="false" ImpSicSIS="0" />
+		<ItemIR Id="5" Des="Progetto" Tot="0" RbsAmnt="0" ImpMsr="0" ImpCrp="0" ImpEcnm="0" ImpMdo="0" ImpSic="0" SomDisp="0" ImpOffCRP="0" ImpOffMIS="0" ImpOffECNM="0" ImpOFF="0" ImpCntrt="0" ImpCntCrp="0" IncMDO="0" IncSIC="0" ImpSicCRP="0" ImpSicMIS="0" ImpSicECnm="0" FlgEdRbs="false" Dsp1Dbl="0" Dsp2Dbl="0" Dsp1Str="" Dsp1Int="0" Dsp1Bln="false" ImpSicSIS="0" />
+	</DGCollectionIR>
+	</DGImportiRibassi>
+	<DGCollectionCntrt>
+		<ItemCntrt Des="CONTRATTO" Rprtr="" DtCntrt="30/12/1899" ImpCntrt="0" DtRg="30/12/1899" NmReg="" LgRg="" />
+	</DGCollectionCntrt>
+	<DGDate Ofrt="30/12/1899" Cnsg="30/12/1899" InzLvr="30/12/1899" GrnEscz="0" UltmzLvr="30/12/1899" FnLvr="30/12/1899" GrnSps="0" NrSps="0" NvDtUltmz="30/12/1899" >
+	<DGCollectionAD/>
+	</DGDate>
+	<DGCollectionTpLvr>
+		<ItemTpLvr Id="0" DesSnt="a Misura" DesEst="Lavori a MISURA" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" />
+		<ItemTpLvr Id="1" DesSnt="a Corpo" DesEst="Lavori a CORPO" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" />
+		<ItemTpLvr Id="2" DesSnt="in Economia" DesEst="Lavori in ECONOMIA" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" />
+		<ItemTpLvr Id="3" DesSnt="COSTI SICUREZZA (speciali)" DesEst="COSTI SICUREZZA (speciali)" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" />
+	</DGCollectionTpLvr>
+	<DGCollectionSpCap>
+		<ItemSpCap Id="0" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSpCap Id="1" IdSrc="3" DesSnt="VOCI ANALIZZATE" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSpCap Id="2" IdSrc="1" DesSnt="RISORSE" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSpCap Id="3" IdSrc="1" DesSnt="RISORSE" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSpCap Id="4" IdSrc="1" DesSnt="RISORSE" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSpCap Id="5" IdSrc="1" DesSnt="RISORSE" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSpCap Id="6" DesSnt="overflow" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+	</DGCollectionSpCap>
+	<DGCollectionCap>
+		<ItemCap Id="0" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemCap Id="1" IdSrc="3" DesSnt="QUADRI ELETTRICI" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemCap Id="2" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemCap Id="3" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemCap Id="4" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemCap Id="5" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemCap Id="6" DesSnt="overflow" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+	</DGCollectionCap>
+	<DGCollectionSbCap>
+		<ItemSbCap Id="0" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSbCap Id="1" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSbCap Id="2" IdSrc="8" DesSnt="SCHNEIDER" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSbCap Id="3" IdSrc="8" DesSnt="SCHNEIDER" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSbCap Id="4" IdSrc="8" DesSnt="SCHNEIDER" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSbCap Id="5" IdSrc="3" DesSnt="VOCI PREZZARIO COSTI ELEMENTARI (Regione Lombardia 2023)" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSbCap Id="6" DesSnt="overflow" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+	</DGCollectionSbCap>
+	<DGCollectionSpCat>
+		<ItemSpCat Id="0" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSpCat Id="1" DesSnt="overflow" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+	</DGCollectionSpCat>
+	<DGCollectionCat>
+		<ItemCat Id="0" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemCat Id="1" DesSnt="overflow" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+	</DGCollectionCat>
+	<DGCollectionSbCat>
+		<ItemSbCat Id="0" DesSnt="&lt;nessuna&gt;" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+		<ItemSbCat Id="1" DesSnt="overflow" DesEst="" DataInit="30/12/1899" Drt="0" CodFs="" Prcntl="0" Cod="" SICInc="0" MDOInc="0" SICImp="0" MDOImp="0" BIMImp="0" Grp="" IdxOGOS="0" />
+	</DGCollectionSbCat>
+	<DGCollectionNrm>
+		<ItemNrm Titolo="Disponibile" Nome="Disp." >
+	<CollectionChildNrm>
+		<ItemChildNrm Id="0" Cod="" DesRid="Norma riservata!" DesEst="" Data="30/12/1899" IdOD="0" Fgs="0" />
+	</CollectionChildNrm>
+</ItemNrm>
+		<ItemNrm Titolo="Disponibile" Nome="Disp." >
+	<CollectionChildNrm>
+		<ItemChildNrm Id="0" Cod="" DesRid="Norma riservata!" DesEst="" Data="30/12/1899" IdOD="0" Fgs="0" />
+	</CollectionChildNrm>
+</ItemNrm>
+		<ItemNrm Titolo="Disponibile" Nome="Disp." >
+	<CollectionChildNrm>
+		<ItemChildNrm Id="0" Cod="" DesRid="Norma riservata!" DesEst="" Data="30/12/1899" IdOD="0" Fgs="0" />
+	</CollectionChildNrm>
+</ItemNrm>
+		<ItemNrm Titolo="Disponibile" Nome="Disp." >
+	<CollectionChildNrm>
+		<ItemChildNrm Id="0" Cod="" DesRid="Norma riservata!" DesEst="" Data="30/12/1899" IdOD="0" Fgs="0" />
+	</CollectionChildNrm>
+</ItemNrm>
+		<ItemNrm Titolo="Disponibile" Nome="Disp." >
+	<CollectionChildNrm>
+		<ItemChildNrm Id="0" Cod="" DesRid="Norma riservata!" DesEst="" Data="30/12/1899" IdOD="0" Fgs="0" />
+	</CollectionChildNrm>
+</ItemNrm>
+		<ItemNrm Titolo="Disponibile" Nome="Disp." >
+	<CollectionChildNrm>
+		<ItemChildNrm Id="0" Cod="" DesRid="Norma riservata!" DesEst="" Data="30/12/1899" IdOD="0" Fgs="0" />
+	</CollectionChildNrm>
+</ItemNrm>
+		<ItemNrm Titolo="Disponibile" Nome="Disp." >
+	<CollectionChildNrm>
+		<ItemChildNrm Id="0" Cod="" DesRid="Norma riservata!" DesEst="" Data="30/12/1899" IdOD="0" Fgs="0" />
+	</CollectionChildNrm>
+</ItemNrm>
+		<ItemNrm Titolo="Disponibile" Nome="Disp." >
+	<CollectionChildNrm>
+		<ItemChildNrm Id="0" Cod="" DesRid="Norma riservata!" DesEst="" Data="30/12/1899" IdOD="0" Fgs="0" />
+	</CollectionChildNrm>
+</ItemNrm>
+	</DGCollectionNrm>
+	<DGAttiContabili UltLM="1" UltRC="1" UltSRC="0" UltSAL="0" UltVcLM="0" UltVcRC="0" UltPgLM="0" UltPgRC="0" RprtPgmnt="0" UltImprtSAL="0" />
+	<DGAnalisi SpsUtl="true" SpsGnl="15" UtlImprs="10" OnrAccSC="0" CnfQnt="11.3|1" ClclOnrSic="true" NtAnSIC="true" CoeffKDes="Percentuale +/- sul totale analisi" CoeffKVl="0" ANLrdCoeffK="false" DsblModAN="false" OnrScl="0" ClclSpsGnOnrSic="true" ClclUtlImprsOnrSic="true" DtrOnrSicTtlAnls="false" />
+	<DGImpianti Ditta="" Indrz="" Cap="" Citta="" Prvnc="" PIva="" Tel="" Fax="" Email="" DesList="" Data="30/12/1899" CstOr="0" IncdzTrspt="0" OnrSic="0" SpsGnl="14" UtlImprs="10" FrmSpsUtl="0" ClclOnrSic="true" />
+	<DGIncidenzaMDO SpsGnl="14" UtlImprs="10" OnrAccSC="0" CnfQnt="11.3|1" />
+	<DGPassword PswOpen="" PswMod="" BlcEp="" BlcMis="" BlcNrm="" BlcStmp="" />
+	<DGConfigurazione Pu="8.2|0" Lu="8.2|0" La="9.3|0" Hp="9.3|0" TotQt="10.2|1" PrzUn="10.2|1" PrzTot="14.2|1" CnvPrzUn="11.0|1" CnvImpTot="15.0|1" IncPrc="7.3|0" Aliq="7.3|0" Dvs="euro" Fnc="4" CnvIn="lire" FtrCnv="1936.27" Cmb="1" />
+	<DGConfigurazioneAvanzata ArrFis="0" Rgl="1" R1PrcntlTst="70" R1LenVcGrp="9" R1LenSbVc="1" R2PrcntlTst="50" WrdSubExtra="2" PrfxStVc="idem c.s. ..." >
+	<DGCollectionAV>
+		<ItemAV Imprt="0" Arrmnto="0" Des="oltre 0.00 fino a " />
+		<ItemAV Imprt="99999999999999" Arrmnto="0" Des="oltre ZERO fino a INFINITO" />
+	</DGCollectionAV>
+	</DGConfigurazioneAvanzata>
+	<DGCollectionFrm>
+		<ItemFrm IdFrm="0" Qualifica="Il Tecnico" Firma="" />
+		<ItemFrm IdFrm="1" Qualifica="Il D.L." Firma="" />
+		<ItemFrm IdFrm="2" Qualifica="L&apos;ing. Capo" Firma="" />
+		<ItemFrm IdFrm="3" Qualifica="VISTO" Firma="" />
+		<ItemFrm IdFrm="4" Qualifica="Il Committente" Firma="" />
+		<ItemFrm IdFrm="5" Qualifica="L&apos;impresa" Firma="" />
+		<ItemFrm IdFrm="6" Qualifica="Il Collaudatore" Firma="" />
+		<ItemFrm IdFrm="7" Qualifica="Il Coordinatore" Firma="" />
+		<ItemFrm IdFrm="8" Qualifica="Il Responsabile del Procedimento" Firma="" />
+	</DGCollectionFrm>
+	<DGIntestazioneTabulati LogoTst="0" LogoHdr="0" AlinLogoH="0" NRgLogoH="0" IntRg1="" IntRg2="" LogoFoot="0" AlinLogoF="0" NRgLogoF="0" />
+	<DGVarie Ita="1" Deu="2" Eng="3" Esp="4" Fra="5" Alt="6" PrzDflt="0" />
+	<DGCustomPW LF="0" TP="0" Width="75" Height="63" HeightEP="33" HeightVC="50" TipoSizeW="0" ActiveWinEd="2" />
+	<DGInterfaccia> 
+		<DGInterfacciaEP Cpcls="false" Zoom="false" Dati="false" WdthPrcCapCls="25" WdthPrcGrdEp="50" WdthPrcZoom="25" ActvPnlCapEp="0" LsFldInOut="Tariffa|Descr. Sintetica|Descr. Estesa|Unità Misura|Prezzo 1|"  >
+	<EPFontGridColonne Nm="Tahoma" Sz="8" Clr="#000000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />	<EPFontGridRighe Nm="Tahoma" Sz="8" Clr="#000000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />	<FntZoomEst Nm="MS Sans Serif" Sz="8" Clr="#000000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />
+</DGInterfacciaEP>
+		<DGInterfacciaVC Cat="false" Zoom="false" Dati="false" WdthPrcCat="25" WdtPrcGrdVC="50" WdthPrcZoom="25" ActvPnlCatSb="0" DMActvEP="false" DMSttsTbx="0"  >
+	<VCFontGridColonne Nm="Tahoma" Sz="8" Clr="#080000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />	<VCFontGridRighe Nm="Tahoma" Sz="8" Clr="#080000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />
+</DGInterfacciaVC>
+		<DGInterfacciaRM Cat="false" Zoom="false" Dati="false" WdthPrcCat="25" WdtPercGrdRM="50" WdthPrcZoom="25" Des="true" Pu="true" Lu="true" La="true" Hp="true" TotQt="true"  >
+	<RMFontGridColonne Nm="Tahoma" Sz="8" Clr="#000000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />	<RMFontGridRighe Nm="Tahoma" Sz="8" Clr="#000000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />
+</DGInterfacciaRM>
+		<DGInterfacciaAN DtPrncpl="false"  >
+	<ANFontGridColonne Nm="Tahoma" Sz="8" Clr="#000000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />	<ANFontGridRighe Nm="Tahoma" Sz="8" Clr="#000000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />
+</DGInterfacciaAN>
+		<DGInterfacciaNO TplgNrm="false" RcrcDnmc="false" Zoom="false" WdthPrcTpNrm="25" WdthPrcZoom="25" HghtPrcGrdNr="60"  >
+	<NOFontGridColonne Nm="Tahoma" Sz="8" Clr="#000000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />	<NOFontGridRighe Nm="Tahoma" Sz="8" Clr="#000000" Bold="false" Itlc="false" Undrlne="false" StrkeOt="false"  />
+</DGInterfacciaNO>
+	</DGInterfaccia>
+	<CollectionVrbl CountId="1" />
+	<WBS CountId="3" Attv="false" Prgrmzn="false" IdOD="0" >
+	<ItemWBS Id="2" CU="{00000000-0000-0000-0000-000000000001}" IdSrc="0" CUPrnt="" Titolo="WBS" Cod="" DtInz="30/12/1899" DtFn="30/12/1899" ExtDt="" IdGntt="0" Imprt="0" ImprtBIM="0" CdcSfx="" />
+	<ItemWBS Id="3" CU="{00000000-0000-0000-0000-000000000002}" IdSrc="0" CUPrnt="{00000000-0000-0000-0000-000000000001}" Titolo="&lt;NON assegnata&gt;" Cod="" DtInz="30/12/1899" DtFn="30/12/1899" ExtDt="" IdGntt="0" Imprt="0" ImprtBIM="0" CdcSfx="" />
+	</WBS>
+	<WBSCap CountId="3" Attv="false" Prgrmzn="false" IdOD="0" >
+	<ItemWBS Id="2" CU="{00000000-0000-0000-0000-000000000001}" IdSrc="0" CUPrnt="" Titolo="WBS CAPITOLI" Cod="" DtInz="30/12/1899" DtFn="30/12/1899" ExtDt="" IdGntt="0" Imprt="0" ImprtBIM="0" CdcSfx="" />
+	<ItemWBS Id="3" CU="{00000000-0000-0000-0000-000000000002}" IdSrc="0" CUPrnt="{00000000-0000-0000-0000-000000000001}" Titolo="&lt;NON assegnata&gt;" Cod="" DtInz="30/12/1899" DtFn="30/12/1899" ExtDt="" IdGntt="0" Imprt="0" ImprtBIM="0" CdcSfx="" />
+	</WBSCap>
+	</DatiGenerali>
+	<CollectionEP CountId="7" IsIncAnls="false" >
+		<ItemEP IdEP="2" IdSrc="0" Trf="" Art="" DesRid="Voce riservata!!!" DesEst="" DesBrv="Voce riservata!!!" UnMsr="" Prz1="0" Prz2="0" Prz3="0" Prz4="0" Prz5="0" CnfQt="" QtPrg="0" CodFase="" TipoLvr="0" IdSpCap="0" IdCap="0" IdSbCap="0" Rbs="0" Fgs="64" Rclc="0" PrNetto="0" Fabbis="0" Data="30/12/1899" IdNrm1="0" IdNrm2="0" IdNrm3="0" IdNrm4="0" IdNrm5="0" IdNrm6="0" IdNrm7="0" IdNrm8="0" Prcntl="1" PrcntlTrf="" AdrInet="" IdOD="0" ICodBridge="" ITmpEsec="0" ISglDitta="" IFamSconto="" Dsp1a="" Dsp1n="0" Dsp1s="0" Dsp1i="0" Blocco="0" TipoRsrs="0" Aliq="0" PrzPrg="0" MDOPrz="0" MDOPrzNetto="0" SICInc="0.000000000000000000" MDOInc="0.000000000000000000" ExtDt="" IncMt="0.000000000000000000" IncAttr="0.000000000000000000" TagBIM="" IdWBS="" />
+		<ItemEP IdEP="3" IdSrc="50" Trf="AP.002" Art="QP0-APP" DesRid="F.p.o. di quadro elettrico di partenza QP0 unità abitativ ... alino IP65 12 moduli da esterno. In opera a regola d&apos;arte." DesEst="F.p.o. di quadro elettrico di partenza QP0 unità abitativa composto da centralino IP65 12 moduli da esterno. In opera a regola d&apos;arte." DesBrv="" UnMsr="a corpo" Prz1="405.66" Prz2="0" Prz3="0" Prz4="0" Prz5="0" CnfQt="" QtPrg="0" CodFase="" TipoLvr="0" IdSpCap="1" IdCap="1" IdSbCap="1" Rbs="1" Fgs="67240512" Rclc="0" PrNetto="0" Fabbis="10" Data="20/09/2022" IdNrm1="0" IdNrm2="0" IdNrm3="0" IdNrm4="0" IdNrm5="0" IdNrm6="0" IdNrm7="0" IdNrm8="0" Prcntl="5" PrcntlTrf="" AdrInet="" IdOD="0" ICodBridge="" ITmpEsec="0" ISglDitta="" IFamSconto="" Dsp1a="" Dsp1n="0" Dsp1s="0" Dsp1i="0" Blocco="0" TipoRsrs="20" Aliq="0" PrzPrg="0" MDOPrz="75.72" MDOPrzNetto="0" SICInc="0.000000000000000000" MDOInc="18.991273480254403000" ExtDt="" IncMt="60.060148893161752400" IncAttr="0.000000000000000000" TagBIM="" IdWBS="" >
+			<CollectionAN CountId="7" SpsDef="false" UtlDef="false" OnrDef="false" CnfQTDef="false" Sps="15" Utl="10" Onr="0" CnfQt="11.3|1" TpArrt="0" ArrtVl="0" CoeffKDef="false" CoeffK="0" >
+				<ItemAN IdAN="5" IdEP="4" Tp="1" Des="" Mis="" Qt="1.000" Prz="" FldCTL="0" ExtDt="" />
+				<ItemAN IdAN="6" IdEP="5" Tp="1" Des="" Mis="" Qt="1.000" Prz="" FldCTL="0" ExtDt="" />
+				<ItemAN IdAN="7" IdEP="6" Tp="1" Des="" Mis="" Qt="1.000" Prz="" FldCTL="0" ExtDt="" />
+				<ItemAN IdAN="2" IdEP="7" Tp="1" Des="" Mis="" Qt="3.000" Prz="" FldCTL="0" ExtDt="" />
+			</CollectionAN>
+		</ItemEP>
+		<ItemEP IdEP="4" IdSrc="51" Trf="SNR-10341" Art="SNR-10341" DesRid="QUADRO KAEDRA IP65 1 FILA 18MOD." DesEst="QUADRO KAEDRA IP65 1 FILA 18MOD." DesBrv="" UnMsr="cadauno" Prz1="61.44" Prz2="76.8" Prz3="0" Prz4="0" Prz5="0" CnfQt="" QtPrg="0" CodFase="" TipoLvr="0" IdSpCap="2" IdCap="2" IdSbCap="2" Rbs="2" Fgs="576" Rclc="0" PrNetto="0" Fabbis="0" Data="01/04/2022" IdNrm1="0" IdNrm2="0" IdNrm3="0" IdNrm4="0" IdNrm5="0" IdNrm6="0" IdNrm7="0" IdNrm8="0" Prcntl="5" PrcntlTrf="" AdrInet="" IdOD="0" ICodBridge="" ITmpEsec="0" ISglDitta="SNR" IFamSconto="" Dsp1a="" Dsp1n="0" Dsp1s="0" Dsp1i="0" Blocco="0" TipoRsrs="2" Aliq="0" PrzPrg="0" MDOPrz="0" MDOPrzNetto="0" SICInc="0.000000000000000000" MDOInc="0.000000000000000000" ExtDt="" IncMt="100.000000000000000000" IncAttr="0.000000000000000000" TagBIM="" IdWBS="" >
+	<Impianti Mrc="" Mod="" FlgScntRcrc="0" Scnt1="0" Scnt2="0" Scnt3="0" Scnt4="0" Scnt5="0" IFlgDflt="0" ICstoMat="0" ICstOpriOra="0" ITrasp="0" IOnrSic="0" ISpsGen="0" IUtlImprs="0" IFlgAccs="0" IAccs="0" IMrctrCE="1" IFlgMrchQl="0" IFlgArrtndmnt="0" IArrtndmnt="0" IFamiScnt="PICE" EPProve="" />
+		</ItemEP>
+		<ItemEP IdEP="5" IdSrc="52" Trf="SNR-A9F79232" Art="SNR-A9F79232" DesRid="iC60N 2P C  32A 6000A" DesEst="iC60N 2P C  32A 6000A" DesBrv="" UnMsr="cadauno" Prz1="47.6" Prz2="59.5" Prz3="0" Prz4="0" Prz5="0" CnfQt="" QtPrg="0" CodFase="" TipoLvr="0" IdSpCap="3" IdCap="3" IdSbCap="3" Rbs="3" Fgs="576" Rclc="0" PrNetto="0" Fabbis="0" Data="01/04/2022" IdNrm1="0" IdNrm2="0" IdNrm3="0" IdNrm4="0" IdNrm5="0" IdNrm6="0" IdNrm7="0" IdNrm8="0" Prcntl="5" PrcntlTrf="" AdrInet="" IdOD="0" ICodBridge="" ITmpEsec="0" ISglDitta="SNR" IFamSconto="" Dsp1a="" Dsp1n="0" Dsp1s="0" Dsp1i="0" Blocco="0" TipoRsrs="2" Aliq="0" PrzPrg="0" MDOPrz="0" MDOPrzNetto="0" SICInc="0.000000000000000000" MDOInc="0.000000000000000000" ExtDt="" IncMt="100.000000000000000000" IncAttr="0.000000000000000000" TagBIM="" IdWBS="" >
+	<Impianti Mrc="" Mod="" FlgScntRcrc="0" Scnt1="0" Scnt2="0" Scnt3="0" Scnt4="0" Scnt5="0" IFlgDflt="0" ICstoMat="0" ICstOpriOra="0" ITrasp="0" IOnrSic="0" ISpsGen="0" IUtlImprs="0" IFlgAccs="0" IAccs="0" IMrctrCE="1" IFlgMrchQl="0" IFlgArrtndmnt="0" IArrtndmnt="0" IFamiScnt="PT" EPProve="" />
+		</ItemEP>
+		<ItemEP IdEP="6" IdSrc="53" Trf="SNR-A9V26263" Art="SNR-A9V26263" DesRid="Vigi iC60 2P  63A 500mA Tipo A" DesEst="Vigi iC60 2P  63A 500mA Tipo A" DesBrv="" UnMsr="cadauno" Prz1="134.6" Prz2="168.25" Prz3="0" Prz4="0" Prz5="0" CnfQt="" QtPrg="0" CodFase="" TipoLvr="0" IdSpCap="4" IdCap="4" IdSbCap="4" Rbs="4" Fgs="576" Rclc="0" PrNetto="0" Fabbis="0" Data="01/04/2022" IdNrm1="0" IdNrm2="0" IdNrm3="0" IdNrm4="0" IdNrm5="0" IdNrm6="0" IdNrm7="0" IdNrm8="0" Prcntl="5" PrcntlTrf="" AdrInet="" IdOD="0" ICodBridge="" ITmpEsec="0" ISglDitta="SNR" IFamSconto="" Dsp1a="" Dsp1n="0" Dsp1s="0" Dsp1i="0" Blocco="0" TipoRsrs="2" Aliq="0" PrzPrg="0" MDOPrz="0" MDOPrzNetto="0" SICInc="0.000000000000000000" MDOInc="0.000000000000000000" ExtDt="" IncMt="100.000000000000000000" IncAttr="0.000000000000000000" TagBIM="" IdWBS="" >
+	<Impianti Mrc="" Mod="" FlgScntRcrc="0" Scnt1="0" Scnt2="0" Scnt3="0" Scnt4="0" Scnt5="0" IFlgDflt="0" ICstoMat="0" ICstOpriOra="0" ITrasp="0" IOnrSic="0" ISpsGen="0" IUtlImprs="0" IFlgAccs="0" IAccs="0" IMrctrCE="1" IFlgMrchQl="0" IFlgArrtndmnt="0" IArrtndmnt="0" IFamiScnt="PT" EPProve="" />
+		</ItemEP>
+		<ItemEP IdEP="7" IdSrc="54" Trf="NQ.01" Art="MA.00.060.0000" DesRid="Operaio impiantista B1 (NON comprensivo di Spese Generali ed Utile di Impresa)" DesEst="Operaio impiantista B1 (NON comprensivo di Spese Generali ed Utile di Impresa)" DesBrv="" UnMsr="h" Prz1="25.68" Prz2="0" Prz3="0" Prz4="0" Prz5="0" CnfQt="" QtPrg="0" CodFase="" TipoLvr="0" IdSpCap="5" IdCap="5" IdSbCap="5" Rbs="5" Fgs="576" Rclc="0" PrNetto="0" Fabbis="175" Data="13/09/2022" IdNrm1="0" IdNrm2="0" IdNrm3="0" IdNrm4="0" IdNrm5="0" IdNrm6="0" IdNrm7="0" IdNrm8="0" Prcntl="5" PrcntlTrf="" AdrInet="" IdOD="0" ICodBridge="" ITmpEsec="0" ISglDitta="" IFamSconto="" Dsp1a="" Dsp1n="0" Dsp1s="0" Dsp1i="0" Blocco="0" TipoRsrs="1" Aliq="0" PrzPrg="0" MDOPrz="25.68" MDOPrzNetto="0" SICInc="0.000000000000000000" MDOInc="100.000000000000000000" ExtDt="" IncMt="0.000000000000000000" IncAttr="0.000000000000000000" TagBIM="" IdWBS="" />
+	</CollectionEP>
+	<CollectionGP CountId="1" />
+	<CollectionVC CountId="1" />
+	<CollectionOD CountId="1" />
+	<OpzioniInterfaccia UsaOpzEP="true" UsaOpzVC="true" >
+		<OIVistaEP FrstPg="1" Ordnmnt="0" PrnType="0" Nm="Tahoma" Sz="8" MrgnLF="0" MrgnTP="0" MrgnRG="0" MrgnBT="0" Fnc="true" Clr="true" PrnQlty="0" PrnOrnt="0" DesVcRdt="false" DesVcRdtBld="false" DesVcRdtItlc="false" DesVcBrv="false" DesVcBrvBld="false" DesVcBrvItlc="false" DesBrvCrtrInz="180" DesBrvCrtrEnd="120" DesVcEsts="true" DesVcEstsBld="false" DesVcEstsItlc="false" DesVcEstsAll="false" DesVcEstsSub="false" DesVcCrtrInz="180" DesVoceCrtrEnd="120" Lng="0" NChrFrstCol="11" Grfc="true" LgStmp="" NPrz="false" Rplg="false" Evdnzt="false" Ttl="false" Nt="" Fgs="1" DsFllRw="false" TrfInz="" TrfEnd="" AvrtnzGen="false" RplgStrtrlCap="false" Smmr="true" Cnfrnt="false" SmmrPrvst="false" SmmrRst="false" ClnIncSIC="false" ClnIncMDO="false" ClnIncATT="false" ClnIncMAT="false" ClnImpIncSIC="false" ClnImpIncMDO="false" ClnImpIncATT="false" ClnImpIncMAT="false" RgrpmntEP="0" OrdnmntEP="0" ToolMM="false" WBS="false" 	>
+	<CollectionNt MstrNt="false" CountId="1" />
+		</OIVistaEP>
+		<OIVistaMDO FrstPg="1" Ordnmnt="0" PrnType="0" Nm="Tahoma" Sz="8" MrgnLF="0" MrgnTP="0" MrgnRG="0" MrgnBT="0" Fnc="true" Clr="true" PrnQlty="0" PrnOrnt="0" DesVcRdt="false" DesVcRdtBld="false" DesVcRdtItlc="false" DesVcBrv="false" DesVcBrvBld="false" DesVcBrvItlc="false" DesBrvCrtrInz="180" DesBrvCrtrEnd="120" DesVcEsts="true" DesVcEstsBld="false" DesVcEstsItlc="false" DesVcEstsAll="false" DesVcEstsSub="false" DesVcCrtrInz="180" DesVoceCrtrEnd="120" Lng="0" NChrFrstCol="11" Grfc="true" LgStmp="" NPrz="false" Rplg="false" Evdnzt="false" Ttl="false" Nt="" Fgs="0" DsFllRw="false" TrfInz="" TrfEnd="" AvrtnzGen="false" RplgStrtrlCap="false" Smmr="true" Cnfrnt="false" SmmrPrvst="false" SmmrRst="false" ClnIncSIC="false" ClnIncMDO="false" ClnIncATT="false" ClnIncMAT="false" ClnImpIncSIC="false" ClnImpIncMDO="false" ClnImpIncATT="false" ClnImpIncMAT="false" RgrpmntEP="0" OrdnmntEP="0" ToolMM="false" WBS="false" 	>
+	<CollectionNt MstrNt="false" CountId="1" />
+		</OIVistaMDO>
+		<OIVistaAN FrstPg="1" Ordnmnt="0" PrnType="0" Nm="Tahoma" Sz="8" MrgnLF="0" MrgnTP="0" MrgnRG="0" MrgnBT="0" Fnc="true" Clr="true" PrnQlty="0" PrnOrnt="0" DesVcRdt="false" DesVcRdtBld="false" DesVcRdtItlc="false" DesVcBrv="false" DesVcBrvBld="false" DesVcBrvItlc="false" DesBrvCrtrInz="180" DesBrvCrtrEnd="120" DesVcEsts="true" DesVcEstsBld="false" DesVcEstsItlc="false" DesVcEstsAll="false" DesVcEstsSub="false" DesVcCrtrInz="180" DesVoceCrtrEnd="120" Lng="0" NChrFrstCol="11" Grfc="true" LgStmp="" NPrz="false" Rplg="false" Evdnzt="false" Ttl="false" Nt="" Fgs="0" DsFllRw="false" TrfInz="" TrfEnd="" AvrtnzGen="false" RplgStrtrlCap="false" Smmr="true" Cnfrnt="false" SmmrPrvst="false" SmmrRst="false" ClnIncSIC="false" ClnIncMDO="false" ClnIncATT="false" ClnIncMAT="false" ClnImpIncSIC="false" ClnImpIncMDO="false" ClnImpIncATT="false" ClnImpIncMAT="false" RgrpmntEP="0" OrdnmntEP="0" ToolMM="false" WBS="false" 	>
+	<CollectionNt MstrNt="false" CountId="1" />
+		</OIVistaAN>
+		<OIVistaNRM FrstPg="1" Ordnmnt="0" PrnType="0" Nm="Tahoma" Sz="8" MrgnLF="0" MrgnTP="0" MrgnRG="0" MrgnBT="0" Fnc="true" Clr="true" PrnQlty="0" PrnOrnt="0" DesVcRdt="false" DesVcRdtBld="false" DesVcRdtItlc="false" DesVcBrv="false" DesVcBrvBld="false" DesVcBrvItlc="false" DesBrvCrtrInz="180" DesBrvCrtrEnd="120" DesVcEsts="true" DesVcEstsBld="false" DesVcEstsItlc="false" DesVcEstsAll="false" DesVcEstsSub="false" DesVcCrtrInz="180" DesVoceCrtrEnd="120" Lng="0" NChrFrstCol="11" Grfc="true" LgStmp="" NPrz="false" Rplg="false" Evdnzt="false" Ttl="false" Nt="" Fgs="0" DsFllRw="false" TrfInz="" TrfEnd="" AvrtnzGen="false" RplgStrtrlCap="false" Smmr="true" Cnfrnt="false" SmmrPrvst="false" SmmrRst="false" ClnIncSIC="false" ClnIncMDO="false" ClnIncATT="false" ClnIncMAT="false" ClnImpIncSIC="false" ClnImpIncMDO="false" ClnImpIncATT="false" ClnImpIncMAT="false" RgrpmntEP="0" OrdnmntEP="0" ToolMM="false" WBS="false" 	>
+	<CollectionNt MstrNt="false" CountId="1" />
+		</OIVistaNRM>
+		<OIVistaVC FrstPg="1" Ordnmnt="0" PrnType="0" Nm="Tahoma" Sz="8" MrgnLF="0" MrgnTP="0" MrgnRG="0" MrgnBT="0" Fnc="true" Clr="true" PrnQlty="0" PrnOrnt="0" DesVcRdt="false" DesVcRdtBld="false" DesVcRdtItlc="false" DesVcBrv="false" DesVcBrvBld="false" DesVcBrvItlc="false" DesBrvCrtrInz="180" DesBrvCrtrEnd="120" DesVcEsts="true" DesVcEstsBld="false" DesVcEstsItlc="false" DesVcEstsAll="false" DesVcEstsSub="false" DesVcCrtrInz="180" DesVoceCrtrEnd="120" Lng="0" NChrFrstCol="11" Grfc="true" LgStmp="" NPrz="false" Rplg="false" Evdnzt="false" Ttl="false" Nt="" Fgs="1" DsFllRw="false" Tutte="true" NVcInz="0" NVcEnd="0" Rprt="true" StmpDt="false" Frml="0" RplgStrutCat="false" Przl="false" RgrpmntVC="0" OrdnmntVC="0" ClnUM="false" WBS="false" 	>
+	<CollectionNt MstrNt="false" CountId="1" />
+		</OIVistaVC>
+		<OIVistaLM FrstPg="1" Ordnmnt="0" PrnType="0" Nm="Tahoma" Sz="8" MrgnLF="0" MrgnTP="0" MrgnRG="0" MrgnBT="0" Fnc="true" Clr="true" PrnQlty="0" PrnOrnt="0" DesVcRdt="false" DesVcRdtBld="false" DesVcRdtItlc="false" DesVcBrv="false" DesVcBrvBld="false" DesVcBrvItlc="false" DesBrvCrtrInz="180" DesBrvCrtrEnd="120" DesVcEsts="true" DesVcEstsBld="false" DesVcEstsItlc="false" DesVcEstsAll="false" DesVcEstsSub="false" DesVcCrtrInz="180" DesVoceCrtrEnd="120" Lng="0" NChrFrstCol="11" Grfc="true" LgStmp="" NPrz="false" Rplg="false" Evdnzt="false" Ttl="false" Nt="" Fgs="0" DsFllRw="false" Tutte="true" NVcInz="0" NVcEnd="0" Rprt="true" StmpDt="false" Frml="0" RplgStrutCat="false" Przl="false" RgrpmntVC="0" OrdnmntVC="0" ClnUM="false" WBS="false" 	>
+	<CollectionNt MstrNt="false" CountId="1" />
+		</OIVistaLM>
+		<OIVistaRC FrstPg="1" Ordnmnt="0" PrnType="0" Nm="Tahoma" Sz="8" MrgnLF="0" MrgnTP="0" MrgnRG="0" MrgnBT="0" Fnc="true" Clr="true" PrnQlty="0" PrnOrnt="0" DesVcRdt="false" DesVcRdtBld="false" DesVcRdtItlc="false" DesVcBrv="false" DesVcBrvBld="false" DesVcBrvItlc="false" DesBrvCrtrInz="180" DesBrvCrtrEnd="120" DesVcEsts="true" DesVcEstsBld="false" DesVcEstsItlc="false" DesVcEstsAll="false" DesVcEstsSub="false" DesVcCrtrInz="180" DesVoceCrtrEnd="120" Lng="0" NChrFrstCol="11" Grfc="true" LgStmp="" NPrz="false" Rplg="false" Evdnzt="false" Ttl="false" Nt="" Fgs="0" DsFllRw="false" Tutte="true" NVcInz="0" NVcEnd="0" Rprt="true" StmpDt="false" Frml="0" RplgStrutCat="false" Przl="false" RgrpmntVC="0" OrdnmntVC="0" ClnUM="false" WBS="false" 	>
+	<CollectionNt MstrNt="false" CountId="1" />
+		</OIVistaRC>
+		<OIVistaSAL FrstPg="1" Ordnmnt="0" PrnType="0" Nm="Tahoma" Sz="8" MrgnLF="0" MrgnTP="0" MrgnRG="0" MrgnBT="0" Fnc="true" Clr="true" PrnQlty="0" PrnOrnt="0" DesVcRdt="false" DesVcRdtBld="false" DesVcRdtItlc="false" DesVcBrv="false" DesVcBrvBld="false" DesVcBrvItlc="false" DesBrvCrtrInz="180" DesBrvCrtrEnd="120" DesVcEsts="true" DesVcEstsBld="false" DesVcEstsItlc="false" DesVcEstsAll="false" DesVcEstsSub="false" DesVcCrtrInz="180" DesVoceCrtrEnd="120" Lng="0" NChrFrstCol="11" Grfc="true" LgStmp="" NPrz="false" Rplg="false" Evdnzt="false" Ttl="false" Nt="" Fgs="0" DsFllRw="false" Tutte="true" NVcInz="0" NVcEnd="0" Rprt="true" StmpDt="false" Frml="0" RplgStrutCat="false" Przl="false" RgrpmntVC="0" OrdnmntVC="0" ClnUM="false" WBS="false" 	>
+	<CollectionNt MstrNt="false" CountId="1" />
+		</OIVistaSAL>
+		<OIVistaBIM FrstPg="1" Ordnmnt="0" PrnType="0" Nm="Tahoma" Sz="8" MrgnLF="0" MrgnTP="0" MrgnRG="0" MrgnBT="0" Fnc="true" Clr="true" PrnQlty="0" PrnOrnt="0" DesVcRdt="false" DesVcRdtBld="false" DesVcRdtItlc="false" DesVcBrv="false" DesVcBrvBld="false" DesVcBrvItlc="false" DesBrvCrtrInz="180" DesBrvCrtrEnd="120" DesVcEsts="true" DesVcEstsBld="false" DesVcEstsItlc="false" DesVcEstsAll="false" DesVcEstsSub="false" DesVcCrtrInz="180" DesVoceCrtrEnd="120" Lng="0" NChrFrstCol="11" Grfc="true" LgStmp="" NPrz="false" Rplg="false" Evdnzt="false" Ttl="false" Nt="" Fgs="1" DsFllRw="false" TrfInz="" TrfEnd="" AvrtnzGen="false" RplgStrtrlCap="false" Smmr="true" Cnfrnt="false" SmmrPrvst="false" SmmrRst="false" ClnIncSIC="false" ClnIncMDO="false" ClnIncATT="false" ClnIncMAT="false" ClnImpIncSIC="false" ClnImpIncMDO="false" ClnImpIncATT="false" ClnImpIncMAT="false" RgrpmntEP="0" OrdnmntEP="0" ToolMM="false" WBS="false" 	>
+	<CollectionNt MstrNt="false" CountId="1" />
+		</OIVistaBIM>
+		<OIVistaEPV FrstPg="1" Ordnmnt="0" PrnType="0" Nm="Tahoma" Sz="8" MrgnLF="0" MrgnTP="0" MrgnRG="0" MrgnBT="0" Fnc="true" Clr="true" PrnQlty="0" PrnOrnt="0" DesVcRdt="false" DesVcRdtBld="false" DesVcRdtItlc="false" DesVcBrv="false" DesVcBrvBld="false" DesVcBrvItlc="false" DesBrvCrtrInz="180" DesBrvCrtrEnd="120" DesVcEsts="true" DesVcEstsBld="false" DesVcEstsItlc="false" DesVcEstsAll="false" DesVcEstsSub="false" DesVcCrtrInz="180" DesVoceCrtrEnd="120" Lng="0" NChrFrstCol="11" Grfc="true" LgStmp="" NPrz="false" Rplg="false" Evdnzt="false" Ttl="false" Nt="" Fgs="0" DsFllRw="false" TrfInz="" TrfEnd="" AvrtnzGen="false" RplgStrtrlCap="false" Smmr="false" Cnfrnt="false" SmmrPrvst="false" SmmrRst="false" ClnIncSIC="false" ClnIncMDO="false" ClnIncATT="false" ClnIncMAT="false" ClnImpIncSIC="false" ClnImpIncMDO="false" ClnImpIncATT="false" ClnImpIncMAT="false" RgrpmntEP="0" OrdnmntEP="0" ToolMM="false" WBS="false" 	>
+	<CollectionNt MstrNt="false" CountId="1" />
+		</OIVistaEPV>
+	</OpzioniInterfaccia>
+	<InfoMRR PsTtlStrtt="0" PsRcctStrtt="0" PsTtlNoStrtt="0" PsRccltNoStrtt="0" Fgs="0" />
+		<EPV/>
+</DCFdocument>
+ 

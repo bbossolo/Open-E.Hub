@@ -1,0 +1,71 @@
+/* α Alfa — stili del tool. Riusa la shell condivisa (.ehb-hdr, .ehb-logo,
+   .ehb-glyph-svg, .ehb-card, .ehb-badge da components.css) e i token
+   (tokens.css → accento NEUTRO nero/bianco per tema via data-tool="alfa").
+   Le classi .adm-* sono portate 1:1 dalla vecchia modale admin dell'hub
+   (src/hub/styles/hub.css), qui perché α ne è ora l'unico proprietario. */
+
+body { margin: 0; font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 14px; }
+
+/* ── Controlli comuni della suite ─────────────────────────────────────────
+   Pulsanti (.ehb-btn*, .ehb-icon-btn) e tab (.ehb-tab/.ehb-tabs) nel design
+   system condiviso. */
+
+#app { padding: 20px 24px 40px; max-width: 1200px; margin: 0 auto; }
+.a-view[hidden] { display: none; }
+/* Sotto --bp-sm padding ridotto e stat-card a piena larghezza
+   (min 200px forzerebbe overflow su schermo stretto). Le liste utenti/backup
+   usano già flex-wrap → naturalmente fluide. */
+@media (max-width: 768px) {
+  #app { padding: 14px 12px 32px; }
+  .a-stat-card { min-width: 0; flex-basis: 100%; }
+}
+.a-sec-head { display: flex; align-items: baseline; gap: 10px; }
+.a-sec-head h2 { margin: 0; font-size: 16px; }
+.a-sec-lead { color: var(--muted); font-size: 13px; max-width: 640px; margin: 6px 0 16px; }
+
+/* ── Panoramica: stat-tile ────────────────────────────────────────────── */
+.a-stats-grid { display: flex; flex-wrap: wrap; gap: 16px; }
+.a-stat-card { flex: 1 1 220px; min-width: 200px; }
+.a-stat-card__title { font-weight: 700; margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.a-stat-card__big { font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.a-stat-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; border-bottom: 1px solid var(--line); }
+.a-stat-row:last-child { border-bottom: none; }
+.a-stat-row b { font-variant-numeric: tabular-nums; }
+
+/* ── Utenti / Tool / Azienda / Backup: classi ereditate dalla vecchia modale ── */
+.adm-sec-count { font-family: var(--mono); font-size: var(--fs-xs); color: var(--faint); }
+.adm-users { display: flex; flex-direction: column; gap: 6px; }
+.adm-user { display: flex; flex-direction: column; gap: 6px; background: var(--panel2); border: 1px solid var(--line); border-radius: var(--r2, 8px); padding: 7px 10px; }
+.adm-user__row { display: flex; align-items: center; gap: 8px; }
+.adm-user__id { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.2; }
+.adm-user__name { font-family: var(--sans); font-size: var(--fs-base); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.adm-user__uname { font-family: var(--mono); font-size: var(--fs-xs); color: var(--muted); }
+.adm-chip { font-family: var(--mono); font-size: var(--fs-xs); font-weight: 600; letter-spacing: .03em; text-transform: uppercase; padding: 2px 8px; border-radius: 99px; border: 1px solid var(--line2); background: var(--panel); color: var(--muted); cursor: pointer; transition: var(--tr); }
+.adm-chip.is-on { color: #137a3f; border-color: color-mix(in srgb, #137a3f 40%, transparent); background: color-mix(in srgb, #137a3f 12%, transparent); }
+.adm-chip.is-off { color: var(--faint); }
+.adm-chip.is-admin { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, transparent); background: var(--accent-soft); }
+.adm-user__del { background: none; border: none; color: var(--faint); cursor: pointer; font-size: var(--fs-md); padding: 0 2px; transition: var(--tr); }
+.adm-user__del:hover { color: var(--bad); }
+.adm-user-add { display: flex; gap: 6px; margin-top: 8px; }
+.adm-user-add input { flex: 1; min-width: 0; font-family: var(--sans); font-size: var(--fs-base); background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--r2, 8px); padding: 6px 9px; color: var(--text); }
+.adm-add-btn { font-family: var(--sans); font-size: var(--fs-base); background: var(--accent); color: var(--on-accent); border: none; border-radius: var(--r2, 8px); padding: 6px 12px; cursor: pointer; white-space: nowrap; }
+.adm-add-btn:hover { filter: brightness(1.05); }
+
+/* ── Barra utenti: ricerca (statica sopra la lista) ── */
+.adm-users-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+.adm-users-filter { flex: 1 1 220px; min-width: 160px; font-family: var(--sans); font-size: var(--fs-base); background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--r2, 8px); padding: 6px 10px; color: var(--text); }
+
+/* ── Rinomina inline ── */
+.adm-user__id--editing { flex-direction: row; align-items: center; }
+.adm-user__rename { display: flex; gap: 6px; width: 100%; align-items: center; }
+.adm-user__rename input { flex: 1 1 0; min-width: 0; font-family: var(--sans); font-size: var(--fs-base); background: var(--panel); border: 1px solid var(--line2); border-radius: var(--r2, 8px); padding: 4px 8px; color: var(--text); }
+
+.adm-ph { font-family: var(--mono); font-size: var(--fs-sm); color: var(--faint); background: var(--panel2); border: 1px dashed var(--line2); border-radius: var(--r2, 8px); padding: 9px 12px; }
+.adm-ph--warn { font-family: var(--sans); color: var(--warn); background: var(--warn-soft); border-style: solid; border-color: var(--warn); }
+.adm-backup { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.adm-co { display: flex; align-items: center; gap: 12px; background: var(--panel2); border: 1px solid var(--line); border-radius: var(--r2, 8px); padding: 10px 12px; max-width: 480px; }
+.adm-co__name { font-family: var(--sans); font-size: var(--fs-md); font-weight: 600; color: var(--text); }
+.adm-co__addr { font-family: var(--sans); font-size: var(--fs-sm); color: var(--muted); }
+.adm-co__logo { max-height: 34px; max-width: 120px; width: auto; height: auto; object-fit: contain; }
+.co-logo { display: inline-flex; align-items: center; justify-content: center; }
+.co-logo--ph { min-width: 44px; height: 34px; padding: 0 10px; border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--line2)); border-radius: 8px; font-family: var(--mono); font-weight: 800; font-size: var(--fs-md); letter-spacing: .06em; color: var(--text); background: var(--panel2); }

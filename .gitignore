@@ -1,0 +1,26 @@
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Dipendenze e output di build
+node_modules/
+dist/
+*.log
+
+# Bundle HTML dei tool: sono l'OUTPUT di `npm run build:web`, non sorgenti.
+# Si rigenerano con un comando; gli installer pronti stanno nelle GitHub Releases.
+/*.html
+
+# Prezzari — qui c'è la pipeline, non i dati. I prezzari regionali e i listini di
+# fornitore non sono ridistribuibili: ogni studio mette i propri grezzi in
+# prezzari-src/ e li normalizza con `npm run build:prezzari` (ricetta in CLAUDE.md §2).
+prezzari-src/
+prezzari/*.json.gz
+prezzari/_bundle/
+prezzari/STATUS.md
+
+# Disegni: input e output dei tool DXF, grossi e legati al singolo progetto.
+*.dxf
+
+# Credenziali e configurazione locale: mai nel repo.
+.env*

@@ -1,0 +1,81 @@
+name: Release
+
+# Alla creazione di un tag vX.Y.Z (creato da scripts/release.mjs via hook
+# pre-push a ogni push su main) builda gli installer desktop per macOS e
+# Windows e li allega alla GitHub Release corrispondente. Build NON firmate:
+# macOS mostrerà l'avviso Gatekeeper "app danneggiata" (bypassabile da
+# Impostazioni → Privacy e sicurezza → "Apri comunque"), Windows l'avviso
+# SmartScreen (bypassabile con "Ulteriori informazioni" → "Esegui comunque").
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web (dai sorgenti)
+        run: npm run build:web
+
+      - name: Genera bundle prezzari interni
+        run: npm run bundle:prezzari
+
+      - name: Build installer macOS (non firmato)
+        run: npm run build:mac -- --publish never
+
+      - name: Upload alla release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.dmg
+            dist/*.zip
+          body: |
+            Build desktop non firmate (nessun certificato di firma codice):
+            - **macOS**: al primo avvio Gatekeeper segnala l'app come "danneggiata" — Impostazioni di Sistema → Privacy e sicurezza → "Apri comunque".
+            - **Windows**: SmartScreen avvisa dell'app non riconosciuta — "Ulteriori informazioni" → "Esegui comunque".
+
+            In alternativa: build in locale (`npm run build:mac` / `npm run build:win`) o uso via browser (`npm run serve`), vedi [Build e Release](Docs/03-Build-e-Release.md).
+          append_body: false
+          generate_release_notes: true
+
+  build-windows:
+    needs: build-mac
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build web (dai sorgenti)
+        run: npm run build:web
+
+      - name: Genera bundle prezzari interni
+        run: npm run bundle:prezzari
+
+      - name: Build installer Windows (non firmato)
+        run: npm run build:win -- --publish never
+
+      - name: Upload alla release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.exe

@@ -1,0 +1,248 @@
+/* δ Pages — stili del tool. Riusa la shell condivisa (.ehb-hdr, .ehb-logo,
+   .ehb-glyph-svg, .ehb-tab, i pulsanti e .ehb-table da components.css) e i
+   token (tokens.css → accento TEAL via data-tool="delta"). Qui restano solo
+   gli stili propri: le quattro viste e l'editor a campi sul template. */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: var(--sans); background: var(--bg); color: var(--text); font-size: 14px; display: flex; flex-direction: column; }
+
+#app { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.d-view { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.d-view[hidden] { display: none; }
+
+/* Binario di flusso: spunta ✓ al posto del numero sui passi già completati
+   (Template caricato, Elenco importato, almeno un Campo) — guida a colpo
+   d'occhio senza dover aprire ogni vista per scoprire cosa manca. */
+#delta-rail .ehb-rail-step.is-done .rail-k { color: transparent; border-color: var(--ok); position: relative; }
+#delta-rail .ehb-rail-step.is-done .rail-k::after {
+  content: '✓'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--ok); font-size: 10px; line-height: 1;
+}
+#delta-rail .ehb-rail-step.is-done .dot { background: var(--ok); }
+#delta-rail .ehb-rail-step.is-done:not(.active) { color: var(--ok); }
+
+/* ── Pannelli "a pagina" (Template / Elenco): colonna centrata, scrollabile ── */
+.d-panel { overflow-y: auto; padding: 24px; }
+.d-panel--center { max-width: 880px; width: 100%; margin: 0 auto; }
+.d-block { background: var(--panel); border: 1px solid var(--line2); border-radius: var(--radius); padding: 18px 20px; margin-bottom: 18px; }
+.d-panel-hd { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.d-h2 { font-size: 17px; font-weight: 700; margin: 0 0 8px; color: var(--text); }
+.d-h3 { font-size: 13px; font-weight: 700; margin: 0; color: var(--text); }
+.d-hint { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin: 6px 0; }
+.d-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.d-actions--stack { flex-direction: column; align-items: stretch; }
+.d-file-info { margin-top: 12px; padding: 9px 12px; background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--radius-sm); font-size: 12.5px; color: var(--muted); }
+.d-file-info b { color: var(--text); }
+
+/* Anteprima di sola lettura del cartiglio (sfondo + campi già composti,
+   drawCover con editable=false): altezza contenuta apposta, per non
+   riallungare la schermata Template come faceva la vecchia anteprima a 60vh. */
+.d-tpl-preview { margin-top: 10px; height: min(64vh, 640px); display: flex; align-items: center; justify-content: center; background: var(--panel2); border-radius: var(--radius-sm); }
+.d-tpl-preview[hidden] { display: none; }
+.d-tpl-preview .d-svg { max-width: 100%; max-height: 100%; border-radius: var(--radius-sm); }
+.d-tpl-lock { font-size: 10.5px; font-weight: 400; color: var(--muted); margin-left: 6px; }
+
+/* Empty state */
+.d-template-loading { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12.5px; color: var(--muted); }
+.d-template-loading[hidden] { display: none; }
+.d-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 40px; }
+.d-empty[hidden] { display: none; }
+.d-empty__ic { font-size: 34px; color: var(--faint); }
+.d-empty__lead { max-width: 460px; text-align: center; color: var(--muted); font-size: 14px; line-height: 1.6; margin: 0; }
+
+/* ── Editor / Genera: pannelli laterali + canvas centrale ── */
+.d-editor, .d-generate, .d-workbench { flex: 1; min-height: 0; display: flex; }
+.d-editor[hidden], .d-generate[hidden], .d-workbench[hidden] { display: none; }
+/* Pannelli regolabili (makeResizer condiviso): larghezza per-lato persistita
+   in --d-left-w/--d-right-w, comune a tutte le viste col layout a colonne
+   (Template unificata, Genera) — trascinare l'handle sull'una vale per l'altra. */
+.d-side { position: relative; flex: 0 0 auto; width: var(--d-left-w, 260px); background: var(--panel); border-right: 1px solid var(--line2); overflow-y: auto; padding: 14px; }
+.d-side--right { border-right: none; border-left: 1px solid var(--line2); width: var(--d-right-w, 288px); }
+.d-resize-handle { position: absolute; top: 0; bottom: 0; width: 6px; cursor: col-resize; z-index: 8; }
+.d-resize-handle:hover, .d-resize-handle.dragging { background: color-mix(in srgb, var(--accent) 25%, transparent); }
+.d-resize-handle--right { right: -3px; }
+.d-resize-handle--left { left: -3px; }
+
+/* ── Vista Template unificata: barra modello + workbench a 3 colonne
+   (libreria a sinistra · canvas al centro · proprietà del campo a destra) —
+   sostituisce i vecchi passi separati «1 Template» e «3 Campi». ── */
+.d-template-bar { flex: 0 0 auto; display: flex; align-items: center; gap: 10px; padding: 8px 16px; background: var(--panel); border-bottom: 1px solid var(--line2); flex-wrap: wrap; }
+.d-template-bar__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: 0 0 auto; }
+.d-template-bar__info { flex: 1 1 auto; min-width: 120px; font-size: 12.5px; color: var(--text2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.d-template-bar__info b { color: var(--text); }
+/* Azioni «campo» spostate qui dalla colonna sinistra: erano
+   in cima alla lista modelli e costringevano a scorrere per arrivare ai Campi. */
+.d-template-bar__fields { display: flex; gap: 6px; flex-wrap: wrap; padding-left: 10px; margin-left: 10px; border-left: 1px solid var(--line2); }
+.d-template-bar__fields[hidden] { display: none; }
+.d-template-bar__actions { display: flex; gap: 8px; flex: 0 0 auto; margin-left: auto; }
+
+/* Libreria modelli/storico ad accordion: chiusa da sola quando un template è
+   applicato, per lasciare subito visibili i Campi sotto. */
+.d-accordion > summary { list-style: none; cursor: pointer; }
+.d-accordion > summary::-webkit-details-marker { display: none; }
+.d-accordion > summary::after { content: '▾'; color: var(--faint); font-size: 11px; margin-left: 8px; transition: transform .12s; }
+.d-accordion:not([open]) > summary::after { transform: rotate(-90deg); }
+.d-accordion:not([open]) > summary { margin-bottom: 0; }
+.d-canvas-hint { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--muted);
+  background: var(--panel); border: 1px solid var(--line2); padding: 5px 12px; border-radius: 999px; margin: 0; pointer-events: none; }
+
+/* Pannello Avanzate (espressione testuale): collassato di default, per chi ha
+   bisogno di comporre più colonne o un filtro custom — l'editor normale usa
+   solo Sorgente (select) + Formato (chip), senza sintassi. */
+.d-advanced { border-top: 1px dashed var(--line2); padding-top: 10px; margin-top: 12px; }
+.d-advanced summary { font-size: 11px; color: var(--muted); cursor: pointer; list-style: none; }
+.d-advanced summary::-webkit-details-marker { display: none; }
+.d-advanced summary::before { content: '▸ '; }
+.d-advanced[open] summary::before { content: '▾ '; }
+
+.d-canvas-wrap { position: relative; flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; overflow: auto; padding: 20px; background: var(--panel2); }
+.d-canvas { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; transition: transform .1s ease; }
+
+/* Barra zoom del canvas (Campi/Genera) */
+.d-zoom-bar { position: absolute; top: 10px; right: 10px; z-index: 5; display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line2); border-radius: var(--radius-sm); padding: 3px; box-shadow: var(--shadow-2); }
+/* Il template va sempre su carta chiara, a prescindere dal tema del tool. */
+.d-svg { max-width: 100%; max-height: 100%; background: #fff; box-shadow: 0 4px 20px rgba(0,0,0,.35); }
+.d-fld-text { fill: #111; paint-order: stroke; }
+/* Area di presa invisibile dietro ogni campo: il testo SVG da solo si aggancia
+   ai soli tratti dei glifi, impossibile da afferrare sulle celle piccole. */
+.d-fld-hit { fill: transparent; pointer-events: all; }
+.d-fld-text.is-sel { fill: var(--accent); stroke: var(--accent); stroke-width: .3px; }
+.d-fld-text.is-empty { fill: #b0b0b0; }
+
+/* Lista campi */
+.d-field-list { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; }
+.d-field-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel2); cursor: pointer; transition: var(--tr); }
+.d-field-row:hover { border-color: var(--accent); }
+.d-field-row.is-sel { border-color: var(--accent); background: var(--accent-soft); }
+.d-field-tag { font-size: 9px; font-weight: 800; letter-spacing: .04em; padding: 2px 5px; border-radius: 4px; flex: 0 0 auto; }
+.d-field-tag--fixed { background: color-mix(in srgb, var(--muted) 22%, transparent); color: var(--muted); }
+.d-field-tag--variable { background: var(--accent-soft); color: var(--accent); }
+.d-field-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; color: var(--text); }
+.d-field-warn { margin-left: 5px; color: var(--warn, #d97706); cursor: help; }
+.d-field-warn-line { display: block; margin-top: 4px; color: var(--warn, #d97706); font-size: 11px; }
+.d-field-warn-line[hidden] { display: none; }
+
+/* Libreria cartigli dello studio (Vista 1) */
+.d-actions--between { display: flex; gap: 8px; align-items: center; }
+.d-search { flex: 1; min-width: 0; padding: 7px 10px; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel2); color: var(--text); font-size: 12.5px; }
+.d-search:focus { border-color: var(--accent); }
+.d-model-list { margin-top: 10px; display: flex; flex-direction: column; gap: 4px; max-height: 340px; overflow-y: auto; }
+.d-model-row { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel2); }
+.d-model-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.d-model-info .d-field-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Slot grigio: i 5 modelli ricorrenti dello studio, in arrivo (implementazione futura). */
+.d-model-row.is-placeholder { opacity: .55; border-style: dashed; background: transparent; }
+.d-model-ic { flex: 0 0 auto; width: 26px; height: 26px; display: grid; place-items: center; border-radius: var(--radius-sm); background: color-mix(in srgb, var(--muted) 18%, transparent); color: var(--muted); font-size: 14px; }
+/* Anteprima del cartiglio nella libreria: riconoscere il modello senza applicarlo. */
+.d-model-thumb { flex: 0 0 auto; width: 34px; height: 46px; object-fit: contain; background: #fff; border: 1px solid var(--line2); border-radius: 2px; }
+.d-informativa { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--line2); color: var(--text3); }
+/* Intestazione di gruppo dello storico commesse: il codice commessa sopra i suoi template. */
+.d-model-group { margin-top: 8px; font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--muted); }
+.d-model-group:first-child { margin-top: 0; }
+
+/* Maniglie a video sul campo selezionato (elimina / ridimensiona) */
+.d-sel-rect { fill: none; stroke: var(--accent); stroke-width: 1px; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; pointer-events: none; }
+/* Riquadro della CASELLA di testo (larghezza di wrap): a differenza di
+   .d-sel-rect è cliccabile (si trascina per spostare il campo, come il resto
+   del testo) e il suo bordo destro/sinistro porta la maniglia ↔ che cambia
+   SOLO questa larghezza — mai la dimensione del testo, che è un'altra proprietà. */
+.d-sel-box { fill: transparent; stroke: var(--accent); stroke-width: 1px; stroke-dasharray: 4 3; vector-effect: non-scaling-stroke; pointer-events: all; cursor: move; }
+.d-handle circle { stroke: #fff; stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+.d-handle--del circle { fill: var(--danger, #dc2626); }
+.d-handle--resize circle { fill: var(--accent); }
+.d-handle-glyph { fill: #fff; text-anchor: middle; dominant-baseline: central; font-weight: 700; pointer-events: none; }
+
+/* Rettangolo "Disegna campo" tracciato sul canvas */
+.d-draw-rect { fill: color-mix(in srgb, var(--accent) 12%, transparent); stroke: var(--accent); stroke-width: 2px; stroke-dasharray: 6 4; vector-effect: non-scaling-stroke; }
+
+/* Selettore sorgente campo (Colonna | Espressione) */
+.d-seg { display: inline-flex; border: 1px solid var(--line2); border-radius: var(--radius-sm); overflow: hidden; }
+.d-seg-btn { border: 0; background: var(--panel2); color: var(--text2); padding: 5px 12px; font-size: 12px; cursor: pointer; transition: var(--tr); }
+.d-seg-btn.is-sel { background: var(--accent); color: #fff; }
+
+/* Chip colonna → inserisce {token} nell'espressione */
+.d-chip-row { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.d-chip { border: 1px solid var(--line2); background: var(--panel2); color: var(--text2); border-radius: 999px; padding: 2px 9px; font-size: 11px; cursor: pointer; transition: var(--tr); }
+.d-chip:hover { border-color: var(--accent); color: var(--accent); }
+/* Chip di formato selezionata (MAIUSCOLO/tail/head/meseanno/stato). */
+.d-chip.is-sel { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 45%, transparent); color: var(--accent); font-weight: 700; }
+
+/* Espressione mostrata nella mappatura (passo 3) */
+.d-map-expr { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11.5px; color: var(--text2); background: var(--panel2); border: 1px solid var(--line2); border-radius: var(--radius-sm); padding: 4px 8px; }
+.d-map-expr.is-orphan { border-color: var(--warn, #d97706); color: var(--warn, #d97706); }
+
+/* Pannello proprietà campo */
+.d-props-empty .d-hint { margin: 0; }
+.d-prop { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; font-size: 12px; color: var(--muted); }
+.d-prop[hidden] { display: none; }
+.d-prop > span { font-weight: 600; letter-spacing: .02em; text-transform: uppercase; font-size: 10.5px; color: var(--faint); }
+.d-prop--row { flex-direction: row; align-items: center; gap: 8px; text-transform: none; }
+.d-prop input[type="text"], .d-prop textarea, .d-prop select { font: inherit; font-size: 13px; padding: 7px 9px; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel2); color: var(--text); }
+.d-prop input[type="text"]:focus, .d-prop textarea:focus, .d-prop select:focus { border-color: var(--accent); }
+.d-prop textarea { resize: vertical; }
+.d-prop input[type="range"] { width: 100%; accent-color: var(--accent); }
+.d-xy-row { display: flex; gap: 6px; }
+.d-xy-row input[type="number"] { width: 0; flex: 1; font: inherit; font-size: 13px; padding: 6px 8px; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel2); color: var(--text); }
+
+/* Griglia 3×3 dell'ancoraggio */
+.d-anchor-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 84px; }
+.d-anchor { width: 100%; aspect-ratio: 1; border: 1px solid var(--line2); border-radius: 4px; background: var(--panel2); cursor: pointer; padding: 0; transition: var(--tr); }
+.d-anchor:hover { border-color: var(--accent); }
+.d-anchor.is-sel { background: var(--accent); border-color: var(--accent); }
+
+/* Mappatura colonne */
+.d-mapping-list { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+.d-map-row { display: flex; align-items: center; gap: 10px; }
+.d-map-row .d-field-name { flex: 0 0 40%; }
+.d-map-row select { flex: 1; font: inherit; font-size: 13px; padding: 6px 9px; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel2); color: var(--text); }
+
+/* Selettore fogli (import XLSX multi-foglio, dentro il pannello di verifica) */
+.d-sheet-list { display: flex; flex-direction: column; gap: 6px; margin: 10px 0; }
+.d-sheet-list[hidden] { display: none; }
+.d-sheet-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border: 1px solid var(--line2); border-radius: var(--radius-sm); background: var(--panel2); cursor: pointer; }
+.d-sheet-row .d-field-name { flex: 0 0 auto; min-width: 160px; }
+.d-sheet-row--low { opacity: .6; }
+.d-sheet-row--low .d-hint { font-style: italic; }
+.d-sheet-row.is-focus { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--panel2)); }
+
+/* Pannello di verifica import elenco (sempre mostrato: orientamento + riga cliccabile) */
+.d-verify-controls { display: flex; align-items: center; gap: 12px; margin: 10px 0; flex-wrap: wrap; }
+.d-confidence-badge { font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px; background: var(--panel2); color: var(--muted); }
+.d-confidence-badge.is-ok { background: color-mix(in srgb, var(--ok, #2fae63) 16%, transparent); color: var(--ok, #2fae63); }
+.d-confidence-badge.is-warn { background: color-mix(in srgb, var(--warn, #d99a1e) 18%, transparent); color: var(--warn, #d99a1e); }
+.d-verify-table tr.d-verify-row { cursor: pointer; transition: var(--tr); }
+.d-verify-table tr.d-verify-row:hover td { background: var(--panel3); }
+.d-verify-table tr.d-verify-row.is-header td { background: color-mix(in srgb, var(--accent) 16%, transparent); font-weight: 700; color: var(--text); }
+.d-verify-table td.d-verify-idx { color: var(--faint); font-size: 10.5px; text-align: right; padding-right: 6px; user-select: none; }
+#dVerifyUnknowns { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+#dVerifyUnknowns[hidden] { display: none; }
+#dVerifyUnknowns .d-map-row select { flex: 0 0 auto; min-width: 200px; }
+
+/* Anteprima tabella elenco */
+.d-elenco-preview { margin-top: 6px; }
+.d-table-scroll { overflow-x: auto; border: 1px solid var(--line2); border-radius: var(--radius-sm); }
+.d-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.d-table th, .d-table td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line2); white-space: nowrap; }
+.d-table th { background: var(--panel2); font-weight: 700; color: var(--text); position: sticky; top: 0; }
+.d-table td { color: var(--muted); }
+
+/* Navigazione anteprima (Genera) */
+.d-preview-nav { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 8px 0; }
+.d-preview-nav[hidden] { display: none; }
+.d-preview-label { font-family: var(--mono, monospace); font-size: 13px; color: var(--text); min-width: 64px; text-align: center; }
+
+/* Barra di avanzamento export ZIP */
+.d-gen-progress { margin: 10px 0; display: flex; flex-direction: column; gap: 4px; }
+.d-gen-progress[hidden] { display: none; }
+.d-gen-progress__track { height: 6px; border-radius: 3px; background: var(--panel2); border: 1px solid var(--line2); overflow: hidden; }
+.d-gen-progress__bar { height: 100%; width: 0%; background: var(--accent); transition: width .15s ease; }
+.d-gen-progress__row { display: flex; align-items: center; gap: 8px; }
+
+/* Toast */
+.d-toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); padding: 9px 16px; background: var(--panel); border: 1px solid var(--line2); border-radius: var(--radius-sm); box-shadow: var(--shadow-2); font-size: 13px; color: var(--text); z-index: 200; }
+.d-toast[hidden] { display: none; }
+
+@media (max-width: 860px) {
+  .d-side { width: 210px; }
+  .d-side--right { width: 220px; }
+}

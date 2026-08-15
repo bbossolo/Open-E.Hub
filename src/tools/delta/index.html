@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it" data-tool="delta" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- CSP — nessuno schema http:/https: compare in questa policy: la suite non può
+     caricare nulla dalla rete né spedire nulla fuori, e non è più solo una promessa
+     del codice. 'unsafe-inline'/'unsafe-eval' servono perché i bundle sono file
+     unici (tutto inlinato) e pdf.js/JSZip usano eval al proprio interno; la via
+     d'esecuzione JS dei PDF ostili è chiusa alla fonte con isEvalSupported:false. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' file: data: blob:; script-src 'self' file: blob: 'unsafe-inline' 'unsafe-eval'; style-src 'self' file: data: 'unsafe-inline'; img-src 'self' file: data: blob:; font-src 'self' file: data:; connect-src 'self' file: data: blob:; worker-src 'self' file: blob:; frame-src 'self' file: blob:; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>δ Copertine — Copertine degli elaborati</title>
+<!-- Design system condiviso: token + componenti; δ tiene solo i propri specifici.
+     Accento teal (data-tool="delta"). -->
+<link rel="stylesheet" href="../../shared/ui/tokens.css">
+<link rel="stylesheet" href="../../shared/ui/components.css">
+<link rel="stylesheet" href="./styles/delta.css">
+</head>
+<body>
+
+<header class="ehb-hdr" data-tool="delta">
+  <div class="ehb-hdr__brand">
+    <div class="ehb-logo" data-tool="delta"><span class="ehb-logo__glyph"><svg class="ehb-glyph-svg" viewBox="0 -800 600 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M40 -227Q40 -286 64.5 -334Q89 -382 132 -411Q175 -440 230 -440Q257 -440 277.5 -433.5Q298 -427 311 -414L317 -420L94 -607V-730H495V-607H269L440 -469Q472 -443 499.5 -408Q527 -373 543.5 -329.6Q560 -286.2 560 -234Q560 -163.2 526.5 -107.6Q493 -52 434.5 -21Q376 10 300.3 10Q224.5 10 165.8 -20.5Q107 -51 73.5 -105Q40 -159 40 -227ZM193 -233Q193 -200 206.5 -174.5Q220 -149 244.3 -134.5Q268.6 -120 299.9 -120Q332 -120 356 -134.5Q380 -149 393.5 -174.5Q407 -200 407 -233Q407 -266 393.5 -294Q380 -322 355.9 -339Q331.9 -356 300 -356Q269 -356 244.5 -339Q220 -322 206.5 -294Q193 -266 193 -233Z" fill="currentColor"/></svg></span></div>
+    <div class="ehb-hdr__brand-txt">
+      <span class="ehb-hdr__brand-name"><span class="ehb-name-glyph"><svg class="ehb-glyph-svg" viewBox="0 -800 600 1000" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M40 -227Q40 -286 64.5 -334Q89 -382 132 -411Q175 -440 230 -440Q257 -440 277.5 -433.5Q298 -427 311 -414L317 -420L94 -607V-730H495V-607H269L440 -469Q472 -443 499.5 -408Q527 -373 543.5 -329.6Q560 -286.2 560 -234Q560 -163.2 526.5 -107.6Q493 -52 434.5 -21Q376 10 300.3 10Q224.5 10 165.8 -20.5Q107 -51 73.5 -105Q40 -159 40 -227ZM193 -233Q193 -200 206.5 -174.5Q220 -149 244.3 -134.5Q268.6 -120 299.9 -120Q332 -120 356 -134.5Q380 -149 393.5 -174.5Q407 -200 407 -233Q407 -266 393.5 -294Q380 -322 355.9 -339Q331.9 -356 300 -356Q269 -356 244.5 -339Q220 -322 206.5 -294Q193 -266 193 -233Z" fill="currentColor"/></svg></span> Copertine</span>
+      <span class="ehb-hdr__brand-sub">copertine degli elaborati · template + elenco → ZIP di PDF (uno per elaborato)</span>
+    </div>
+  </div>
+  <div class="ehb-hdr__spacer"></div>
+  <div class="ehb-hdr__actions">
+    <button id="btnTheme" class="ehb-icon-btn" onclick="toggleTheme()" title="Cambia tema (chiaro/scuro) di questo tool">☾</button>
+    <button id="btnGuide" class="ehb-guide-btn" onclick="openGuide()" title="Guida rapida a δ Copertine">? Guida</button>
+  </div>
+</header>
+
+<!-- Binario di flusso — navigazione REALE (showView), non decorazione: Template →
+     Elenco → Genera. Template e campi si preparano in un'unica schermata. -->
+<nav id="delta-rail" class="ehb-rail" aria-label="Fasi di lavoro">
+  <div id="dTabTemplate" class="ehb-rail-step active" data-step="template" data-fam="create" onclick="showView('template')" title="Scegli e prepara il template (1)"><span class="rail-k">1</span><span class="dot"></span>Template</div>
+  <div class="ehb-rail-sep"></div>
+  <div id="dTabElenco" class="ehb-rail-step" data-step="elenco" data-fam="create" onclick="showView('elenco')" title="Importa l'elenco (2)"><span class="rail-k">2</span><span class="dot"></span>Elenco</div>
+  <div class="ehb-rail-sep"></div>
+  <div id="dTabGenera" class="ehb-rail-step" data-step="genera" data-fam="export" onclick="showView('genera')" title="Genera i PDF (3)"><span class="rail-k">3</span><span class="dot"></span>Genera</div>
+</nav>
+
+<main id="app">
+
+  <!-- ══ VISTA 1 — TEMPLATE: due modalità mutuamente esclusive, stesso passo del binario.
+       Home = scelta/caricamento template + libreria (a riposo). Editor = workbench a
+       3 colonne coi campi, aperto solo su richiesta esplicita. ══ -->
+  <section id="viewTemplate" class="d-view">
+    <div id="dTemplateBar" class="d-template-bar">
+      <span class="d-template-bar__dot"></span>
+      <span id="dTemplateBarInfo" class="d-template-bar__info">Nessun template applicato: caricane uno o scegline uno dalla libreria.</span>
+      <!-- Le azioni sui campi esistono SOLO nell'Editor (creano/modificano campi:
+           non hanno senso in Home, dove non c'è nulla su cui agire) — nascoste,
+           non solo disabilitate. «Editor campi»/«Applica e continua» restano
+           invece sempre negli stessi punti: sono le uniche azioni valide anche
+           in Home, così non saltano posizione passando modalità. -->
+      <div id="dTemplateBarFields" class="d-template-bar__fields" hidden>
+        <button class="ehb-btn ehb-btn--sm ehb-btn--accent" id="dBtnDetect" onclick="detectCampi()" title="Legge le etichette del cartiglio (Committente, Commessa n°, scala, Tavola N°…) e crea ogni campo GIÀ nella cella giusta, con la sorgente pre-assegnata. Rifinisci col trascinamento.">⌖ Rileva campi</button>
+        <button class="ehb-btn ehb-btn--sm" onclick="addField('fixed')">＋ Fisso</button>
+        <button class="ehb-btn ehb-btn--sm" onclick="addField('variable')">＋ Variabile</button>
+        <button class="ehb-btn ehb-btn--sm ehb-btn--ghost" id="dBtnDraw" onclick="toggleDrawField()" title="Disegna un campo trascinando un rettangolo sul template; poi assegnalo a testo fisso o a una variabile">▭ Disegna</button>
+        <button class="ehb-btn ehb-btn--sm ehb-btn--ghost" onclick="addStandardFields()" title="Aggiunge in un colpo solo i campi tipici del cartiglio, impilati (usa «Rileva» per posizionarli automaticamente)">✨ Standard</button>
+      </div>
+      <div class="d-template-bar__actions">
+        <button id="dBtnToggleEditor" class="ehb-btn ehb-btn--sm ehb-btn--accent" onclick="toggleTemplateEditor()" title="Apre l'editor dei campi (canvas, lista campi, proprietà) sul template applicato" disabled>✎ Editor campi</button>
+        <button id="dBtnApplyContinue" class="ehb-btn ehb-btn--sm ehb-btn--accent" onclick="showView('elenco')" title="Chiude la preparazione del template (le modifiche sono già salvate) e passa all'importazione dell'elenco elaborati" disabled>✓ Applica e continua</button>
+      </div>
+    </div>
+
+    <div id="dTemplateHome" class="d-panel d-panel--center">
+      <!-- Anteprima: protagonista appena c'è un template, staccata dalla scheda di
+           caricamento — sola lettura (drawCover editable=false), gli stessi campi
+           si sbloccano/modificano nell'Editor. -->
+      <div id="dTemplatePreviewBlock" class="d-block" hidden>
+        <div class="d-panel-hd">
+          <h3 class="d-h3">Anteprima <span class="d-tpl-lock" title="Sola lettura qui: i campi si sbloccano nell'Editor campi">🔒 sola lettura</span></h3>
+          <button class="ehb-btn ehb-btn--sm ehb-btn--ghost" onclick="toggleTemplateEditor()" title="Apre l'editor per modificare i campi">✎ Sblocca nell'editor</button>
+        </div>
+        <div id="dTemplatePreview" class="d-tpl-preview"></div>
+        <p id="dTemplateFieldsWarn" class="d-field-warn-line" hidden>⚠ Nessun campo creato ancora — apri l'Editor campi per aggiungerli.</p>
+      </div>
+
+      <!-- Scelta del template: non più protagonista una volta applicato un
+           cartiglio, resta sotto l'anteprima. -->
+      <div class="d-block">
+        <h2 class="d-h2">Template della copertina</h2>
+        <p id="dTemplateIntroHint" class="d-hint">Carica il modello di copertina già disegnato dallo studio: un <b>PDF</b> (si usa la 1ª pagina) o un'<b>immagine</b> (PNG/JPG). Diventa lo sfondo su cui posizioni i campi.</p>
+        <input id="dTemplateFile" type="file" accept=".pdf,image/*" hidden onchange="onTemplateFile(this.files[0])">
+        <div class="d-actions">
+          <button class="ehb-btn ehb-btn--accent-soft" onclick="document.getElementById('dTemplateFile').click()">⇪ Carica template…</button>
+          <button id="dBtnTemplateClear" class="ehb-btn ehb-btn--ghost" onclick="clearTemplate()" hidden>Rimuovi</button>
+        </div>
+        <div id="dTemplateInfo" class="d-file-info" hidden></div>
+        <div id="dTemplateFontPicker" class="d-prop" hidden>
+          <span>Font del cartiglio (più di uno rilevato)</span>
+          <select id="dTemplateFontSelect"></select>
+        </div>
+        <!-- Attesa INDETERMINATA (rasterizzazione PDF + estrazione font/etichette). -->
+        <div id="dTemplateLoading" class="d-template-loading" hidden>
+          <span class="ehb-spinner"></span> Elaboro il PDF…
+        </div>
+      </div>
+
+    </div>
+
+    <div id="dTemplateEditorWrap" class="d-workbench" hidden>
+      <aside class="d-side d-side--left">
+        <div class="d-block">
+          <div class="d-panel-hd"><h3 class="d-h3">Campi</h3></div>
+          <p class="d-hint">Aggiungi un campo dalla barra in alto, poi trascinalo sul template per posizionarlo.</p>
+          <div id="dFieldList" class="d-field-list"></div>
+        </div>
+        <div class="d-resize-handle d-resize-handle--right" data-resize="left" title="Trascina per ridimensionare"></div>
+      </aside>
+
+      <div class="d-canvas-wrap">
+        <div class="d-zoom-bar">
+          <button class="ehb-icon-btn" onclick="zoomCampi(-1)" title="Riduci">−</button>
+          <button class="ehb-icon-btn" onclick="zoomCampi(0)" title="Adatta (100%)">⤢</button>
+          <button class="ehb-icon-btn" onclick="zoomCampi(1)" title="Ingrandisci">＋</button>
+        </div>
+        <div id="dEditorCanvas" class="d-canvas"></div>
+        <p id="dCanvasEmptyHint" class="d-hint d-canvas-hint" hidden>Carica un template o scegline uno dalla libreria a sinistra.</p>
+      </div>
+
+      <aside class="d-side d-side--right">
+        <div class="d-resize-handle d-resize-handle--left" data-resize="right" title="Trascina per ridimensionare"></div>
+        <div id="dFieldProps" class="d-block d-props" hidden></div>
+        <div id="dFieldPropsEmpty" class="d-block d-props-empty"><p class="d-hint">Seleziona un campo per modificarne testo, posizione e stile.</p></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ══ VISTA 2 — ELENCO (prima dei campi: le colonne servono per l'auto-mappatura) ══ -->
+  <section id="viewElenco" class="d-view" hidden>
+    <div class="d-panel d-panel--center">
+      <div class="d-block">
+        <h2 class="d-h2">Elenco elaborati</h2>
+        <p class="d-hint">Importa il file (CSV o Excel) con un elaborato per riga: si genererà una copertina per ciascuna. Le colonne alimentano i <b>campi variabili</b> del passo successivo.</p>
+        <input id="dElencoFile" type="file" accept=".csv,.xls,.xlsx" hidden onchange="onElencoFile(this.files[0])">
+        <div class="d-actions">
+          <button class="ehb-btn ehb-btn--accent-soft" onclick="document.getElementById('dElencoFile').click()">⇪ Importa elenco…</button>
+          <button id="dBtnElencoClear" class="ehb-btn ehb-btn--ghost" onclick="clearElenco()" hidden>Rimuovi</button>
+        </div>
+        <div id="dElencoInfo" class="d-file-info" hidden></div>
+      </div>
+      <div id="dElencoVerify" class="d-block" hidden>
+        <div class="d-panel-hd"><h3 class="d-h3" id="dVerifyTitle">Verifica intestazione</h3></div>
+        <p class="d-hint">δ ha provato a capire da solo dove sono le etichette delle colonne (Codice Commessa, Disciplina…) e se sono disposte su una riga o su una colonna. Controlla e correggi se serve: clicca la riga giusta nell'anteprima, o cambia l'orientamento.</p>
+        <div id="dVerifySheetList" class="d-sheet-list" hidden></div>
+        <div class="d-verify-controls">
+          <div class="d-seg" id="dVerifyOrientation">
+            <button type="button" class="d-seg-btn" data-orientation="rows">Etichette su righe</button>
+            <button type="button" class="d-seg-btn" data-orientation="columns">Etichette su colonne</button>
+          </div>
+          <span class="d-confidence-badge" id="dVerifyConfidence"></span>
+        </div>
+        <div id="dVerifyPreview" class="d-table-scroll"></div>
+        <div id="dVerifyUnknowns" class="d-block" hidden></div>
+        <div class="d-actions">
+          <button class="ehb-btn ehb-btn--accent-soft" onclick="confirmElencoVerify()">✓ Conferma importazione</button>
+          <button class="ehb-btn ehb-btn--ghost" onclick="cancelElencoVerify()">Annulla</button>
+        </div>
+      </div>
+      <div id="dMappingBlock" class="d-block" hidden>
+        <div class="d-panel-hd">
+          <h3 class="d-h3">Mappatura colonne</h3>
+          <button class="ehb-btn ehb-btn--sm ehb-btn--ghost" onclick="detectColumnsNow()" title="Suggerisce la colonna per ogni campo variabile ancora senza mappatura, in base al nome">✨ Rileva colonne automaticamente</button>
+        </div>
+        <p class="d-hint">Assegna a ogni campo variabile la colonna dell'elenco da cui prendere il testo.</p>
+        <div id="dMappingList" class="d-mapping-list"></div>
+      </div>
+      <div id="dElencoPreview" class="d-elenco-preview" hidden></div>
+    </div>
+  </section>
+
+  <!-- ══ VISTA 3 — GENERA ══ -->
+  <section id="viewGenera" class="d-view" hidden>
+    <div id="dGeneraEmpty" class="d-empty">
+      <div class="d-empty__ic">⎙</div>
+      <p class="d-empty__lead">Carica un <b>template</b> (passo 1) per generare le copertine. L'elenco (passo 2) è opzionale: senza, si crea una sola copertina coi campi fissi.</p>
+      <button class="ehb-btn ehb-btn--accent-soft" onclick="showView('template')">1 · Vai a Template</button>
+    </div>
+    <div id="dGeneraWork" class="d-generate" hidden>
+      <aside class="d-side d-side--left">
+        <div class="d-block">
+          <div class="d-panel-hd"><h3 class="d-h3">Anteprima</h3></div>
+          <div id="dPreviewNav" class="d-preview-nav" hidden>
+            <button class="ehb-icon-btn" onclick="previewStep(-1)" title="Copertina precedente">‹</button>
+            <span id="dPreviewLabel" class="d-preview-label">—</span>
+            <button class="ehb-icon-btn" onclick="previewStep(1)" title="Copertina successiva">›</button>
+          </div>
+          <p id="dGeneraSummary" class="d-hint"></p>
+          <div id="dFilenameBlock" class="d-prop" hidden>
+            <span>Nome file da</span>
+            <select id="dFilenameColumn"></select>
+          </div>
+          <div id="dGenProgress" class="d-gen-progress" hidden>
+            <div class="d-gen-progress__track"><div id="dGenProgressBar" class="d-gen-progress__bar"></div></div>
+            <div class="d-gen-progress__row">
+              <span id="dGenProgressLabel" class="d-hint"></span>
+              <!-- Clessidra: SOLO per la fase indeterminata (compressione ZIP dopo
+                   che i PDF sono pronti) — i PDF hanno già un conteggio reale sopra. -->
+              <span id="dGenSpinner" class="ehb-spinner" hidden title="Comprimo in ZIP…"></span>
+            </div>
+          </div>
+          <div class="d-actions d-actions--stack">
+            <button id="dBtnGenera" class="ehb-btn ehb-btn--accent-soft" onclick="generaPDF()">⎙ Genera copertine (ZIP)</button>
+            <button id="dBtnGeneraDxf" class="ehb-btn ehb-btn--ghost" onclick="generaDXF()" title="Esporta i cartigli come DXF vettoriale (cornice + testo editabile) in uno ZIP — per lavorarci in CAD. Serve un template PDF caricato in questa sessione.">⎘ Esporta DXF (ZIP)</button>
+            <button class="ehb-btn ehb-btn--ghost" onclick="stampaAnteprimaCorrente()" title="Stampa/salva solo la copertina in anteprima, senza generare l'intero export">🖶 Stampa anteprima corrente</button>
+          </div>
+        </div>
+        <div class="d-resize-handle d-resize-handle--right" data-resize="left" title="Trascina per ridimensionare"></div>
+      </aside>
+      <div class="d-canvas-wrap">
+        <div class="d-zoom-bar">
+          <button class="ehb-icon-btn" onclick="zoomGenera(-1)" title="Riduci">−</button>
+          <button class="ehb-icon-btn" onclick="zoomGenera(0)" title="Adatta (100%)">⤢</button>
+          <button class="ehb-icon-btn" onclick="zoomGenera(1)" title="Ingrandisci">＋</button>
+        </div>
+        <div id="dPreviewCanvas" class="d-canvas"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div id="toast" class="d-toast" hidden></div>
+
+<script type="module" src="./main.js"></script>
+</body>
+</html>
