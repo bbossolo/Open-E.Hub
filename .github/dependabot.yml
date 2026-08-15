@@ -7,6 +7,12 @@ version: 2
 # Attenzione: le librerie che l'app spedisce davvero stanno in vendor/ come copie
 # congelate (pdf.js, SheetJS, pdf-lib, fontkit, JSZip) e Dependabot NON le vede.
 # Quelle si aggiornano a mano — versioni e licenze in NOTICE.md.
+#
+# Raggruppate SOLO le versioni minori e di manutenzione: quelle arrivano in una
+# PR sola, che se la CI è verde si merge senza pensarci. I cambi di versione
+# MAGGIORE restano fuori dal gruppo e ottengono una PR ciascuno: sono quelli che
+# tolgono opzioni e cambiano API, e vanno guardati uno per uno (il primo giro ne
+# aveva accorpati sei, e la CI l'ha giustamente bocciato).
 updates:
   - package-ecosystem: npm
     directory: /
@@ -14,11 +20,16 @@ updates:
       interval: monthly
     open-pull-requests-limit: 5
     groups:
-      dev-dependencies:
+      manutenzione:
         patterns: ["*"]
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
     open-pull-requests-limit: 3
+    groups:
+      manutenzione:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
