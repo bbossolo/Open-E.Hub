@@ -43,7 +43,7 @@ jobs:
         # Best-effort: se la quota artifact dell'account è piena l'upload
         # fallisce, ma i risultati restano comunque leggibili nel log.
         continue-on-error: true
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: trivy-report
           path: trivy-report.json

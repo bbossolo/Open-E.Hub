@@ -20,9 +20,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
@@ -34,18 +34,21 @@ jobs:
       - name: Genera bundle prezzari interni
         run: npm run bundle:prezzari
 
-      - name: Build installer macOS (non firmato)
-        run: npm run build:mac -- --publish never
+      # Entrambe le architetture: il runner macOS di GitHub è Apple Silicon, e
+      # senza --x64 electron-builder produrrebbe SOLO l'arm64 — chi ha un Mac
+      # Intel si troverebbe la release senza nulla da scaricare.
+      - name: Build installer macOS (non firmato, arm64 + Intel)
+        run: npm run build:mac -- --arm64 --x64 --publish never
 
       - name: Upload alla release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             dist/*.dmg
             dist/*.zip
           body: |
             Build desktop non firmate (nessun certificato di firma codice):
-            - **macOS**: al primo avvio Gatekeeper segnala l'app come "danneggiata" — Impostazioni di Sistema → Privacy e sicurezza → "Apri comunque".
+            - **macOS**: scarica il file con `arm64` nel nome se hai un Mac Apple Silicon (M1/M2/M3/M4), quello con `x64` se hai un Mac Intel. Al primo avvio Gatekeeper segnala l'app come "danneggiata" — Impostazioni di Sistema → Privacy e sicurezza → "Apri comunque".
             - **Windows**: SmartScreen avvisa dell'app non riconosciuta — "Ulteriori informazioni" → "Esegui comunque".
 
             In alternativa: build in locale (`npm run build:mac` / `npm run build:win`) o uso via browser (`npm run serve`), vedi [Build e Release](Docs/03-Build-e-Release.md).
@@ -58,9 +61,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
@@ -76,6 +79,6 @@ jobs:
         run: npm run build:win -- --publish never
 
       - name: Upload alla release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: dist/*.exe
