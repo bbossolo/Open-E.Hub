@@ -29,8 +29,30 @@ Rientra quindi tutto ciò che, partendo da un file ostile, porta a:
 - superamento dell'isolamento del preload (`window.ehubNative`).
 
 Non rientrano: la mancanza di firma del codice negli installer (è dichiarata, vedi
-[Docs/03-Build-e-Release.md](Docs/03-Build-e-Release.md)), e le vulnerabilità delle dipendenze
-di **sviluppo** (`electron-builder`, `vitest`, `vite`), che non finiscono nell'app distribuita.
+[Docs/03-Build-e-Release.md](Docs/03-Build-e-Release.md) e il paragrafo qui sotto), e le
+vulnerabilità delle dipendenze di **sviluppo** (`electron-builder`, `vitest`, `vite`), che non
+finiscono nell'app distribuita.
+
+## Verificare un installer scaricato
+
+Gli installer nelle Release **non sono firmati**: non c'è un certificato Apple Developer ID né
+Authenticode, quindi macOS e Windows mostrano un avviso al primo avvio. Al posto della firma
+commerciale ogni artefatto porta un'**attestazione di provenienza** (Sigstore, generata dal
+workflow di release) e un checksum SHA-256.
+
+```bash
+# Provenienza: conferma che il file è uscito da QUESTO repository, da questo
+# workflow, a partire da quel commit — cosa che una firma Developer ID non dice.
+gh attestation verify <file-scaricato> --repo bbossolo/Open-E.Hub
+
+# Integrità: confronta il digest con quello pubblicato accanto agli artefatti.
+shasum -a 256 -c SHA256SUMS-macos.txt
+```
+
+È una garanzia più utile della firma per un progetto open source: la firma dice «qualcuno ha
+pagato un certificato», l'attestazione dice «questo binario viene da quel sorgente pubblico».
+Se una delle due verifiche fallisce su un file preso dalle Release ufficiali, è una
+segnalazione di sicurezza a tutti gli effetti: usa il canale privato qui sopra.
 
 ## Come è difeso, oggi
 

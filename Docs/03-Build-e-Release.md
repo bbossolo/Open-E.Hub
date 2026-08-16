@@ -214,6 +214,22 @@ serve`) non lo mostra. Al primo avvio:
 Costruire l'installer in locale (§2-3) evita entrambi gli avvisi, perché non passa da un
 download da internet.
 
+### Cosa c'è al posto della firma
+
+Non firmare è legale (la firma è un meccanismo di fiducia di Apple/Microsoft, non un obbligo
+di legge), ma lascia l'utente senza un modo per capire se il file che ha scaricato è quello
+giusto. Il workflow di release colma il vuoto con due cose, entrambe gratuite:
+
+- **Attestazione di provenienza** (`actions/attest-build-provenance`, Sigstore): lega ogni
+  installer al commit e al workflow che l'hanno prodotto. Si verifica con
+  `gh attestation verify <file> --repo bbossolo/Open-E.Hub`.
+- **`SHA256SUMS-macos.txt` / `SHA256SUMS-windows.txt`** allegati alla release, per il
+  controllo di integrità (`shasum -a 256 -c`).
+
+Le attestation richiedono un repository **pubblico**: sui repo privati lo step si salta da sé
+(`if: !github.event.repository.private`) invece di far fallire un job che ha già pubblicato
+gli installer. Dettagli e istruzioni per chi scarica: [SECURITY.md](../SECURITY.md).
+
 ---
 
 ➡️ Prossimo: [04 — Aggiungere una Nuova App](04-Aggiungere-una-Nuova-App.md)

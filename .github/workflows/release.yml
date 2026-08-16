@@ -11,8 +11,12 @@ on:
     tags:
       - 'v*'
 
+# `id-token` e `attestations` servono all'attestazione di provenienza (vedi sotto):
+# l'action ottiene un token OIDC effimero e registra l'attestazione sul repo.
 permissions:
   contents: write
+  id-token: write
+  attestations: write
 
 jobs:
   build-mac:
@@ -40,20 +44,56 @@ jobs:
       - name: Build installer macOS (non firmato, arm64 + Intel)
         run: npm run build:mac -- --arm64 --x64 --publish never
 
+      # Checksum: gli installer non sono firmati, quindi questo è ciò che permette
+      # a chi scarica di verificare che il file sia integro e non manomesso.
+      # Nome distinto per piattaforma: i due job caricano sulla STESSA release e
+      # un nome comune si sovrascriverebbe a vicenda.
+      - name: Checksum SHA-256
+        working-directory: dist
+        run: shasum -a 256 *.dmg *.zip > SHA256SUMS-macos.txt
+
       - name: Upload alla release
         uses: softprops/action-gh-release@v3
         with:
           files: |
             dist/*.dmg
             dist/*.zip
+            dist/SHA256SUMS-macos.txt
           body: |
-            Build desktop non firmate (nessun certificato di firma codice):
+            Build desktop **non firmate** (nessun certificato di firma codice):
             - **macOS**: scarica il file con `arm64` nel nome se hai un Mac Apple Silicon (M1/M2/M3/M4), quello con `x64` se hai un Mac Intel. Al primo avvio Gatekeeper segnala l'app come "danneggiata" — Impostazioni di Sistema → Privacy e sicurezza → "Apri comunque".
             - **Windows**: SmartScreen avvisa dell'app non riconosciuta — "Ulteriori informazioni" → "Esegui comunque".
+
+            ### Verificare che il file scaricato sia autentico
+
+            Non essendoci una firma di Apple/Microsoft, l'autenticità si verifica così — ed è una garanzia più forte, perché lega il file al sorgente pubblico che l'ha prodotto:
+
+            ```bash
+            gh attestation verify <file-scaricato> --repo bbossolo/Open-E.Hub
+            ```
+
+            Conferma che quell'installer è uscito da questo repository, da questo workflow, a partire da quel commit. In alternativa (o in aggiunta) confronta il digest con `SHA256SUMS-macos.txt` / `SHA256SUMS-windows.txt`:
+
+            ```bash
+            shasum -a 256 -c SHA256SUMS-macos.txt      # macOS/Linux
+            ```
 
             In alternativa: build in locale (`npm run build:mac` / `npm run build:win`) o uso via browser (`npm run serve`), vedi [Build e Release](Docs/03-Build-e-Release.md).
           append_body: false
           generate_release_notes: true
+
+      # Provenienza verificabile al posto della firma commerciale: lega ogni
+      # installer al commit e al workflow che l'hanno prodotto (Sigstore).
+      # Sta DOPO l'upload apposta — se fallisce, gli installer sono già pubblicati.
+      # Le attestation richiedono un repo pubblico: finché è privato si salta,
+      # invece di far diventare rosso un job che ha fatto tutto il suo lavoro.
+      - name: Attestazione di provenienza
+        if: ${{ !github.event.repository.private }}
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: |
+            dist/*.dmg
+            dist/*.zip
 
   build-windows:
     needs: build-mac
@@ -78,7 +118,24 @@ jobs:
       - name: Build installer Windows (non firmato)
         run: npm run build:win -- --publish never
 
+      # Stesso formato di `shasum -a 256` (digest minuscolo, due spazi, nome file)
+      # così `sha256sum -c` lo digerisce senza conversioni.
+      - name: Checksum SHA-256
+        shell: pwsh
+        run: |
+          Get-ChildItem dist/*.exe | ForEach-Object {
+            '{0}  {1}' -f (Get-FileHash -Algorithm SHA256 $_.FullName).Hash.ToLower(), $_.Name
+          } | Set-Content -Encoding ascii dist/SHA256SUMS-windows.txt
+
       - name: Upload alla release
         uses: softprops/action-gh-release@v3
         with:
-          files: dist/*.exe
+          files: |
+            dist/*.exe
+            dist/SHA256SUMS-windows.txt
+
+      - name: Attestazione di provenienza
+        if: ${{ !github.event.repository.private }}
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: dist/*.exe
