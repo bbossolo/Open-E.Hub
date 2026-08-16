@@ -6,7 +6,7 @@
   var V = {
     "app": {
       "name": "Open E.Hub",
-      "version": "1.0.0"
+      "version": "1.0.1"
     },
     "developer": {
       "name": "Davide Bottura",

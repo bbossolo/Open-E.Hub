@@ -72,7 +72,7 @@ ogni strumento.
 
 <!-- AUTO:tools:list:START -->
 <!-- ⚙️ generato da `npm run sync:docs` (fonte: src/hub/data/registry.ts) — NON editare a mano -->
-Strumenti: **5** (Open E.Hub v1.0.0).
+Strumenti: **5** (Open E.Hub v1.0.1).
 
 - **μ Prezzi** — Prezzari e computo metrico _(stabile)_
 - **δ Copertine** — Copertine degli elaborati _(stabile)_
