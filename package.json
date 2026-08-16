@@ -1,6 +1,6 @@
 {
   "name": "open-ehub",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Open E.Hub — suite open source di tool per progettazione elettrica e impiantistica, offline-first",
   "main": "main.js",
   "author": "Davide Bottura",

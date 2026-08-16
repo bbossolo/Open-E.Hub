@@ -87,7 +87,7 @@ troubleshooting — è in **[Docs/](Docs/)**. Parti da [Docs/README.md](Docs/REA
 
 <!-- AUTO:tools:list:START -->
 <!-- ⚙️ generato da `npm run sync:docs` (fonte: src/hub/data/registry.ts) — NON editare a mano -->
-Strumenti: **5** (Open E.Hub v1.0.1).
+Strumenti: **5** (Open E.Hub v1.0.2).
 
 - **μ Prezzi** — Prezzari e computo metrico _(stabile)_
 - **δ Copertine** — Copertine degli elaborati _(stabile)_
@@ -121,7 +121,7 @@ Gestisce utenti e studi e mostra le statistiche d'uso della suite.
 ### Versioni correnti
 
 <!-- VERSIONS:START — auto-generato da versions.js (`npm run sync:readme`). NON editare a mano. -->
-**Open E.Hub v1.0.1**
+**Open E.Hub v1.0.2**
 <!-- VERSIONS:END -->
 
 > Fonte di verità: [versions.js](versions.js). Lo storico delle modifiche resta nei commit/tag
