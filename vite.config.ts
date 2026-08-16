@@ -1,5 +1,8 @@
 import { resolve } from 'node:path'
-import { defineConfig } from 'vite'
+// `defineConfig` viene da vitest/config, non da vite: è quello che conosce anche la
+// chiave `test` qui sotto. Con l'import da 'vite' la config non type-checka più
+// (da Vite 8 il tipo UserConfig non è più aperto all'augmentation di Vitest).
+import { defineConfig } from 'vitest/config'
 import { viteSingleFile } from 'vite-plugin-singlefile'
 
 // Ogni tool viene compilato in un singolo file HTML self-contained (JS+CSS inline)

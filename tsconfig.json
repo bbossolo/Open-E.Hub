@@ -14,15 +14,16 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
     "types": ["vite/client", "vitest/globals"],
-    "baseUrl": ".",
+    // Niente "baseUrl": TypeScript 7 l'ha rimosso. I path qui sotto sono relativi a
+    // questo file ("./…"), l'unica forma che TS 7 accetta.
     "paths": {
-      "compositore-catalog:marchi": ["src/shared/compositore/catalog-data-empty.ts"],
-      "compositore-catalog:libreria": ["src/shared/compositore/catalog-data-empty.ts"],
-      "compositore-catalog:sinonimi-parola": ["src/shared/compositore/catalog-data-empty.ts"],
-      "compositore-catalog:tematiche": ["src/shared/compositore/catalog-data-empty.ts"],
-      "compositore-catalog:macrocategorie": ["src/shared/compositore/catalog-data-empty.ts"],
-      "compositore-catalog:thesaurus": ["src/shared/compositore/catalog-data-empty.ts"],
-      "compositore-catalog:componi": ["src/shared/compositore/catalog-data-empty.ts"]
+      "compositore-catalog:marchi": ["./src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:libreria": ["./src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:sinonimi-parola": ["./src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:tematiche": ["./src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:macrocategorie": ["./src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:thesaurus": ["./src/shared/compositore/catalog-data-empty.ts"],
+      "compositore-catalog:componi": ["./src/shared/compositore/catalog-data-empty.ts"]
     }
   },
   "include": ["src", "tests", "vite.config.ts"]

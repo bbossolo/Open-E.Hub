@@ -19,6 +19,15 @@ import type { PageVectors } from '../../src/shared/dxf-from-pdf'
  */
 const SCRIPT = resolve(__dirname, '../../scripts/dxf-validate.py')
 
+/**
+ * Ogni caso avvia un processo python3 che importa ezdxf: solo quell'import costa ~2s a
+ * freddo, e l'audit di un cartiglio vero ci si somma sopra. Col timeout di default (5s)
+ * il test passava per un soffio e diventava rosso al primo rallentamento della macchina
+ * (è successo passando a Vitest 4). Qui non si sta misurando la velocità di nulla: si
+ * verifica che ezdxf accetti il file, quindi il tetto è largo apposta.
+ */
+const EZDXF_TIMEOUT_MS = 60_000
+
 function ezdxfAvailable(): boolean {
   try {
     execFileSync('python3', ['-c', 'import ezdxf'], { stdio: 'ignore' })
@@ -82,7 +91,7 @@ describe('export DXF — audit ezdxf (accettato dai CAD rigidi)', () => {
       // scripts/dxf-validate.py esce 0 solo se l'audit non ha ERRORI (i «fix» non contano).
       const out = execFileSync('python3', [SCRIPT, paths[name]], { encoding: 'utf8' })
       expect(out).toContain('OK')
-    })
+    }, EZDXF_TIMEOUT_MS)
   }
 
   it('la struttura R2004 è completa (guardia sempre attiva, senza ezdxf)', () => {

@@ -6,6 +6,17 @@
   "author": "Davide Bottura",
   "license": "MIT",
   "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bbossolo/Open-E.Hub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bbossolo/Open-E.Hub/issues"
+  },
+  "homepage": "https://github.com/bbossolo/Open-E.Hub#readme",
+  "engines": {
+    "node": ">=24.15.0"
+  },
   "scripts": {
     "prestart": "npm run build:web",
     "start": "electron .",
@@ -45,18 +56,19 @@
     "build:all": "electron-builder --mac --win"
   },
   "devDependencies": {
-    "@types/jsdom": "^28.0.3",
-    "electron": "^43.2.0",
-    "electron-builder": "^24.13.3",
-    "fast-xml-parser": "^5.9.3",
-    "jsdom": "^29.1.1",
+    "@types/jsdom": "^30.0.0",
+    "electron": "^43.4.0",
+    "electron-builder": "^26.15.3",
+    "fast-xml-parser": "^5.11.0",
+    "jsdom": "^30.0.1",
     "jszip": "^3.10.1",
     "opentype.js": "^2.0.0",
     "stylelint": "^16.26.1",
-    "typescript": "^5.6.3",
-    "vite": "^5.4.10",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.1",
+    "vite-node": "^6.0.0",
     "vite-plugin-singlefile": "^2.0.3",
-    "vitest": "^2.1.4",
+    "vitest": "^4.1.10",
     "wawoff2": "^2.0.1",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
@@ -78,6 +90,7 @@
     "mac": {
       "category": "public.app-category.productivity",
       "icon": "assets/icon.png",
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "target": [
         "dmg",
         "zip"
@@ -102,5 +115,9 @@
   "dependencies": {
     "@pdf-lib/fontkit": "^1.1.1",
     "pdf-lib": "^1.17.1"
+  },
+  "allowScripts": {
+    "electron-winstaller": false,
+    "fsevents": false
   }
 }

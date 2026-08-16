@@ -110,7 +110,9 @@ function setViewMenu(open: boolean): void {
 }
 function toggleViewMenu(): void {
   const pop = document.getElementById('view-menu-pop') as HTMLElement
-  setViewMenu(pop.hidden)
+  // `hidden` non è più solo booleano nella lib.dom (esiste hidden="until-found", che è
+  // comunque "nascosto"): qualunque valore truthy significa chiuso, quindi da riaprire.
+  setViewMenu(Boolean(pop.hidden))
 }
 
 beforeEach(() => {
