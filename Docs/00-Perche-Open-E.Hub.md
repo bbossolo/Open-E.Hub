@@ -180,7 +180,7 @@ un confronto fra computi e offerte —
 tutti pezzi della stessa suite di progettazione impiantistica, non tool a sé stanti. Possono
 arrivare in una versione futura.
 
-## La stagione delle mini-app
+## Il festival delle mini-app
 
 Con gli assistenti AI, scrivere il piccolo strumento che ti serve non è più il problema: un
 tecnico che sa spiegare bene cosa vuole oggi se lo fa costruire. Il problema è **dove farlo

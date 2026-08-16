@@ -6,6 +6,8 @@
 
 La suite è impacchettata come **app desktop (Electron) per macOS e Windows**, con tutte le librerie incluse in locale ([vendor/](vendor/)) e nessun servizio esterno richiesto a runtime. Resta utilizzabile anche aprendo i singoli HTML in un browser o servendo la web build.
 
+![L'hub di Open E.Hub, con le card dei 5 strumenti](Docs/screenshots/hub.png)
+
 > **In English** — Open E.Hub is an offline-first, MIT-licensed desktop suite (Electron, macOS + Windows) of five tools for Italian electrical/building-services design practices: price-list lookup and bills of quantities, public-works accounting (SAL, measurement books, payment certificates), drawing cover sheets and title blocks, DXF layer remapping, and an admin console. Everything runs locally — no account, no cloud, no network calls at all (enforced by a CSP with no `http:`/`https:` scheme). It ships as a *blank platform*: no price lists, catalogues or third-party branding are bundled — you bring your own data. Documentation, UI and code comments are in **Italian**, since the domain (Italian public-procurement accounting, regional price lists, PriMus/DEI/METEL interchange formats) is Italian-specific.
 
 ---
@@ -97,26 +99,54 @@ Strumenti: **5** (Open E.Hub v1.0.2).
 <!-- AUTO:tools:list:END -->
 
 ### μ Prezzi
+![μ Prezzi — consultazione di un prezzario regionale](Docs/screenshots/miu.png)
+*Le voci sono sfocate di proposito: Open E.Hub non distribuisce prezzari di terzi, nemmeno in una schermata. I prezzari li porti tu.*
+
 Consultazione prezzari da file **Excel/XLSX**, con ricerca a parola esatta sempre attiva e un
 motore di ricerca "in linguaggio naturale" (riconoscimento sinonimi) pronto ma **a vocabolario
 vuoto** — lo studio lo popola nel codice, vedi [00 — Perché Open E.Hub](Docs/00-Perche-Open-E.Hub.md#piattaforma-bianca-come-si-personalizza).  
 Permette di caricare uno o più prezzari (portati dall'utente — non inclusi), confrontare prezzi tra archivi diversi, comporre descrizioni per voci di computo e visualizzare il dettaglio di ogni voce in un pannello laterale ridimensionabile. La sidebar è collassabile per guadagnare spazio.
 
 ### β Contabilità
+![β Contabilità — catena documentale dei lavori pubblici](Docs/screenshots/beta.png)
 Contabilità dei **lavori pubblici** in corso d'opera.  
 Dal computo di μ produce libretto delle misure, registro di contabilità, **SAL**, stati di avanzamento e certificati di pagamento, per lavori a misura e a corpo. Redige inoltre i **verbali e le comunicazioni del Direttore dei Lavori** (consegna, sospensione, ripresa).
 
 ### δ Copertine
+![δ Copertine — caricamento del template del cartiglio](Docs/screenshots/delta.png)
 Copertine e frontespizi degli **elaborati** di progetto.  
 Prende un template (PDF o immagine) come sfondo, vi sovrappone i campi del cartiglio e, da un elenco di elaborati, genera in un colpo solo uno **ZIP di PDF** — uno per elaborato. Riconosce da sé i campi dei cartigli ricorrenti dello studio; esporta anche in DXF.
 
 ### χ Refs
+![χ Refs — normalizzazione di una base DXF esterna](Docs/screenshots/chi.png)
 Smista i layer di una base **DXF esterna** (di un collaboratore) sullo standard di studio.  
 Riconosce automaticamente i layer di un DXF non tuo e li rimappa sui nomi/colori dello studio, così le planimetrie dei collaboratori si integrano senza doverle ridisegnare a mano.
 
 ### α Alfa
+![α Alfa — panoramica del centro di controllo](Docs/screenshots/alfa.png)
 Centro di controllo dell'hub, visibile **solo agli amministratori**.  
 Gestisce utenti e studi e mostra le statistiche d'uso della suite.
+
+## Il festival delle mini-app
+
+Con gli assistenti AI, scrivere il piccolo strumento che ti serve non è più il problema: un
+tecnico che sa spiegare bene cosa vuole oggi se lo fa costruire. Il problema è **dove farlo
+vivere**. Quasi sempre finisce come uno script sul computer di chi l'ha scritto, senza
+un'interfaccia presentabile, senza un posto da cui lanciarlo, e i colleghi non lo vedono nemmeno.
+
+Open E.Hub è pensata anche per questo: un posto dove uno strumento nuovo è **una cartella sotto
+`src/tools/` e poche righe di registro**, ed eredita gratis quello che di solito costa più del
+motore — tema, guida, salvataggio del progetto, e il passaggio dati verso gli altri strumenti.
+È terreno buono per un agente AI anche per un motivo poco romantico: le convenzioni della suite
+non sono scritte solo in un documento, sono **presidiate da test**. Se un tool nuovo sbaglia i
+pulsanti, il bus o le liste di registrazione, la verifica lo dice — e un agente il feedback
+meccanico lo sa usare.
+
+Come si fa in concreto: [04 — Aggiungere una nuova app](Docs/04-Aggiungere-una-Nuova-App.md) e
+[CONTRIBUTING](CONTRIBUTING.md). Lo stato di oggi, senza giri di parole: un tool si condivide con
+una **pull request**, non esiste un marketplace né un caricamento a caldo in un'installazione già
+fatta — sono i due limiti veri, e sono in lavorazione. Il ragionamento completo è in
+[00 — Perché Open E.Hub](Docs/00-Perche-Open-E.Hub.md#il-festival-delle-mini-app).
 
 ### Versioni correnti
 
