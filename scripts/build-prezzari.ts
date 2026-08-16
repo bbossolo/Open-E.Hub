@@ -169,6 +169,18 @@ function main(): void {
   const filter = process.argv[2]?.toLowerCase()
   mkdirSync(OUT, { recursive: true })
 
+  // `prezzari-src/` è gitignored e quindi NON esiste in un checkout appena clonato: senza
+  // questa guardia il primo comando che un nuovo utente lancia seguendo CLAUDE.md §2
+  // risponde con uno stack trace ENOENT invece di dirgli cosa manca.
+  if (!existsSync(SRC)) {
+    console.error(`✗ Manca la cartella dei grezzi: ${SRC}`)
+    console.error('  I prezzari non sono inclusi nel repo (dati regionali/di fornitore, non')
+    console.error('  ridistribuibili). Crea `prezzari-src/<Regione>/` e mettici dentro il file')
+    console.error('  ufficiale scaricato, poi rilancia. Ricetta completa: CLAUDE.md §2.')
+    process.exitCode = 1
+    return
+  }
+
   const tutti = findXml(SRC).filter(f => !filter || f.toLowerCase().includes(filter))
   // COMPANION analisi prezzi: file `<analisiPrezzi>` (Veneto) — non sono
   // prezzari a sé: arricchiscono le voci del prezzario della stessa cartella/anno.
