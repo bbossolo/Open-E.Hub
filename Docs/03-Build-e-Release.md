@@ -35,9 +35,19 @@ un HTML, chiudi, rilanci, vedi il risultato.
 npm run build:mac
 ```
 
-Risultato in `dist/`:
-- `Open E.Hub-<versione>-arm64.dmg` — l'installer da aprire
-- `Open E.Hub-<versione>-arm64-mac.zip` — versione zippata
+Risultato in `dist/`, per l'architettura del Mac su cui stai buildando:
+- `Open E.Hub-<versione>-<arch>.dmg` — l'installer da aprire
+- `Open E.Hub-<versione>-<arch>.zip` — versione zippata
+
+dove `<arch>` è `arm64` (Apple Silicon) o `x64` (Intel). L'architettura è **sempre** nel nome:
+è il `artifactName` in `package.json` → `build.mac`. Senza, electron-builder lascerebbe
+l'artefatto Intel senza suffisso (`Open E.Hub-1.0.0.dmg`) e le due build sarebbero
+distinguibili solo a occhio.
+
+Per produrle entrambe da una sola macchina (è quello che fa la CI di release):
+```bash
+npm run build:mac -- --arm64 --x64
+```
 
 > **Perché mac si builda solo in locale?** Un `.dmg` non firmato, se **scaricato** da
 > internet, viene marcato da macOS come "danneggiato" (Gatekeeper). Costruendolo in locale e

@@ -6,6 +6,8 @@
 
 La suite è impacchettata come **app desktop (Electron) per macOS e Windows**, con tutte le librerie incluse in locale ([vendor/](vendor/)) e nessun servizio esterno richiesto a runtime. Resta utilizzabile anche aprendo i singoli HTML in un browser o servendo la web build.
 
+> **In English** — Open E.Hub is an offline-first, MIT-licensed desktop suite (Electron, macOS + Windows) of five tools for Italian electrical/building-services design practices: price-list lookup and bills of quantities, public-works accounting (SAL, measurement books, payment certificates), drawing cover sheets and title blocks, DXF layer remapping, and an admin console. Everything runs locally — no account, no cloud, no network calls at all (enforced by a CSP with no `http:`/`https:` scheme). It ships as a *blank platform*: no price lists, catalogues or third-party branding are bundled — you bring your own data. Documentation, UI and code comments are in **Italian**, since the domain (Italian public-procurement accounting, regional price lists, PriMus/DEI/METEL interchange formats) is Italian-specific.
+
 ---
 
 ## 🧭 Prima volta? Non sei uno sviluppatore? Inizia qui
@@ -17,8 +19,9 @@ queste righe sono per te — se sei del mestiere (sviluppatore/IT), salta pure a
 ["Come si usa"](#come-si-usa) qui sotto.
 
 ### Cosa ti serve
-Un Mac o un PC Windows, e [**Node.js**](https://nodejs.org) installato (scarica la versione
-"LTS", installala come un programma qualsiasi — Avanti, Avanti, Fine).
+Un Mac o un PC Windows, e [**Node.js**](https://nodejs.org) installato — versione **24.15 o
+superiore**: scarica quella indicata come "LTS", installala come un programma qualsiasi
+(Avanti, Avanti, Fine).
 
 ### I passaggi (con il terminale)
 1. Su questa pagina GitHub, in alto, clicca il pulsante verde **"Code" → "Download ZIP"** ed
@@ -103,7 +106,7 @@ Permette di caricare uno o più prezzari (portati dall'utente — non inclusi), 
 Contabilità dei **lavori pubblici** in corso d'opera.  
 Dal computo di μ produce libretto delle misure, registro di contabilità, **SAL**, stati di avanzamento e certificati di pagamento, per lavori a misura e a corpo. Redige inoltre i **verbali e le comunicazioni del Direttore dei Lavori** (consegna, sospensione, ripresa).
 
-### δ Pages
+### δ Copertine
 Copertine e frontespizi degli **elaborati** di progetto.  
 Prende un template (PDF o immagine) come sfondo, vi sovrappone i campi del cartiglio e, da un elenco di elaborati, genera in un colpo solo uno **ZIP di PDF** — uno per elaborato. Riconosce da sé i campi dei cartigli ricorrenti dello studio; esporta anche in DXF.
 

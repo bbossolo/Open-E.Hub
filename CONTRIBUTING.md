@@ -20,8 +20,15 @@ npm start          # rigenera i bundle (build:web) e avvia l'app desktop (Electr
 npm run build:web && npm run serve   # server statico locale su http://localhost:8080
 ```
 
-Richiede Node.js + npm. Tutto il resto (librerie vendor, font) è già nel repo — la
-suite è pensata per funzionare offline.
+Richiede **Node.js 24.15 o superiore** (è la linea LTS su cui gira la CI; c'è un
+[`.nvmrc`](.nvmrc), quindi con nvm basta `nvm use`) e npm. Il minimo lo detta `jsdom`, usato
+dai test per simulare il DOM: dalla 30 non supporta più Node 20. Tutto il resto (librerie
+vendor, font) è già nel repo — la suite è pensata per funzionare offline.
+
+> `npm install` scarica anche SheetJS dal CDN ufficiale `cdn.sheetjs.com` e non dal registry
+> npm: dalla 0.20 SheetJS non pubblica più su npm. È l'unica dipendenza fuori registry, ed è
+> l'unica ragione per cui il primo `npm install` può fallire pur essendo tutto a posto —
+> vedi [Docs/05 §A](Docs/05-Manutenzione-e-Troubleshooting.md#a-le-dipendenze-offline-vendor).
 
 ## Prima di aprire una PR
 
@@ -36,10 +43,12 @@ Se hai modificato `src/hub/data/registry.ts`, `src/shared/bus.ts` o
 `scripts/docs-manifest.ts`, lancia anche `npm run sync:docs` e committa i doc
 rigenerati (i blocchi `<!-- AUTO:...:START/END --> ` in README/Docs).
 
-**Nota sui bundle**: i file `.html` in root (`EHub.html`, `miu.html`, `delta.html`, …)
-sono generati dal build, non sorgenti. Se cambi qualcosa sotto `src/tools/<tool>/` o
-`src/shared/`, rigenera i bundle con `npm run build:web` prima di committare — la CI
-fallisce se i sorgenti sono cambiati senza rigenerare i bundle corrispondenti.
+**Nota sui bundle**: i file `.html` in root (`EHub.html`, `miu.html`, `Delta.html`, …)
+sono **artefatti di build, non sorgenti**, e sono gitignored — non vanno committati e non
+compaiono nel diff della tua PR. Si rigenerano in locale con `npm run build:web` quando vuoi
+provare le tue modifiche nell'app vera; la CI li ricostruisce da sé dai sorgenti a ogni PR
+(è quel passo che ti dice se hai rotto la build). Gli installer pronti stanno nelle
+[GitHub Releases](https://github.com/bbossolo/Open-E.Hub/releases).
 
 ## Convenzioni di commit
 
@@ -49,7 +58,7 @@ Il repo usa messaggi in stile `tipo(ambito): descrizione`, per esempio:
 feat(miu): aggiunge il parser per il prezzario Puglia
 fix(delta): il cartiglio non salvava il layout campi custom
 docs(readme): aggiorna l'elenco dei tool
-build: rigenera bundle EHub.html/miu.html
+build: aggiorna pdf-lib in vendor/ alla 1.17.2
 ```
 
 `ambito` è tipicamente il nome del tool (`miu`, `delta`, `beta`, `chi`,

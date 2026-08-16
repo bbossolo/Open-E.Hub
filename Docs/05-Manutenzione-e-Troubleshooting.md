@@ -11,20 +11,38 @@ Le librerie usate dai tool (Excel, 3D, PDF, font) sono salvate in `vendor/` per 
 
 | File in `vendor/` | Libreria | Usata da |
 |---|---|---|
-| `three.min.js` | three.js r128 (grafica 3D) | LightCalc Road |
-| `xlsx.full.min.js` | SheetJS xlsx 0.18.5 (Excel) | μ Prezzi, β Contabilità, δ Copertine |
-| `jszip.min.js` | JSZip 3.10.1 (zip) | μ Prezzi |
-| `pdf.min.js` + `pdf.worker.min.js` | pdf.js 3.11.174 (PDF) | μ Prezzi, δ Copertine |
+| `xlsx.full.min.js` | SheetJS xlsx 0.20.3 (Excel) | μ Prezzi, β Contabilità, δ Copertine |
+| `jszip.min.js` | JSZip 3.10.1 (zip) | μ Prezzi, β Contabilità, δ Copertine |
+| `pdf.min.js` + `pdf.worker.min.js` | pdf.js 3.11.174 (lettura PDF) | μ Prezzi, δ Copertine |
+| `pdf-lib.min.js` | pdf-lib 1.17.x (generazione PDF) | δ Copertine |
+| `fontkit.min.js` | fontkit 1.1.x (metriche font per l'export PDF) | δ Copertine |
 | `fonts.css` + `fonts/*.woff2` | Inter + JetBrains Mono | tutti |
 
+Il caricamento passa da [src/shared/vendor.ts](../src/shared/vendor.ts) (`loadXLSX`,
+`loadJSZip`, `loadPDF`, `loadPdfLib`, `loadFontkit`): gli script restano **file esterni**
+caricati a runtime, non inglobati nel bundle singlefile, ed è lì che si vede chi carica cosa.
+
+> Questa tabella e [NOTICE.md](../NOTICE.md) devono restare d'accordo: NOTICE è la fonte
+> legale (licenza + versione ridistribuita), qui c'è il taglio operativo (chi la usa).
+> Se aggiorni una libreria, aggiorna **entrambi**.
+
 ### Aggiornare una libreria
-1. Scarica la nuova versione dal CDN nella stessa posizione, es.:
-   ```bash
-   curl -o vendor/xlsx.full.min.js https://cdnjs.cloudflare.com/ajax/libs/xlsx/<nuova-ver>/xlsx.full.min.js
-   ```
+1. Scarica la nuova versione **dal sito ufficiale della libreria** nella stessa posizione.
+   Non dare per scontato che stia su un CDN generico: SheetJS, per esempio, ha lasciato npm
+   e cdnjs e si prende solo da `cdn.sheetjs.com` (vedi il riquadro qui sotto).
 2. Se il **nome file** resta uguale, non devi toccare gli HTML. Se cambia, aggiorna i tag
    `<script src="vendor/…">` nei file che la usano.
-3. Prova con `npm start` che tutto funzioni ancora.
+3. Aggiorna versione e licenza in [NOTICE.md](../NOTICE.md) e nella tabella qui sopra.
+4. Prova con `npm start` che tutto funzioni ancora, poi `npx vitest run`.
+
+> **SheetJS (`xlsx`) non viene dal registry npm.** In [package.json](../package.json) è
+> pinnata all'URL del tarball ufficiale (`https://cdn.sheetjs.com/xlsx-0.20.3/…`), perché
+> dalla 0.20 SheetJS non pubblica più su npm. Due conseguenze pratiche:
+> `npm ci` — quindi anche la CI e il primo `npm install` di un contributore — dipende
+> dall'uptime di quel CDN; e né `npm audit` né Dependabot vedono quel pacchetto, quindi gli
+> avvisi di sicurezza su SheetJS vanno seguiti a mano dal
+> [CHANGELOG upstream](https://cdn.sheetjs.com/). Vale sia per la copia in `vendor/` (che
+> l'app spedisce) sia per la dipendenza di build usata dagli script sui prezzari.
 
 ### Regola d'oro per i nuovi tool
 **Mai** lasciare riferimenti a CDN (`https://…`) negli HTML: l'app deve girare offline. Scarica

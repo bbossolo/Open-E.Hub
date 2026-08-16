@@ -116,14 +116,14 @@ descrive un tool e punta a un **nome file stabile**:
 ```ts
 {
   id:      "delta-pages",                  // identificatore unico
-  name:    "δ Pages",                      // nome mostrato
-  tagline: "Copertine degli elaborati · template + elenco → ZIP di PDF",
+  name:    "δ Copertine",                  // nome mostrato
+  tagline: "Copertine degli elaborati",
   file:    "Delta.html",                   // ← nome file STABILE (senza versione)
   srcDir:  "delta",                        // ← cartella sorgente in src/tools/ (OBBLIGATORIA)
   logoType:"delta",                        // icona
-  tags:    ["copertine","elaborati","pdf"],
+  tags:    ["copertine","elaborati","frontespizio","template","pdf","tavole","delta"],
   status:  "stable",                       // 'stable' | 'beta'
-  category:"computo-documenti",            // tematica (raggruppamento nell'hub)
+  category:"documenti-commessa",           // tematica (raggruppamento nell'hub)
 }
 ```
 
