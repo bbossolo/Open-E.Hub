@@ -50,7 +50,16 @@ jobs:
       # un nome comune si sovrascriverebbe a vicenda.
       - name: Checksum SHA-256
         working-directory: dist
-        run: shasum -a 256 *.dmg *.zip > SHA256SUMS-macos.txt
+        run: |
+          # I nomi vanno NORMALIZZATI: gli artefatti su disco hanno spazi
+          # ("Open E.Hub-1.0.2-arm64.dmg") ma GitHub li sostituisce con punti
+          # quando li pubblica come asset. Senza questa sostituzione il file
+          # elenca nomi che dopo il download non esistono, e il `shasum -c`
+          # documentato in SECURITY.md fallisce per chiunque.
+          for f in *.dmg *.zip; do
+            printf '%s  %s\n' "$(shasum -a 256 "$f" | cut -d' ' -f1)" "${f// /.}"
+          done > SHA256SUMS-macos.txt
+          cat SHA256SUMS-macos.txt
 
       - name: Upload alla release
         uses: softprops/action-gh-release@v3
@@ -123,9 +132,17 @@ jobs:
       - name: Checksum SHA-256
         shell: pwsh
         run: |
-          Get-ChildItem dist/*.exe | ForEach-Object {
-            '{0}  {1}' -f (Get-FileHash -Algorithm SHA256 $_.FullName).Hash.ToLower(), $_.Name
-          } | Set-Content -Encoding ascii dist/SHA256SUMS-windows.txt
+          # Due accortezze, entrambe necessarie perché il file venga consumato da
+          # `shasum -c` / `sha256sum -c` su macOS e Linux:
+          #  1. nomi normalizzati come nel job macOS — GitHub pubblica
+          #     "Open E.Hub Setup 1.0.2.exe" come "Open.E.Hub.Setup.1.0.2.exe";
+          #  2. fine riga LF. `Set-Content` scriverebbe CRLF, e il \r finirebbe
+          #     DENTRO il nome del file cercato: "impossibile aprire" su ogni riga.
+          $lines = Get-ChildItem dist/*.exe | ForEach-Object {
+            '{0}  {1}' -f (Get-FileHash -Algorithm SHA256 $_.FullName).Hash.ToLower(), ($_.Name -replace ' ', '.')
+          }
+          [IO.File]::WriteAllText("$PWD/dist/SHA256SUMS-windows.txt", ($lines -join "`n") + "`n")
+          Get-Content dist/SHA256SUMS-windows.txt
 
       - name: Upload alla release
         uses: softprops/action-gh-release@v3
