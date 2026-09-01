@@ -63,7 +63,7 @@
     "jsdom": "^30.0.1",
     "jszip": "^3.10.1",
     "opentype.js": "^2.0.0",
-    "stylelint": "^16.26.1",
+    "stylelint": "^17.14.1",
     "typescript": "^7.0.2",
     "vite": "^8.2.1",
     "vite-node": "^6.0.0",
