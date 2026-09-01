@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@types/jsdom": "^30.0.0",
-    "electron": "^43.4.0",
+    "electron": "^44.0.0",
     "electron-builder": "^26.15.3",
     "fast-xml-parser": "^5.11.0",
     "jsdom": "^30.0.1",
